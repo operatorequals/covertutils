@@ -29,7 +29,7 @@ This is a package's requirement, to ensure good flow when compiling in executabl
 ## The Entities
 
 ### The `Message`
-Messages are all things that mean something to the listener. Messages travel through communication channels, and they have to be unaware of that channel.
+Messages are all things that mean something to the listener. Messages travel through communication channels, and they have to be unaware of the channel they are travelling in. In other words, messages have to be independent of the mean of their transportation.
  *  If the communication channel can handle low length byte-chunks per "burst", the message has to be chunked.
  *  If the communication channel filters certain byte arrays (IDS/IPS, NextGen Firewalls).
  
