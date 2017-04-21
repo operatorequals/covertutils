@@ -39,10 +39,10 @@ The Stream is a tag that gives certain context to the message. Can be defined an
 
 ## The Organizers
 
-### Orchestrator
+### The `Orchestrator`
 Orchestrators are the core of data manipulation in `covertutils`. They handle all data transformation methods to translate raw chunks of data into Stream-Message pairs.
 
-### Handler
+### The `Handler`
 Handlers tie together the raw byte input/output with the `orchestrators` to provide an interface of:
 * `onChunk()`
 * `onMessage()`
@@ -56,7 +56,10 @@ def onMessage( message, stream ) :
 
 ## Networking
 Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` Handlers are **2 functions wrapping the raw data sending and receiving**.
- 
+
+
+Just pass a `send( raw )` and a `recv()` function to a `Handler` and you have a working *One-Time-Pad* encrypted, bandwidth aware, protocol independent, *password protected* channel.
 
 # Further Examples:
 Sample TCP/UDP Reverse Shells and TCP Bind Shell scripts can be found in `examples/` directory.
+
