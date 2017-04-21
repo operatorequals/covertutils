@@ -2,14 +2,16 @@
 A framework for Remote Code Execution Agent programming.
 
 [![Documentation Status](https://readthedocs.org/projects/covertutils/badge/?version=latest)](http://covertutils.readthedocs.io/en/latest/?badge=latest)
+  
 [![PyPI version](https://badge.fury.io/py/covertutils.svg)](https://pypi.python.org/pypi/covertutils)         
+  
 [![GitHub version](https://badge.fury.io/gh/operatorequals%2Fcovertutils.svg)](https://github.com%2Foperatorequals%2Fcovertutils)
 
 
 ### What is it?
 This python package automatically handles all communication channel options, like **encryption**, **chunking**, **steganography**, etc.
 
-With all those set with a few lines of code, a programmer can spend time creating the *actual payloads*, *persistense mechanisms*, *shellcodes* and generally **more creative stuff!**
+With all those set with a few lines of code, a programmer can spend time creating the *actual payloads*, *persistense mechanisms*, *shellcodes* and generally **more creative stuff!**!
 
 The security programmers can stop *re-inventing the wheel* by implementing encryption mechanisms both agent-side and handler-side to spend their time to develop more versatile *agents*, and generally feature-full shells!
 
@@ -53,5 +55,8 @@ def onMessage( message, stream ) :
 ```
 
 ## Networking
-Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` Handlers are 2 functions wrapping the raw data sending and receiving.
+Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` Handlers are **2 functions wrapping the raw data sending and receiving**.
  
+
+# Further Examples:
+Sample TCP/UDP Reverse Shells and TCP Bind Shell scripts can be found in `examples/` directory.
