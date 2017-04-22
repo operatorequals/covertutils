@@ -1,11 +1,7 @@
 # covertutils
 A framework for Remote Code Execution Agent programming.
 
-[![Documentation Status](https://readthedocs.org/projects/covertutils/badge/?version=latest)](http://covertutils.readthedocs.io/en/latest/?badge=latest)
-  
-[![PyPI version](https://badge.fury.io/py/covertutils.svg)](https://pypi.python.org/pypi/covertutils)         
-  
-[![GitHub version](https://badge.fury.io/gh/operatorequals%2Fcovertutils.svg)](https://github.com%2Foperatorequals%2Fcovertutils)
+[![Documentation Status](https://readthedocs.org/projects/covertutils/badge/?version=latest)](http://covertutils.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/covertutils.svg)](https://pypi.python.org/pypi/covertutils)          [![GitHub version](https://badge.fury.io/gh/operatorequals%2Fcovertutils.svg)](https://github.com%2Foperatorequals%2Fcovertutils)
 
 
 ### What is it?
@@ -63,3 +59,7 @@ Just pass a `send( raw )` and a `recv()` function to a `Handler` and you have a 
 # Further Examples:
 Sample TCP/UDP Reverse Shells and TCP Bind Shell scripts can be found in `examples/` directory.
 
+
+# Pull Requests?
+Certainly! All pull requests that are tested and do not break the existing tests will be accepted!
+Especially Pull Requests towards Python2/Python3 compatibility will be greatly appreciated!
