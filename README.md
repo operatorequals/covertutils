@@ -3,6 +3,7 @@ A framework for Remote Code Execution Agent programming.
 
 [![Documentation Status](https://readthedocs.org/projects/covertutils/badge/?version=latest)](http://covertutils.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/covertutils.svg)](https://pypi.python.org/pypi/covertutils)          [![GitHub version](https://badge.fury.io/gh/operatorequals%2Fcovertutils.svg)](https://github.com%2Foperatorequals%2Fcovertutils)
 
+[Documentation Page](https://covertutils.readthedocs.io)
 
 ### What is it?
 This python package automatically handles all communication channel options, like **encryption**, **chunking**, **steganography**, etc.
