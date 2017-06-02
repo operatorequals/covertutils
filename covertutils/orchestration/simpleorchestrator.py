@@ -27,8 +27,6 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 
 	"""
 
-	__pass_encryptor = ascii_letters * 10
-
 	def __init__( self, passphrase, tag_length = 2, out_length = 10, in_length = 10, streams = ['main'], cycling_algorithm = None, reverse = False ) :
 		"""
 :param str passphrase: The `passphrase` is the seed used to generate all encryption keys and stream identifiers. Two `SimpleOrchestrator` objects are compatible (can understand each other products) if they are initialized with the same `passphrase`. As `passphrase` is data argument, it is Case-Sensitive, and arbitrary bytes (not just printable strings) can be used.

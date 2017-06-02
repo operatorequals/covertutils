@@ -37,9 +37,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 
 	"""
 
-	__pass_encryptor = ascii_letters * 10
-
-	def __init__( self, passphrase, stego_config, main_template, transformation_list = [], tag_length = 2, cycling_algorithm = None, intermediate_function = _dummy_function, reverse = False ) :
+	def __init__( self, passphrase, stego_config, main_template, transformation_list = [], tag_length = 2, cycling_algorithm = None, streams = ['main'], intermediate_function = _dummy_function, reverse = False ) :
 		"""
 :param str stego_config: The configuration that is passed to :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`.
 :param str main_template: The default template that will be used in :func:`readyMessage()` `template` argument.
@@ -56,6 +54,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 			self.cycling_algorithm = StandardCyclingAlgorithm
 
 		self.main_template = main_template
+		self.current_template = main_template
 		# streams = self.stego_injector.getTemplates()
 
 		super( StegoOrchestrator, self ).__init__( passphrase, tag_length, cycling_algorithm, streams, reverse )
@@ -63,45 +62,65 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 		for index, template in enumerate( self.stego_injector.getTemplates() ) :
 			stego_capacity = self.stego_injector.getCapacity( template )
 			# print stego_capacity
-			inter_product = self.intermediate_function( "0" * stego_capacity, False )	# Need a valid decodable data string "0000..." is valid hex
+			inter_product = self.intermediate_function( "0" * stego_capacity, False )	# Need a valid decodable data string "0000..." is valid hex, base64, etc
 			intermediate_cap = len( inter_product )	 - self.tag_length # check the capacity of the data length after the intermediate function
 
-			self.streams_buckets[ template ]['chunker'] = AdHocChunker( intermediate_cap, intermediate_cap, reverse = reverse )
+			# self.streams_buckets[ template ]['chunker'] = AdHocChunker()
+
+
+	def useTemplate( self, template ) :
+		self.current_template = template
+
+
+	def lastReceivedTemplate( self ) :
+		return self.received_template
 
 
 	@copydoc(Orchestrator.readyMessage)
-	def readyMessage( self, message, stream = None, template = None ) :
-		"""
-:param str template: The template to inject the chunks into. If `None` the default template will be used.
-		"""
-		if template == None :
-			template = self.main_template
+	def readyMessage( self, message, stream = None ) :
 
+		template = self.current_template
 		if stream == None :
 			stream = self.default_stream
 
+		template_capacity = self.stego_injector.getCapacity( template )
+		self.streams_buckets[ stream ]['chunker'].setChunkSize( template_capacity )
 		chunks = super( StegoOrchestrator, self ).readyMessage( message, stream )
 
 		ready_chunks = []
 		for chunk in chunks :
-
-			# print chunk.encode('hex')
 			modified_chunk = self.intermediate_function( chunk, True )
-
 			injected = self.stego_injector.inject( modified_chunk, template )
-			transformed = self.data_tranformer.runAll( injected, template + "_alt" )	# needs to be documented
+			alterations = self.getAlterations( template )
+			transformed = injected
+			for alteration_templ in alterations :
+				transformed = self.data_tranformer.runAll( transformed, alteration_templ )	# needs to be documented
 
 			ready_chunks.append( transformed )
-
 		return ready_chunks
+
+
+	def getAlterations( self, template ) :
+		templates = self.stego_injector.getTemplates()
+		ret = []
+		for templ in templates :
+			if templ.startswith( template+"_alt" ) :
+				ret.append( templ )
+		return ret
 
 
 	@copydoc(Orchestrator.depositChunk)
 	def depositChunk( self, chunk ) :
 
 		templ = self.stego_injector.guessTemplate( chunk )[0]
+		self.received_template = templ
 		extr_data = self.stego_injector.extract( chunk, templ )
 		chunk = self.intermediate_function( extr_data, False )
 
 		ret = super( StegoOrchestrator, self ).depositChunk( chunk )
 		return ret
+
+
+	def addStream( self, stream ) :
+		super( StegoOrchestrator, self ).addStream( stream )
+		self.streams_buckets[ stream ]['chunker'] = AdHocChunker()

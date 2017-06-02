@@ -26,7 +26,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 	__pass_encryptor = ascii_letters * 10
 
-	def __init__( self, passphrase, tag_length, cycling_algorithm = None, streams = [], reverse = False ) :
+	def __init__( self, passphrase, tag_length, cycling_algorithm = None, streams = [], reverse = False, history = 1 ) :
 		self.compressor = Compressor()
 
 		self.cycling_algorithm = cycling_algorithm
@@ -58,6 +58,8 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 			self.addStream( stream )
 
 		self.tag_length = tag_length
+		self.history_queue = []
+		self.history_length = history
 
 
 	def deleteStream( self, stream ) :
@@ -78,6 +80,15 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		chunker = self.streams_buckets[ stream ]['chunker']
 		return chunker
 
+
+	def __add_to_history( self, chunk ) :
+		while len(self.history_queue) > self.history_length :
+			self.history_queue.pop()
+		self.history_queue.insert( 0, chunk )
+
+
+	def getHistoryChunk( self, index = 0 ) :
+		return self.history_queue[ index ]
 
 
 	def getStreamDict( self ) :

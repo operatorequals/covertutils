@@ -298,6 +298,8 @@ Example ::
 
 	def __initializeInjection( self, data_len, template, pkt = None ) :
 
+		if template not in self.__packets.keys() :
+			raise TemplateNotFoundException( "Template '%s' is not available" % template)
 		sample_packet  = self.__packets[ template ][0]
 		sample_capacity = self.getCapacity( template )
 
@@ -396,6 +398,8 @@ Example ::
 
 		extract_dict = {}
 		pkt_hex = pkt.encode( 'hex' )
+		if template not in self.__packets.keys() :
+			raise TemplateNotFoundException( "Template '%s' is not available" % template)
 		sample_hex, sample_cap = self.__packets[ template ]
 		data = ''
 		sample_hex = bytearray(sample_hex)

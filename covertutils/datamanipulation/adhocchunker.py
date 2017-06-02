@@ -21,7 +21,11 @@ The dechunking works by first identifying the byte length of the whole message a
 		self.reset()
 
 
-	def chunkMessage( self, payload, chunk_size = 10 ) :
+	def setChunkSize( self, chunk_size ) :
+		self.chunk_size = chunk_size - self.tag_length
+
+
+	def chunkMessage( self, payload, chunk_size = None ) :
 		"""
 :param str payload: The raw data to be chunked in bytes.
 :rtype: list
@@ -29,6 +33,12 @@ The dechunking works by first identifying the byte length of the whole message a
 		"""
 		data = self.__prepareMessage( payload )
 		chunks = []
+
+		if not chunk_size :
+			chunk_size = self.chunk_size
+
+		# self.setChunkSize( chunk_size )
+
 		while data :
 
 			if len(data) >= chunk_size :
@@ -115,6 +125,8 @@ Resets all partially assembled messages.
 		"""
 		self.__message = ''
 		self.remaining_bytes = 0
+		self.chunk_size = 0
+
 
 
 	def chunkMessageToStr( self, payload ) :

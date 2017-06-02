@@ -73,17 +73,22 @@ Runs all Tranformations in the `transformation_list` that relate to the specifie
 			in_template, in_tag = in_template_tag.split(':')
  			(out_struct, in_struct) = struct_strs
 
-			if template != out_template :
-				continue
+			# if template != out_template :
+			# 	continue
+			print "Transforming"
 
 			out_data = self.injector.extractByTag( pkt, template )[ out_tag ]
 			structed_data = unpack( out_struct, out_data )[0]
+#		==========================
 			_data_ = structed_data
 			output_data = eval( eval_str )
+			print structed_data, eval_str, output_data
+#		==========================
 			injectable_data = pack( in_struct, output_data )
-			injectable_dict = {'X' : injectable_data}
+			# injectable_dict = {'X' : injectable_data }
 			# print injectable_data.encode('hex')
 			# print self.injector.getCapacity( template ), len( injectable_data)
-			pkt = self.injector.injectByTag( injectable_dict, template, pkt  )
+			# pkt = self.injector.injectByTag( injectable_dict, template, pkt  )
+			pkt = self.injector.inject( injectable_data, template, pkt  )
 
 		return pkt
