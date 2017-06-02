@@ -34,7 +34,6 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
  - :class:`covertutils.datamanipulation.StegoInjector`
  - :class:`covertutils.datamanipulation.DataTransformer`
 
-
 	"""
 
 	def __init__( self, passphrase, stego_config, main_template, transformation_list = [], tag_length = 2, cycling_algorithm = None, streams = ['main'], intermediate_function = _dummy_function, reverse = False ) :
@@ -55,7 +54,6 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 
 		self.main_template = main_template
 		self.current_template = main_template
-		# streams = self.stego_injector.getTemplates()
 
 		super( StegoOrchestrator, self ).__init__( passphrase, tag_length, cycling_algorithm, streams, reverse )
 
@@ -63,17 +61,31 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 			stego_capacity = self.stego_injector.getCapacity( template )
 			# print stego_capacity
 			inter_product = self.intermediate_function( "0" * stego_capacity, False )	# Need a valid decodable data string "0000..." is valid hex, base64, etc
-			intermediate_cap = len( inter_product )	 - self.tag_length # check the capacity of the data length after the intermediate function
-
-			# self.streams_buckets[ template ]['chunker'] = AdHocChunker()
+			intermediate_cap = len( inter_product )	 - self.tag_length 		# check the capacity of the data length after the intermediate function
 
 
 	def useTemplate( self, template ) :
+		"""
+:param str template: The template to use for the next Message. Use `None` for random templates.
+		"""
 		self.current_template = template
 
 
 	def lastReceivedTemplate( self ) :
+		"""
+:rtype: str
+:return: Returns the last template received.
+		"""
 		return self.received_template
+
+
+	def __getAlterations( self, template ) :
+		templates = self.stego_injector.getTemplates()
+		ret = []
+		for templ in templates :
+			if templ.startswith( template+"_alt" ) :
+				ret.append( templ )
+		return ret
 
 
 	@copydoc(Orchestrator.readyMessage)
@@ -91,22 +103,13 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 		for chunk in chunks :
 			modified_chunk = self.intermediate_function( chunk, True )
 			injected = self.stego_injector.inject( modified_chunk, template )
-			alterations = self.getAlterations( template )
+			alterations = self.__getAlterations( template )
 			transformed = injected
 			for alteration_templ in alterations :
 				transformed = self.data_tranformer.runAll( transformed, alteration_templ )	# needs to be documented
 
 			ready_chunks.append( transformed )
 		return ready_chunks
-
-
-	def getAlterations( self, template ) :
-		templates = self.stego_injector.getTemplates()
-		ret = []
-		for templ in templates :
-			if templ.startswith( template+"_alt" ) :
-				ret.append( templ )
-		return ret
 
 
 	@copydoc(Orchestrator.depositChunk)

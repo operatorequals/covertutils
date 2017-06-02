@@ -190,3 +190,44 @@ The most engineered class in the whole project.
 	>>> sinj.guessTemplate(payload)
 	('sample1', 1.0)		# 	(template_name, possibility)
 	>>>
+
+
+Steganography Packet Templating
+-------------------------------
+
+HTTP Protocol Stego
+*******************
+
+.. code:: python
+
+	>>> from covertutils.datamanipulation import asciiToHexTemplate
+	>>>
+	>>> search_request="""GET /search.php?q=~~~~~~~~?userid=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HTTP/1.1
+	... Host: {0}
+	... Cookie: SESSIOID=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	... eTag: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	...
+	... """
+	>>> search_template = asciiToHexTemplate(search_request)
+	>>>
+	>>> print search_template
+	0a474554202f7365617263682e7068703f713dXXXXXXXXXXXXXXXX3f7573657269643dXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX20485454502f312e310a486f73743a207b307d0a436f6f6b69653a2053455353494f49443dXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX0a655461673a20XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX0a0a
+	>>>
+	>>> stego_config = """
+	... X:_data_:
+	... search='''%s'''
+	... """ % search_template
+	>>>
+	>>> from covertutils.datamanipulation import StegoInjector
+	>>>
+	>>> sinj = StegoInjector(stego_config)
+	>>> sinj.getCapacityDict( 'search' )
+	{'X': 212}
+	>>>
+	>>> packet = sinj.inject("A"*212, 'search')
+	>>> print packet
+	GET /search.php?q=AAAAAAAA?userid=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA HTTP/1.1
+	Host: {0}
+	Cookie: SESSIOID=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	eTag: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	>>>

@@ -19,6 +19,14 @@ covertutils.handlers.basehandler module
     :undoc-members:
     :show-inheritance:
 
+covertutils.handlers.buffering module
+-------------------------------------
+
+.. automodule:: covertutils.handlers.buffering
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.handlers.functiondict module
 ----------------------------------------
 

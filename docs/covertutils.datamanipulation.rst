@@ -4,6 +4,14 @@ covertutils.datamanipulation package
 Submodules
 ----------
 
+covertutils.datamanipulation.adhocchunker module
+------------------------------------------------
+
+.. automodule:: covertutils.datamanipulation.adhocchunker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.datamanipulation.chunker module
 -------------------------------------------
 

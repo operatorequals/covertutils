@@ -10,6 +10,8 @@ Subpackages
     covertutils.datamanipulation
     covertutils.handlers
     covertutils.orchestration
+    covertutils.pivots
+    covertutils.prompts
 
 Submodules
 ----------
