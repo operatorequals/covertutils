@@ -28,12 +28,6 @@ https://securosophy.com/2017/04/22/reinventing-the-wheel-for-the-last-time-the-c
 
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-
-As the *covertutils API* Toc-Tree is huge (due to the *single-class* coding style), it is really handy to use the search page of sphinx.
+As the *covertutils API* Toc-Tree is **huge** (due to the *single-module=single-class* code organizing), it is really handy to use the **search page** of sphinx.
 
 * :ref:`search`

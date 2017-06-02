@@ -34,7 +34,7 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 :param int out_length: The data length of the chunks that are returned by the :func:`covertutils.orchestration.SimpleOrchestrator.readyMessage`.
 :param int in_length: The data length of the chunks that will be passed to :func:`covertutils.orchestration.SimpleOrchestrator.depositChunk`.
 :param list streams: The list of all streams needed to be recognised by the `SimpleOrchestrator`. A "control" stream is always hardcoded in a `SimpleOrchestrator` object.
-:param class cycling_algorithm: The hashing/cycling function used in all crypto and stream identification. If not specified the :class:`covertutils.crypto.algorithms.StandardCyclingAlgorithm` will be used. The :class:`hashlib.sha256` is a great choice if `hashlib` is available.
+:param class cycling_algorithm: The hashing/cycling function used in all OTP crypto and stream identification. If not specified the  :class:`covertutils.crypto.algorithms.StandardCyclingAlgorithm` will be used. The :class:`hashlib.sha256` is a great choice if `hashlib` is available.
 :param bool reverse: If this is set to `True` the `out_length` and `in_length` are internally reversed in the instance. This parameter is typically used to keep the parameter list the same between 2 `SimpleOrchestrator` initializations, yet make them `compatible`.
 		"""
 		self.out_length = out_length - tag_length
@@ -47,7 +47,6 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 
 	@copydoc(Orchestrator.addStream)
 	def addStream( self, stream ) :
-
 		super(SimpleOrchestrator, self).addStream( stream )
 		self.streams_buckets[ stream ]['chunker'] = Chunker( self.out_length,
 															self.in_length,

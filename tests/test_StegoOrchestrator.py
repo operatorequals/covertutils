@@ -8,6 +8,16 @@ from covertutils.datamanipulation import StegoInjector
 from random import randint
 from os import urandom
 
+
+
+
+def hexall( data, encode = False ) :
+	if encode :
+		return data.encode('hex')
+	return data.decode('hex')
+
+
+
 class Test_StegoOrchestrator( unittest.TestCase ) :
 
 
@@ -68,3 +78,12 @@ simple_alt='''41420000000000000000XXXX'''
 
 			print stream ,message
 		self.failUnless( data == message )
+	# 
+	#
+	#
+	#
+	# def test_intermediate_function( self ) :
+	#
+	# 	orch1 = StegoOrchestrator( "a", self.stego_conf, "simple", intermediate_function = hexall )
+	#
+	# 	chunks = orch1.readyMessage( "a", 'main' )

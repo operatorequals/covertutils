@@ -21,7 +21,7 @@ doc : docs
 
 
 see_doc : doc
-	firefox $(PWD)/docs/_build/html/index.html
+	firefox $(PWD)/docs/_build/html/index.html &
 
 
 gh-pages : doc

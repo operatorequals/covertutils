@@ -27,13 +27,15 @@ class StegoOrchestrator ( Orchestrator ) :
 	"""
 The `StegoOrchestrator` class combines compression, chunking, encryption, stream tagging and steganography injection, by utilizing the below `covertutils` classes:
 
- - :class:`covertutils.datamanipulation.Chunker`
+ - :class:`covertutils.datamanipulation.AdHocChunker`
  - :class:`covertutils.datamanipulation.Compressor`
  - :class:`covertutils.crypto.keys.StandardCyclingKey`
  - :class:`covertutils.orchestration.StreamIdentifier`
  - :class:`covertutils.datamanipulation.StegoInjector`
  - :class:`covertutils.datamanipulation.DataTransformer`
 
+
+The `StegoOrchestrator` packs `(stream, message)` pairs in predefined data templates.
 	"""
 
 	def __init__( self, passphrase, stego_config, main_template, transformation_list = [], tag_length = 2, cycling_algorithm = None, streams = ['main'], intermediate_function = _dummy_function, reverse = False ) :
@@ -41,7 +43,10 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 :param str stego_config: The configuration that is passed to :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`.
 :param str main_template: The default template that will be used in :func:`readyMessage()` `template` argument.
 :param list transformation_list: The Transformation List that is passed to the :class:`covertutils.datamanipulation.datatransformer.DataTransformer` object.
+:param class cycling_algorithm: The hashing/cycling function used in all OTP crypto and stream identification. If not specified the  :class:`covertutils.crypto.algorithms.StandardCyclingAlgorithm` will be used. The :class:`hashlib.sha256` is a great choice if `hashlib` is available.
+:param list streams: The list of all streams needed to be recognised by the `SimpleOrchestrator`. A "control" stream is always hardcoded in a `SimpleOrchestrator` object.
 :param func intermediate_function: A *codec* function with signature `codec( data, encode = False )`. The function is called before and injection of a chunk with *encode = True* and after the extraction of a chunk with *encode = False*.
+:param bool reverse: If this is set to `True` the `out_length` and `in_length` are internally reversed in the instance. This parameter is typically used to keep the parameter list the same between 2 `SimpleOrchestrator` initializations, yet make them `compatible`.
 		"""
 		self.intermediate_function = intermediate_function
 		self.stego_injector = StegoInjector( stego_config )
@@ -124,6 +129,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 		return ret
 
 
+	@copydoc(Orchestrator.addStream)
 	def addStream( self, stream ) :
 		super( StegoOrchestrator, self ).addStream( stream )
 		self.streams_buckets[ stream ]['chunker'] = AdHocChunker()
