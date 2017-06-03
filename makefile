@@ -3,8 +3,7 @@ PY=$(which python)
 PY='python'
 
 clean :
-	rm covertutils/*.pyc tests/*.pyc 2>/dev/null
-
+	find ./covertutils/ tests/ -name "*.pyc" -exec rm {} \;
 
 test :
 	clear;$(PY) -m unittest  discover -v  ./tests

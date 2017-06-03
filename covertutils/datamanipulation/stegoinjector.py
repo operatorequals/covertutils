@@ -80,8 +80,9 @@ class StegoInjector :
 	__not_permitted_chars = '1234567890ABCDEFabcdef'
 
 
-	def __init__( self, stego_template ) :
+	def __init__( self, stego_template, hex_inject = False ) :
 
+		self.hex_inject = hex_inject
 		self.__tags, self.__packets = self.__parseStegoScheme( stego_template )
 		# print self.__packets
 
@@ -148,7 +149,6 @@ class StegoInjector :
 
 			if self.__checkPermittedChars( hex_pkt, tag_dict.keys() ) :
 
-
 				cap = self.__getCapacityDict( hex_pkt , tag_dict.keys() )
 				pkt_dict[ pkt_name ] = ( hex_pkt, cap )
 
@@ -196,6 +196,9 @@ Example ::
 		caps = {}
 		for tag in tag_chars :
 			caps[tag] = pkt.count(tag) / 2 	# in bytes
+			if self.hex_inject :			# if bytes injected in hex
+				caps[tag] = caps[tag] / 2	# furtherly divide by 2
+
 		return caps
 
 
@@ -285,6 +288,10 @@ Example ::
 		data_len = len( data )
 		hex_pkt, sample_capacity = self.__initializeInjection( data_len, template, pkt )
 		hex_pkt = str(hex_pkt)
+
+		if self.hex_inject :
+			data = data.encode('hex')
+
 		injection_dict = self.__createInjectionDict( hex_pkt, data, sample_capacity )
 
 		inj_hex_pkt = self.__injectFromDict( hex_pkt, injection_dict, sample_capacity )
@@ -307,6 +314,8 @@ Example ::
 			pkt = deepcopy( sample_packet )			# COPY DEEPLY
 		else :
 			pkt = pkt.encode('hex')
+
+
 
 		if data_len != sample_capacity :
 			raise StegoDataInjectionException( "Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity) )
@@ -346,6 +355,7 @@ Example ::
 		for tag in injection_dict.keys() :
 			injection_dict[tag] = bytearray(injection_dict[tag].decode('hex') )
 
+		# print len( data_hex )
 		assert len( data_hex ) == 0
 		return injection_dict
 
@@ -427,6 +437,9 @@ Example ::
 							( raw_byte_, extr_function, len(pkt), byte_index, sample_cap )
 				extract_data_ += data_byte_
 				# print hex_str+"->"+data_byte_.encode('hex')
+			if self.hex_inject :
+				extract_data_ = extract_data_.decode('hex')
+
 			extract_dict[tag] = bytearray( extract_data_ )
 
 			# print sample_hex

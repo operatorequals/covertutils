@@ -232,3 +232,20 @@ data2="""44X44X4141Y4141Y44X43X"""
 		testable = "\xFF\x0F\xF0\xFF\xFF\x0F\xFF\xF0\xFF\x0F\xF0"
 		# print testable.encode('hex')
 		self.failUnless( inj_pkt == testable)
+
+
+
+	def test_injection_from_text_to_hex( self, n = 4) :
+		config = '''
+X:_data_:
+Y:_data_:
+
+data1="""44444444%s41414141%s"""
+		''' % ("X"*n, "Y"*n)
+		data = 'aa'
+		psi = StegoInjector( config, hex_inject = True )
+		stego_pkt = psi.inject(data, template = 'data1')
+
+		extracted = psi.extract( stego_pkt, 'data1' )
+		self.failUnless( extracted == data )
+		# self.failUnless( stego_pkt == 'DDDD61AAAA61')

@@ -34,9 +34,6 @@ simple_alt='''41420000000000000000XXXX'''
 	"""
 
 
-
-
-
 	def setUp(self) :
 
 		self.orch1 = StegoOrchestrator( "a", self.stego_conf, "simple" )
@@ -46,7 +43,7 @@ simple_alt='''41420000000000000000XXXX'''
 		self.orch4 = StegoOrchestrator( "a", self.stego_conf, "simple", self.alt_configuration, reverse = True )
 
 
-	def test_functionality( self, n = 100, l = 10 ) :
+	def test_functionality( self, n = 50, l = 40 ) :
 
 		for i in range(n) :
 
@@ -54,12 +51,14 @@ simple_alt='''41420000000000000000XXXX'''
 			data = urandom( ldata )
 
 			chunks = self.orch1.readyMessage( data, 'main' )
+			print chunks[0].encode('hex')
 
 			for chunk in chunks :
 				stream, message = self.orch2.depositChunk( chunk )
-				print stream, chunk
+				print stream, chunk, message
+				assert stream != None
 
-			# print message, data
+			print message.encode('hex'), data.encode('hex')
 			self.failUnless( data == message )
 
 
@@ -73,17 +72,29 @@ simple_alt='''41420000000000000000XXXX'''
 
 		for chunk in chunks :
 			stream, message = self.orch2.depositChunk( chunk )
-			print chunk
+			# print chunk
 			self.failUnless( chunk.encode('hex')[-4:] == '4345' )	# Testing the alteration
 
-			print stream ,message
+			# print stream ,message
 		self.failUnless( data == message )
-	# 
-	#
-	#
-	#
-	# def test_intermediate_function( self ) :
-	#
-	# 	orch1 = StegoOrchestrator( "a", self.stego_conf, "simple", intermediate_function = hexall )
-	#
-	# 	chunks = orch1.readyMessage( "a", 'main' )
+
+
+
+
+	def test_intermediate_function( self ) :
+
+
+		stego_conf = """
+		X:_data_:
+		Y:_data_:
+		Z:_data_:
+
+		simple='''4142XXXXXXXXYYYYYYYY4344'''
+
+		simple_alt='''41420000000000000000XXXX'''
+			"""
+
+		orch1 = StegoOrchestrator( "a", stego_conf, "simple", hex_inject = True )
+		chunks = orch1.readyMessage( "a", 'main' )
+
+		print chunks

@@ -3,6 +3,8 @@ from string import ascii_letters
 from covertutils.crypto.keys import StandardCyclingKey
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
+from covertutils.helpers import sxor, xor_str
+
 from covertutils.exceptions import *
 
 
@@ -12,7 +14,8 @@ class StreamIdentifier :
 
 	def __init__( self, passphrase, stream_list = [], cycling_algorithm = None, reverse = False, hard_stream = 'control' ) :
 
-		self.cycle = False		# For testing
+		self.cycle = True		# For testing
+		# self.cycle = False		# For testing
 		if cycling_algorithm == "No" :
 			self.cycle = False
 
@@ -69,7 +72,7 @@ class StreamIdentifier :
 		StandardCyclingKeys = self.__streams[ stream_name ]
 		out_StandardCyclingKey = self.__streams[ stream_name ][1]
 
-		ident = out_StandardCyclingKey.xor( self.__comparer[:byte_len] )
+		ident = out_StandardCyclingKey.xor( self.__comparer[:byte_len], cycle = False )
 
 		hardIdentify = (stream_name == self.__hard_stream)
 		self.__cycleKey( out_StandardCyclingKey, hardIdentify )
@@ -84,10 +87,13 @@ class StreamIdentifier :
 			inp_StandardCyclingKey = StandardCyclingKeys[0]
 			hardIdentify = (stream_name == self.__hard_stream)
 
-			plain = inp_StandardCyclingKey.xor( bytes_ )
-			if plain == self.__comparer[:byte_len] :
+			comparer = self.__comparer[:byte_len]
+			plain = inp_StandardCyclingKey.xor( bytes_, cycle = False )
+
+			if plain == comparer :
 				self.__cycleKey( inp_StandardCyclingKey, hardIdentify )
 				return stream_name
+
 		return None
 
 

@@ -112,9 +112,9 @@ class TestOrchestrator( unittest.TestCase ) :
 				orch2.depositChunk( chunk )
 
 			d2 = orch2.getStreamDict()
-			# pprint( d )
+			pprint( d )
 			# print '============'
-			# pprint( d2 )
+			pprint( d2 )
 			print "[*] Round %d. Accumulated %d bytes" % ( repetition, byte_n )
 			self.failUnless( d == d2 )
 

@@ -57,3 +57,28 @@ class TestKeys(unittest.TestCase) :
 		plain = k2.xor(crypt1)
 		# print plain[-10:], self.plaintext[-10:]
 		self.failUnless( plain == self.plaintext )
+
+
+	def test_small_char( self, n = 32 ) :
+
+		data = 'a'
+		pass_ = urandom( n )
+		k1 = StandardCyclingKey( pass_ )
+		k2 = StandardCyclingKey( pass_ )
+
+		encrypted_list = []
+		for i in range( n ) :
+			# print k1.getCycles(), k1.getKeyBytes().encode('hex')
+			encr = k1.encrypt( data )
+			# print encr.encode('hex')
+			encrypted_list.append( encr )
+		encrypted = set (encrypted_list)
+		self.failUnless( len(encrypted) > 1)
+
+		print
+		for encr in encrypted_list :
+			# print k2.getCycles(), k2.getKeyBytes().encode('hex')
+			decr = k2.decrypt( encr )
+			# print encr.encode('hex')
+
+			self.failUnless( decr == 'a' )

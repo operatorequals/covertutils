@@ -75,14 +75,13 @@ Runs all Tranformations in the `transformation_list` that relate to the specifie
 
 			# if template != out_template :
 			# 	continue
-			print "Transforming"
 
 			out_data = self.injector.extractByTag( pkt, template )[ out_tag ]
 			structed_data = unpack( out_struct, out_data )[0]
 #		==========================
 			_data_ = structed_data
 			output_data = eval( eval_str )
-			print structed_data, eval_str, output_data
+			# print structed_data, eval_str, output_data
 #		==========================
 			injectable_data = pack( in_struct, output_data )
 			# injectable_dict = {'X' : injectable_data }

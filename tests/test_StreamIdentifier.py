@@ -37,9 +37,9 @@ class TestStreamIdentifier( unittest.TestCase ) :
 
 	def testGuess( self, n = 100 ) :
 		idents = (self.id_1, self.id_2)
-		for i in range(n) :
 
-			chosen = randint(1,100) % 2
+		for i in range(n) :
+			chosen = randint(1, 100) % 2
 			checker = 1 - chosen
 			ident1 = idents[chosen]
 			ident2 = idents[checker]
@@ -48,5 +48,5 @@ class TestStreamIdentifier( unittest.TestCase ) :
 
 			guess = ident2.checkIdentifier(tag)
 
-			# print "%s) Tagger:%d. [%s] - %s > %s" % ( i, chosen, stream, guess, tag.encode('hex') )
+			print "%s) Tagger:%d. [%s] - %s > %s" % ( i, chosen, stream, guess, tag.encode('hex') )
 			self.failUnless( stream == guess )

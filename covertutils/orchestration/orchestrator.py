@@ -26,7 +26,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 	__pass_encryptor = ascii_letters * 10
 
-	def __init__( self, passphrase, tag_length, cycling_algorithm = None, streams = [], reverse = False, history = 1 ) :
+	def __init__( self, passphrase, tag_length, cycling_algorithm = None, streams = [], history = 1, reverse = False ) :
 		self.compressor = Compressor()
 
 		self.cycling_algorithm = cycling_algorithm
@@ -37,7 +37,6 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		pass1 = passGenerator.encrypt( self.__pass_encryptor )
 		pass2 = passGenerator.encrypt( self.__pass_encryptor )
 		pass3 = passGenerator.encrypt( self.__pass_encryptor )
-
 
 		self.encryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
 		self.decryption_key = StandardCyclingKey( pass3, cycling_algorithm = self.cycling_algorithm )
@@ -149,7 +148,7 @@ This method resets all components of the `Orchestrator` instance, effectively re
 		for chunk in chunks :
 			tag = self.streamIdent.getIdentifierForStream( stream,
 														byte_len = self.tag_length )
-			encr_chunk = self.encryption_key.xor( chunk )
+			encr_chunk = self.encryption_key.encrypt( chunk )
 
 			ready = self.__addTag(encr_chunk, tag)
 			ready_chunks.append( ready )
@@ -170,7 +169,7 @@ This method resets all components of the `Orchestrator` instance, effectively re
 			return None, None
 
 		chunker = self.getChunkerForStream( stream )
-		decr_chunk = self.decryption_key.xor( chunk )
+		decr_chunk = self.decryption_key.decrypt( chunk )
 		status, message = chunker.deChunkMessage( decr_chunk )
 		if status :
 			message = self.compressor.decompress( message )

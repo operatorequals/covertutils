@@ -93,15 +93,19 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 		return key[:length]
 
 
-	def xor( self, message ) :
-		key = self.current_key
+	def xor( self, message, cycle = True ) :
 
+		key = self.current_key
 		final_key = key
 		while  len(message) > len(final_key) :
-			self.cycle()
+			if cycle :
+				self.cycle()
 			final_key += self.getKeyBytes()[:2*self.getKeyLength()/3]	# 2/3 of the current key length will be used as key
 		s1 = message
 		s2 = final_key
+
+		if cycle :
+			self.cycle()
 		ret = ''.join(sxor(a,b) for a,b in zip(s1,s2))
 		# LOG.debug("XORING:\n%s\n%s\n-> %s" % (s1.encode('hex'), s2.encode('hex'), ret.encode('hex')))
 		return ret
