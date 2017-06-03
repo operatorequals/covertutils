@@ -4,7 +4,7 @@ from covertutils.handlers import BaseHandler
 from covertutils.helpers import defaultArgMerging
 
 from threading import Condition, Thread
-from queue import Queue
+from multiprocessing import Queue
 
 
 class BufferingHandler( BaseHandler ) :
