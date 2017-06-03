@@ -9,12 +9,12 @@ test :
 	clear;$(PY) -m unittest  discover -v  ./tests
 
 
-docs :
-	mkdir docs
+# docs :
+# 	mkdir docs
 
 
-doc : docs
-	cd docs/;
+doc :
+	# cd docs/;
 	sphinx-apidoc ./covertutils/ -P -f -o docs/
 	cd docs/;make html
 

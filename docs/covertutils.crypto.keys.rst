@@ -20,6 +20,14 @@ covertutils.crypto.keys.encryptionkey module
     :undoc-members:
     :show-inheritance:
 
+covertutils.crypto.keys.hailstonekey module
+-------------------------------------------
+
+.. automodule:: covertutils.crypto.keys.hailstonekey
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.crypto.keys.standardcyclingkey module
 -------------------------------------------------
 
