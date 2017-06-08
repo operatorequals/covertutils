@@ -26,7 +26,7 @@ orch2 = SimpleOrchestrator( passp,
 recvd1 = []
 def dummy_receive1( ) :
     while not recvd1 :
-        sleep(0.0001)
+        sleep(0.001)
     return recvd1.pop(0)
 
 def dummy_send1( raw ) :
@@ -36,7 +36,7 @@ def dummy_send1( raw ) :
 recvd2 = []
 def dummy_receive2( ) :
     while not recvd2 :
-        sleep(0.0001)
+        sleep(0.001)
     return recvd2.pop(0)
 
 def dummy_send2( raw ) :

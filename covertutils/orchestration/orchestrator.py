@@ -40,8 +40,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		pass3 = passGenerator.encrypt( self.__pass_encryptor )
 		pass4 = passGenerator.encrypt( self.__pass_encryptor )
 
-		identity_str = pass4 + str(tag_length) + str(set(streams))
-		self.identity = self.cycling_algorithm( identity_str ).hexdigest()
+		self.identity = self.generateIdentity( pass4, str(tag_length), str(set(streams)) )
 
 		self.encryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
 		self.decryption_key = StandardCyclingKey( pass3, cycling_algorithm = self.cycling_algorithm )
@@ -64,10 +63,16 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		self.history_queue = []
 		self.history_length = history
 
+	def generateIdentity( self, *args ) :
+		identity_str = ''.join( args )
+		return  self.cycling_algorithm( identity_str ).hexdigest()
 
-	def getIdentity( self, length = None ) :
-		if length == None :
-			length = 16
+
+
+	def getIdentity( self, length = 16 ) :
+		"""
+:param int length: The length of hex bytes to be returned. Defaults to '16'. If a number greater than the available `identity` string is passed, the whole `identity` hash will be returned.
+		"""
 		ret = self.identity[:length]
 		if self.reverse :
 			true_str = 'F' * length
@@ -76,6 +81,12 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 
 	def checkIdentity( self, identity ) :
+		"""
+:param str identity: The identity hash of the `Orchestrator` object to be checked for compatibility.
+:rtype bool:
+:return: Returns `True` if the `Orchestrator` with the passed identity is compatible, `False` if it has the same specs but needs the `reverse` argument toggled, and `None` if it is incompatible (initialized with different *password*, *tag_length*, *streams*, etc).
+
+		"""
 		length = len(identity)
 		my_id = self.getIdentity( length )
 		if identity == my_id : return False
