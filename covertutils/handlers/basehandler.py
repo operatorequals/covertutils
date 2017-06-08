@@ -119,3 +119,13 @@ If `stream` is `None`, the default Orchestrator's stream will be used.
 			raw_data = self.receive_function()
 			stream, message = self.orchestrator.depositChunk( raw_data )
 			self.__consume( stream, message )
+
+
+	def getOrchestrator( self ) :
+		"""
+
+:rtype: `Orchestrator`
+:return: Returns the Orchestrator object used to create this `Handler` instance.
+
+		"""
+		return self.orchestrator

@@ -50,5 +50,5 @@ class MyHandler( BaseHandler ) :
 
 handler = MyHandler( recv, send, orch )
 
-prompt = TextPrompt(orch, handler, "(%s:%d) [stream:{0}]$ " % addr)
+prompt = TextPrompt(handler, "(%s:%d) [stream:{0}]$ " % addr)
 prompt.cmdloop()

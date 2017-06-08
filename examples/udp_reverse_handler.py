@@ -60,5 +60,5 @@ handler = MyHandler( recv, send, orch )
 # 		handle.sendAdHoc( c, 'control' )
 # 	sleep(0.1)
 
-prompt = TextPrompt(orch, handler, "(%s:%d) [stream:{0}]$ " % addr)
+prompt = TextPrompt(handler, "(%s:%d) [stream:{0}]$ " % addr)
 prompt.cmdloop()

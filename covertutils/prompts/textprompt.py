@@ -6,13 +6,13 @@ import covertutils
 class TextPrompt( cmd.Cmd ) :
 
 	modifier_char = '!'
-	def __init__( self, orchestrator, handler, prompt = "(%s v%s)[{0}]> " % ( covertutils.__name__, covertutils.__version__ ) ) :
+	def __init__( self, handler, prompt = "(%s v%s)[{0}]> " % ( covertutils.__name__, covertutils.__version__ ) ) :
 
 		cmd.Cmd.__init__(self)
 
 		self.handler = handler
 		self.prompt_templ = prompt
-		self.orchestrator = orchestrator
+		self.orchestrator = handler.getOrchestrator()
 		self.current_stream = self.orchestrator.getDefaultStream()
 		self.__updatePrompt()
 
@@ -32,7 +32,10 @@ class TextPrompt( cmd.Cmd ) :
 		line = line[1:]
 		if line in self.availableStreams() :
 			self.current_stream = line
+		else :
+			print "Available streams:\n	[+] " + '	\n	[+] '.join(self.availableStreams())
 		self.__updatePrompt()
+
 
 	def emptyline( self ) :
 		return
