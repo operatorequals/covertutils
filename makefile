@@ -3,7 +3,8 @@ PY=$(which python)
 PY='python'
 
 clean :
-	find ./covertutils/ tests/ -name "*.pyc" -exec rm {} \;
+	find ./covertutils/ tests/ examples/ -name "*.pyc" -exec rm {} \;
+	rm -r docs/_build/
 
 test :
 	clear;$(PY) -m unittest  discover -v  ./tests
@@ -47,7 +48,7 @@ cov-badge :
 
 
 run :
-	PYTHONPATH=".:PYTHONPATH" ${EX}
+	PYTHONPATH=".:${PYTHONPATH}" ${EX}
 
 
 compile :

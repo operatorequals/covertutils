@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
+from covertutils.prompts import TextPrompt
 
 import sys
 import socket
@@ -50,11 +51,14 @@ class MyHandler( BaseHandler ) :
 		print message
 
 
-handle = MyHandler( recv, send, orch )
+handler = MyHandler( recv, send, orch )
 
-while True :
+# while True :
+#
+# 	if synchronized :
+# 		c = raw_input("(%s:%d) $ " % addr)
+# 		handle.sendAdHoc( c, 'control' )
+# 	sleep(0.1)
 
-	if synchronized :
-		c = raw_input("(%s:%d) $ " % addr)
-		handle.sendAdHoc( c, 'control' )
-	sleep(0.1)
+prompt = TextPrompt(orch, handler, "(%s:%d) [stream:{0}]$ " % addr)
+prompt.cmdloop()

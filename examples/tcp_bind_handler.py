@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
+from covertutils.prompts import TextPrompt
 
 import sys
 import socket
@@ -40,10 +41,7 @@ class MyHandler( BaseHandler ) :
 	def onNotRecognised( self ) :
 		print "Got Garbage!"
 
+handler = MyHandler( recv, send, orch )
 
-handle = MyHandler( recv, send, orch )
-
-while True :
-	c = raw_input("(%s:%d) $ " % addr)
-	handle.sendAdHoc( c, 'control' )
-	sleep(0.1)
+prompt = TextPrompt(orch, handler, "(%s:%d) [stream:{0}]$ " % addr)
+prompt.cmdloop()
