@@ -8,6 +8,7 @@ from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
 from covertutils.orchestration import StreamIdentifier
 
+from covertutils.helpers import xor_str
 
 from string import ascii_letters
 from copy import deepcopy
@@ -37,6 +38,10 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		pass1 = passGenerator.encrypt( self.__pass_encryptor )
 		pass2 = passGenerator.encrypt( self.__pass_encryptor )
 		pass3 = passGenerator.encrypt( self.__pass_encryptor )
+		pass4 = passGenerator.encrypt( self.__pass_encryptor )
+
+		identity_str = pass4 + str(tag_length) + str(set(streams))
+		self.identity = self.cycling_algorithm( identity_str ).hexdigest()
 
 		self.encryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
 		self.decryption_key = StandardCyclingKey( pass3, cycling_algorithm = self.cycling_algorithm )
@@ -45,7 +50,6 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 			self.encryption_key, self.decryption_key = self.decryption_key, self.encryption_key
 
 		self.reverse = reverse
-
 		self.streamIdent = StreamIdentifier( pass1, reverse = reverse, stream_list = streams, cycling_algorithm = self.cycling_algorithm )
 
 		self.default_stream = self.streamIdent.getHardStreamName()
@@ -59,6 +63,26 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		self.tag_length = tag_length
 		self.history_queue = []
 		self.history_length = history
+
+
+	def getIdentity( self, length = None ) :
+		if length == None :
+			length = 16
+		ret = self.identity[:length]
+		if self.reverse :
+			true_str = 'F' * length
+			return xor_str( true_str.decode('hex'), ret.decode('hex') ).encode('hex')
+		return ret
+
+
+	def checkIdentity( self, identity ) :
+		length = len(identity)
+		my_id = self.getIdentity( length )
+		if identity == my_id : return False
+		ret = xor_str( my_id.decode('hex'), identity.decode('hex') )
+		if ret == '\xFF' * len(ret) :
+			return True
+		return None
 
 
 	def deleteStream( self, stream ) :
