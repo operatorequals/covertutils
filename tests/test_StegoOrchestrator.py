@@ -1,21 +1,11 @@
 import unittest
 
 from covertutils.orchestration import StegoOrchestrator
-
 from covertutils.datamanipulation import StegoInjector
 
 
 from random import randint
 from os import urandom
-
-
-
-
-def hexall( data, encode = False ) :
-	if encode :
-		return data.encode('hex')
-	return data.decode('hex')
-
 
 
 class Test_StegoOrchestrator( unittest.TestCase ) :
@@ -43,7 +33,7 @@ simple_alt='''41420000000000000000XXXX'''
 		self.orch4 = StegoOrchestrator( "a", self.stego_conf, "simple", self.alt_configuration, reverse = True )
 
 
-	def test_functionality( self, n = 50, l = 40 ) :
+	def test_functionality( self, n = 30, l = 40 ) :
 
 		for i in range(n) :
 
@@ -51,14 +41,14 @@ simple_alt='''41420000000000000000XXXX'''
 			data = urandom( ldata )
 
 			chunks = self.orch1.readyMessage( data, 'main' )
-			print chunks[0].encode('hex')
+			# print chunks[0].encode('hex')
 
 			for chunk in chunks :
 				stream, message = self.orch2.depositChunk( chunk )
-				print stream, chunk, message
+				# print stream, chunk, message
 				assert stream != None
 
-			print message.encode('hex'), data.encode('hex')
+			# print message.encode('hex'), data.encode('hex')
 			self.failUnless( data == message )
 
 
@@ -97,4 +87,4 @@ simple_alt='''41420000000000000000XXXX'''
 		orch1 = StegoOrchestrator( "a", stego_conf, "simple", hex_inject = True )
 		chunks = orch1.readyMessage( "a", 'main' )
 
-		print chunks
+		# print chunks

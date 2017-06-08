@@ -38,9 +38,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		pass1 = passGenerator.encrypt( self.__pass_encryptor )
 		pass2 = passGenerator.encrypt( self.__pass_encryptor )
 		pass3 = passGenerator.encrypt( self.__pass_encryptor )
-		pass4 = passGenerator.encrypt( self.__pass_encryptor )
-
-		self.identity = self.generateIdentity( pass4, str(tag_length), str(set(streams)) )
+		self.id_value = passGenerator.encrypt( self.__pass_encryptor )
 
 		self.encryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
 		self.decryption_key = StandardCyclingKey( pass3, cycling_algorithm = self.cycling_algorithm )
@@ -62,11 +60,12 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		self.tag_length = tag_length
 		self.history_queue = []
 		self.history_length = history
+		self.identity = self.generateIdentity( )
+
 
 	def generateIdentity( self, *args ) :
-		identity_str = ''.join( args )
+		identity_str =  ''.join([ str(x) for x in args ]) + self.id_value + str(self.tag_length) + str(set(self.streams_buckets.keys()))
 		return  self.cycling_algorithm( identity_str ).hexdigest()
-
 
 
 	def getIdentity( self, length = 16 ) :

@@ -85,10 +85,10 @@ The `StegoOrchestrator` packs `(stream, message)` pairs in predefined data templ
 
 		# template_capacity = self.stego_injector.getCapacity( template )
 		template_capacity = self.chunk_sizes[template]
-		print "Lengths: template_length = %d" % template_capacity
+		# print "Lengths: template_length = %d" % template_capacity
 		self.streams_buckets[ stream ]['chunker'].setChunkSize( template_capacity )
 		chunks = super( StegoOrchestrator, self ).readyMessage( message, stream )
-		print "Lengths: chunk_length = %d" % len(chunks[0])
+		# print "Lengths: chunk_length = %d" % len(chunks[0])
 
 		ready_chunks = []
 		for chunk in chunks :
@@ -96,7 +96,7 @@ The `StegoOrchestrator` packs `(stream, message)` pairs in predefined data templ
 			modified_chunk = chunk
 			# modified_chunk = self.intermediate_function( chunk, True )
 			# print "<--"
-			print chunk.encode('hex')
+			# print chunk.encode('hex')
 			# print modified_chunk.encode('hex')
 			injected = self.stego_injector.inject( modified_chunk, template )
 
