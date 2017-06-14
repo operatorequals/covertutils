@@ -174,10 +174,10 @@ This method resets all components of the `Orchestrator` instance, effectively re
 		"""
 		if stream == None :
 			stream = self.default_stream
-		message = self.compressor.compress( message )
+		compressed = self.compressor.compress( message )
 
 		chunker = self.getChunkerForStream( stream )
-		chunks = chunker.chunkMessage( message )
+		chunks = chunker.chunkMessage( compressed )
 		ready_chunks = []
 		for chunk in chunks :
 			tag = self.streamIdent.getIdentifierForStream( stream,

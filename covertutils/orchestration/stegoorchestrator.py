@@ -1,11 +1,8 @@
-
 from covertutils.crypto.keys import StandardCyclingKey
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
 from covertutils.datamanipulation import AdHocChunker
-
 from covertutils.datamanipulation import Chunker
-from covertutils.datamanipulation import Compressor
 
 from covertutils.orchestration import StreamIdentifier
 from covertutils.orchestration import Orchestrator
@@ -48,10 +45,9 @@ The `StegoOrchestrator` packs `(stream, message)` pairs in predefined data templ
 :param func intermediate_function: A *codec* function with signature `codec( data, encode = False )`. The function is called before and injection of a chunk with *encode = True* and after the extraction of a chunk with *encode = False*.
 :param bool reverse: If this is set to `True` a `StegoOrchestrator` with reverse streams is created. This parameter is typically used to keep the parameter list the same between 2 `StegoOrchestrator` initializations, yet make them `compatible`.
 		"""
-		# self.intermediate_function = intermediate_function
+
 		self.stego_injector = StegoInjector( stego_config, hex_inject )
 		self.data_tranformer = DataTransformer( stego_config, transformation_list )
-		self.compressor = Compressor()
 
 		self.cycling_algorithm = cycling_algorithm
 		if self.cycling_algorithm == None:
@@ -112,9 +108,11 @@ The `StegoOrchestrator` packs `(stream, message)` pairs in predefined data templ
 
 	@copydoc(Orchestrator.depositChunk)
 	def depositChunk( self, chunk ) :
-		templ = self.stego_injector.guessTemplate( chunk )[0]
-		self.received_template = templ
-		extr_data = self.stego_injector.extract( chunk, templ )
+		templ = self.stego_injector.guessTemplate( chunk )
+		if templ == None :
+			return (None, None)			# Trigger the notRecognised() method of the underlying Handler
+		self.received_template = templ[0]
+		extr_data = self.stego_injector.extract( chunk, self.received_template )
 
 		ret = super( StegoOrchestrator, self ).depositChunk( extr_data )
 		return ret

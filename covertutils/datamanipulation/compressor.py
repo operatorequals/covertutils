@@ -2,9 +2,6 @@ import bz2
 import zlib
 
 
-
-
-
 class Compressor :
 	"""
 The Compressor class initializes the **bz2** and **zlib** compression routines.
@@ -16,7 +13,6 @@ It detects the used compression on a **trial and error** base, eliminating the n
 		self.comps = [bz2.compress, zlib.compress, self.__dummy_func]
 		self.decomps = [bz2.decompress, zlib.decompress, self.__dummy_func]
 
-		pass
 
 	def __dummy_func( self, data ) :
 		return data
@@ -36,12 +32,9 @@ It does so by comparing the output lengths.
 		for comp in self.comps :
 			zfile = comp( message )
 			zips.append( zfile )
-			# print len(zfile)
 
 		sorted_zips = sorted( zips, key = lambda tup:len( tup ) )
 		winner = sorted_zips[0]
-		# print sorted_zips
-		# print winner
 		return winner
 
 
@@ -65,3 +58,22 @@ Based on the assumption that any decompression algorithm raises an Exception if 
 				pass
 
 		return plain
+
+
+
+if __name__ == '__main__' :
+
+	compressor = Compressor()
+	import sys
+	try :
+		f = open(sys.argv[1], 'rb')
+		content = f.read()
+		compressed = compressor.compress( content )
+		f.close()
+		print "Original size %d bytes" % len(content)
+		print "Best effort compression size %d bytes" % len(compressed)
+		print "Ratio %d %% " % ( len(compressed) / float(len(content)) * 100 )
+	except Exception as e:
+		print e
+		print "Usage:"
+		print "	python -m compressor <filename>"

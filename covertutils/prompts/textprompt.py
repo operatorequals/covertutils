@@ -27,7 +27,7 @@ class TextPrompt( cmd.Cmd ) :
 
 	def default( self, line ) :
 		if not line.startswith( self.modifier_char ) :
-			self.handler.sendAdHoc( line, self.current_stream )		# all messages go to the default stream
+			self.handler.preferred_send( line, self.current_stream )
 			return
 		line = line[1:]
 		if line in self.availableStreams() :
@@ -39,3 +39,7 @@ class TextPrompt( cmd.Cmd ) :
 
 	def emptyline( self ) :
 		return
+
+
+	def do_EOF( self, line ) :
+		print "EOF"

@@ -477,8 +477,9 @@ This method tries to guess the used template of a data packet by computing simil
 			sim_ratio = str_similar( pkt_test2, pkt_test )
 			ret.append( ( template, sim_ratio ) )
 
-		winner = sorted( ret, key = lambda tup:tup[1] )[-1]
-		return winner
+		winner = sorted( ret, key = lambda tup:tup[1] )
+		if not winner : return None		# The template couldn't be guessed
+		return winner[-1]
 
 
 

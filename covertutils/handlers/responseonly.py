@@ -31,10 +31,27 @@ Can be nicely paired with :class:`covertutils.handlers.InterrogatingHandler` for
 
 
 	def onMessage( self, stream, message ) :
-		if message == self.request_data :
-			if self.to_send_raw :
-				to_send = self.to_send_raw.pop(0)
-				self.send_function( to_send )
+		beacon = (message == self.request_data)	# got a beacon message?
+		# if beacon :
+		# print "List of messages '%s' " % self.to_send_list
+		# if not self.readifyQueue() : return False
+		self.readifyQueue()
+		# print "Raw packets pending: %s" % len(self.to_send_raw)
+		if self.to_send_raw :
+			to_send = self.to_send_raw.pop(0)
+			self.send_function( to_send )
+			return True
+		return False
+
+
+	def readifyQueue( self ) :
+
+		if self.to_send_list :
+			message, stream = self.to_send_list.pop(0)
+			chunks = self.orchestrator.readyMessage( message, stream )
+			self.to_send_raw.extend( chunks )
+			return True
+		return False
 
 
 	def queueSend( self, message, stream = None ) :
@@ -44,6 +61,4 @@ Can be nicely paired with :class:`covertutils.handlers.InterrogatingHandler` for
 """
 		if stream == None :
 			stream = self.orchestrator.getDefaultStream()
-
-		chunks = self.orchestrator.readyMessage( message, stream )
-		self.to_send_raw.extend( chunks )
+		self.to_send_list.append( (message, stream) )
