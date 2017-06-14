@@ -102,7 +102,8 @@ html_theme = 'sphinx_rtd_theme'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = { 'sidebarwidth': '200%' }
+html_theme_options = { 'sidebarwidth': '200%' }
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -169,7 +170,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'CovertUtils', u'CovertUtils Documentation',
-     author, 'CovertUtils', 'One line description of project.',
+     author, 'CovertUtils', 'A package for Remote Code Execution Agent programming',
      'Miscellaneous'),
 ]
 

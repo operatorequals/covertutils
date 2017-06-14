@@ -83,9 +83,6 @@ class ShellHandler ( InterrogatingHandler, FunctionDictHandler ) :
 	def onChunk( self, stream, message ) : pass		# If a part of a message arrives - do nothing.
 
 	def onMessage( self, stream, message ) :		# If a message arrives
-		if stream == 'control' and message == 'reset' :	# If the special 'reset' message comes
-			self.reset()	# to be tested				# Run the reset() cascading method
-			return										# to reset all cycling keys and return
 
 		if message != 'X' :								# If message is not the 'no data available' flag
 			stream, output = FunctionDictHandler.onMessage( self, stream, message )	# Run the received message
