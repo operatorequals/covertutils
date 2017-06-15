@@ -1,7 +1,9 @@
 
 Programming Examples
 =====================
+
 Examples can be run using the makefile available in the repo, as shown below:
+
 .. code :: bash
 
 	make EX='examples/example_script.py 8080' run
