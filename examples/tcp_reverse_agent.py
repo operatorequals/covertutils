@@ -33,7 +33,7 @@ while True :
         if ret == '' :      # in empty string socket is closed
             closed = True
             s.close()
-            ret = 'X'
+            # ret = 'X'
         return ret
 
 
@@ -43,6 +43,4 @@ while True :
     orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True, cycling_algorithm = sha512 )
     handler = SimpleShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
 
-
     while not closed : sleep(1)
-    # while True : sleep(10)
