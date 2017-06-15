@@ -3,7 +3,7 @@
 
 from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.prompts import TextPrompt
+from covertutils.prompts import PrintPrompt
 
 from scapy.all import sniff, IP, ICMP, Raw		# Never bloat scapy import with *
 from scapy.all import send as scapy_send	# unexpected things will happen
@@ -118,16 +118,8 @@ handler.preferred_send = handler.sendAdHoc	# Change the preferred method to use 
 
 
 #============================== Prompt Design part ========================
-while True :
-	try :
-		prompt = TextPrompt( handler )
-		prompt.cmdloop()
-	except KeyboardInterrupt :
-		print
-		exit_input = raw_input("Really Control-C [y/N]? ")
-		if exit_input == 'y' :
-			print "Aborted by the user..."
-			sys.exit(0)
+prompt = PrintPrompt( handler )
+prompt.start()
 
 #==========================================================================
 

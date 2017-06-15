@@ -11,7 +11,7 @@
 from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
-from covertutils.prompts import TextPrompt
+from covertutils.prompts import PrintPrompt
 
 from time import sleep
 from os import urandom
@@ -175,16 +175,8 @@ server_thread.start()
 
 
 #============================== Prompt Design part ========================
-while True :
-	try :
-		prompt = TextPrompt( handler )
-		prompt.cmdloop()
-	except KeyboardInterrupt :
-		print
-		exit_input = raw_input("Really Control-C [y/N]? ")
-		if exit_input == 'y' :
-			print "Aborted by the user..."
-			sys.exit(0)
+prompt = PrintPrompt( handler )
+prompt.start()
 
 #==========================================================================
 

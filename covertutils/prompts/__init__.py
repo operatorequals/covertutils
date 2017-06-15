@@ -1,1 +1,3 @@
-from covertutils.prompts.textprompt import TextPrompt
+from covertutils.prompts.baseprompt import BasePrompt
+
+from covertutils.prompts.printprompt import  PrintPrompt
