@@ -125,7 +125,8 @@ class Test_SimplePivot( unittest.TestCase ) :
 		global start
 		self.startHandler.sendAdHoc( data )
 
-		sleep(0.01)
+		while not end :
+			sleep(0.01)
 		# print start, end
 		start = False
 		self.failUnless( data == end )
@@ -135,7 +136,8 @@ class Test_SimplePivot( unittest.TestCase ) :
 		global end
 		self.startHandler.sendAdHoc( data )
 
-		sleep(0.01)
+		while not start :
+			sleep(0.01)
 		# print start, end
 		end = False
 		self.failUnless( data == start )
