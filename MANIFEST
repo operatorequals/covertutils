@@ -11,14 +11,17 @@ covertutils/crypto/algorithms/standardcyclingalgorithm.py
 covertutils/crypto/keys/__init__.py
 covertutils/crypto/keys/cyclingkey.py
 covertutils/crypto/keys/encryptionkey.py
+covertutils/crypto/keys/hailstonekey.py
 covertutils/crypto/keys/standardcyclingkey.py
 covertutils/datamanipulation/__init__.py
+covertutils/datamanipulation/adhocchunker.py
 covertutils/datamanipulation/chunker.py
 covertutils/datamanipulation/compressor.py
 covertutils/datamanipulation/datatransformer.py
 covertutils/datamanipulation/stegoinjector.py
 covertutils/handlers/__init__.py
 covertutils/handlers/basehandler.py
+covertutils/handlers/buffering.py
 covertutils/handlers/functiondict.py
 covertutils/handlers/interrogating.py
 covertutils/handlers/resettable.py
@@ -31,3 +34,7 @@ covertutils/orchestration/orchestrator.py
 covertutils/orchestration/simpleorchestrator.py
 covertutils/orchestration/stegoorchestrator.py
 covertutils/orchestration/streamidentifier.py
+covertutils/pivots/__init__.py
+covertutils/pivots/simplepivot.py
+covertutils/prompts/__init__.py
+covertutils/prompts/textprompt.py
