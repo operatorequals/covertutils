@@ -22,7 +22,6 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 
 	"""
-	# __metaclass__ = DocABCMeta
 	__metaclass__ = ABCMeta
 
 	__pass_encryptor = ascii_letters * 10
@@ -35,27 +34,27 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 			self.cycling_algorithm = StandardCyclingAlgorithm
 
 		passGenerator = StandardCyclingKey( passphrase, cycling_algorithm = self.cycling_algorithm )
-		pass1 = passGenerator.encrypt( self.__pass_encryptor )
-		pass2 = passGenerator.encrypt( self.__pass_encryptor )
-		pass3 = passGenerator.encrypt( self.__pass_encryptor )
 		self.id_value = passGenerator.encrypt( self.__pass_encryptor )
-
-		self.encryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
-		self.decryption_key = StandardCyclingKey( pass3, cycling_algorithm = self.cycling_algorithm )
-
-		if reverse :
-			self.encryption_key, self.decryption_key = self.decryption_key, self.encryption_key
+		strIdentifierSeed = passGenerator.encrypt( self.__pass_encryptor )
 
 		self.reverse = reverse
-		self.streamIdent = StreamIdentifier( pass1, reverse = reverse, stream_list = streams, cycling_algorithm = self.cycling_algorithm )
+		self.streamIdent = StreamIdentifier( strIdentifierSeed, reverse = reverse, stream_list = streams, cycling_algorithm = self.cycling_algorithm )
 
 		self.default_stream = self.streamIdent.getHardStreamName()
 		if self.default_stream not in streams :
 			streams.insert( 0, self.default_stream )
 
 		self.streams_buckets = {}
+		key_generator = passGenerator.encrypt( self.__pass_encryptor )
 		for stream in streams :
 			self.addStream( stream )
+			key_generator = passGenerator.encrypt( key_generator )
+			encryption_key = StandardCyclingKey( key_generator, cycling_algorithm = self.cycling_algorithm )
+			decryption_key = StandardCyclingKey( key_generator[::-1], cycling_algorithm = self.cycling_algorithm )
+			if reverse :
+				encryption_key, decryption_key = decryption_key, encryption_key
+			self.streams_buckets[stream]['keys']['encryption'] = encryption_key
+			self.streams_buckets[stream]['keys']['decryption'] = decryption_key
 
 		self.tag_length = tag_length
 		self.history_queue = []
@@ -107,6 +106,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		self.streams_buckets[ stream ] = {}
 		self.streams_buckets[ stream ]['message'] = ''
 		self.streams_buckets[ stream ]['chunker'] = None
+		self.streams_buckets[ stream ]['keys'] = { 'decryption' : None, 'encryption' : None }
 
 
 	def getChunkerForStream( self, stream ) :
@@ -148,8 +148,9 @@ This method returns the stream that is used if no stream is specified in `readyM
 		"""
 This method resets all components of the `Orchestrator` instance, effectively restarting One-Time-Pad keys, etc.
 		"""
-		self.encryption_key.reset()
-		self.decryption_key.reset()
+		for stream in self.getStreams() :
+			for key in self.streams_buckets[stream]['keys'].values() :
+				key.reset()
 		self.streamIdent.reset()
 
 
@@ -181,8 +182,9 @@ This method resets all components of the `Orchestrator` instance, effectively re
 		ready_chunks = []
 		for chunk in chunks :
 			tag = self.streamIdent.getIdentifierForStream( stream,
-														byte_len = self.tag_length )
-			encr_chunk = self.encryption_key.encrypt( chunk )
+				byte_len = self.tag_length )
+			encryption_key = self.streams_buckets[stream]['keys']['encryption']
+			encr_chunk = encryption_key.encrypt( chunk )
 
 			ready = self.__addTag(encr_chunk, tag)
 			ready_chunks.append( ready )
@@ -203,7 +205,8 @@ This method resets all components of the `Orchestrator` instance, effectively re
 			return None, None
 
 		chunker = self.getChunkerForStream( stream )
-		decr_chunk = self.decryption_key.decrypt( chunk )
+		decryption_key = self.streams_buckets[stream]['keys']['decryption']
+		decr_chunk = decryption_key.decrypt( chunk )
 		status, message = chunker.deChunkMessage( decr_chunk )
 		if status :
 			message = self.compressor.decompress( message )

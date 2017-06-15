@@ -119,3 +119,22 @@ class TestOrchestrator( unittest.TestCase ) :
 			self.failUnless( d == d2 )
 
 			orch1, orch2 = orch2, orch1
+
+
+	def test_key_differences( self ) :
+		streams = ['main','secondary','easy','medium','hard']
+		orch = SimpleOrchestrator("passphrase1", streams = streams )
+		message = 'a'*16
+		keys = []
+		stream_instances = orch.streams_buckets.values()
+		for instance in stream_instances :
+			keys.extend( instance['keys'].values() )
+
+		ciphertexts = set()
+		for key in keys :
+			ctext = key.encrypt( message )
+			ciphertexts.add( ctext )
+			# print ctext
+
+		print "Generated %d keys and %d distinct ciphertexts" % (len(keys), len(ciphertexts))
+		self.failUnless( len(ciphertexts) == len(keys) )
