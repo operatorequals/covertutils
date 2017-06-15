@@ -23,8 +23,8 @@ class TestStreamIdentifier( unittest.TestCase ) :
 								 )
 		self.id_2 = StreamIdentifier( passp,
 								stream_list = streams,
-								reverse = True,
-								cycling_algorithm = sha512
+								cycling_algorithm = sha512,
+								reverse = True
 								)
 
 		for s in ( 'easy', 'medium', 'hard' ) :
@@ -48,5 +48,5 @@ class TestStreamIdentifier( unittest.TestCase ) :
 
 			guess = ident2.checkIdentifier(tag)
 
-			# print "%s) Tagger:%d. [%s] - %s > %s" % ( i, chosen, stream, guess, tag.encode('hex') )
+			print "%s) Tagger:%d. [%s] - %s > %s" % ( i, chosen, stream, guess, tag.encode('hex') )
 			self.failUnless( stream == guess )

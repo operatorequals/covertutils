@@ -82,3 +82,20 @@ class TestKeys(unittest.TestCase) :
 			# print encr.encode('hex')
 
 			self.failUnless( decr == 'a' )
+
+
+
+	def test_not_cycling( self ) :
+		k1 = StandardCyclingKey( "pass", cycle = False )
+		message = "A" * 16
+		ctext1 = k1.encrypt( message )
+		ctext2 = k1.encrypt( message )
+
+
+		ctext3 = k1.encrypt( message*32 )
+		ctext4 = k1.encrypt( message*32 )
+		# print ctext1.encode('hex')
+		# print ctext2.encode('hex')
+		self.failUnless( ctext2 == ctext1 )
+
+		self.failUnless( ctext3 == ctext4 )

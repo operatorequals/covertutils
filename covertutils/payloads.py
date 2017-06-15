@@ -55,6 +55,12 @@ def __system_info( message ) :
 
 
 
+__win_shellcode_pycode = '''
+
+
+
+'''
+
 
 def __win_shellcode( payload ) :
 
@@ -125,6 +131,7 @@ WindowsStages = {}
 WindowsStages['shellcode'] = {}
 WindowsStages['shellcode']['function'] = __win_shellcode
 # WindowsStages['shellcode']['marshal'] = marshal.dumps( __win_shellcode )
+WindowsStages['shellcode']['pycode'] = __win_shellcode_pycode
 
 LinuxStages = {}
 LinuxStages['shellcode'] = {}

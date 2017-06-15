@@ -22,7 +22,7 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 	).decode('hex')
 
 
-	def __init__ ( self, passphrase, cycling_algorithm = None, salt = None, **kw ) :
+	def __init__ ( self, passphrase, cycling_algorithm = None, cycle = True, salt = None, **kw ) :
 		"""
 :param str passphrase: The key will be created against a `passphrase`. Passphrase will be the primary seed of all cycling. If a Secure __hash function is used, it is length won't provide additional security, or better encryption.
 :param object cycling_algorithm: The cycling algorithm determines the key quality. By default the :class:CyclingAlgorithm class is used, but `hashlib.md5`, `hashlib.sha256` and every hash function object with a `digest()` method can be used.
@@ -30,6 +30,7 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 		"""
 		super( StandardCyclingKey, self ).__init__( passphrase, **kw )
 		self.__counter = 0
+		self.cycle_enabled = cycle
 		self.cycling_algorithm = cycling_algorithm
 		if self.cycling_algorithm == None:
 			self.cycling_algorithm = StandardCyclingAlgorithm
@@ -51,6 +52,7 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 
 	def cycle( self, rounds = 1 ) :
+		if self.cycle_enabled == False : return
 		for i in range( rounds ) :
 			self.__previous_key = self.current_key
 			self.current_key = self.__hash( self.current_key )

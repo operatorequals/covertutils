@@ -62,3 +62,9 @@ elf :
 	mv dist/${EX} .
 	rm -r build/
 	rm ${EX}.spec
+
+
+
+publish :
+	python setup.py sdist build
+	twine upload dist/*

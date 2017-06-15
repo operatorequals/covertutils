@@ -46,8 +46,9 @@ class StreamIdentifier :
 		if self.reverse :
 			inp_passphrase, out_passphrase = out_passphrase, inp_passphrase
 
-		inp_StandardCyclingKey = StandardCyclingKey ( inp_passphrase, cycling_algorithm = self.cycling_algorithm  )
-		out_StandardCyclingKey = StandardCyclingKey ( out_passphrase, cycling_algorithm = self.cycling_algorithm )
+		not_hard_stream = self.__hard_stream != stream_name
+		inp_StandardCyclingKey = StandardCyclingKey ( inp_passphrase, cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
+		out_StandardCyclingKey = StandardCyclingKey ( out_passphrase, cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
 
 		StandardCyclingKey_tuple = ( inp_StandardCyclingKey, out_StandardCyclingKey )
 		self.__streams[stream_name] = StandardCyclingKey_tuple
