@@ -50,7 +50,8 @@ class Test_ShellHandler (unittest.TestCase) :
         chunk = orch1.readyMessage( "echo '%s' " % echoed, 'main' )
 
         chunks.extend( chunk )
-        sleep(0.5)
+        # sleep(0.9)
         # print '======================================================='
         # print testable
+		while not testable : sleep(0.5)
         self.failUnless( testable.strip() == echoed )
