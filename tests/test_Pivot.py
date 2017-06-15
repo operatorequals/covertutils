@@ -3,7 +3,7 @@ import unittest
 from covertutils.handlers import BaseHandler, BufferingHandler
 from covertutils.orchestration import SimpleOrchestrator
 
-from covertutils.pivots import SimplePivot
+from covertutils.bridges import SimpleBridge
 
 from os import urandom
 from time import sleep
@@ -108,16 +108,16 @@ class IntermediateHandler( BufferingHandler ) :
 		super( IntermediateHandler, self ).onMessage( stream, message )
 
 
-class Test_SimplePivot( unittest.TestCase ) :
+class Test_SimpleBridge( unittest.TestCase ) :
 
 	def setUp( self ) :
 
 		self.endHandler1 = EndHandler( recv = dummy_receive1, send = dummy_send2, orchestrator = orch1 )
-		self.pivotHandler1 = IntermediateHandler( recv = dummy_receive2, send = dummy_send1, orchestrator = orch2 )
-		self.pivotHandler2 = IntermediateHandler( recv = dummy_receive3, send = dummy_send4, orchestrator = orch3 )
+		self.bridgeHandler1 = IntermediateHandler( recv = dummy_receive2, send = dummy_send1, orchestrator = orch2 )
+		self.bridgeHandler2 = IntermediateHandler( recv = dummy_receive3, send = dummy_send4, orchestrator = orch3 )
 		self.startHandler = StartHandler( recv = dummy_receive4, send = dummy_send3, orchestrator = orch4 )
 
-		self.pivot = SimplePivot( self.pivotHandler1, self.pivotHandler2 )
+		self.bridge = SimpleBridge( self.bridgeHandler1, self.bridgeHandler2 )
 
 
 	def test_one_way( self ) :
@@ -144,7 +144,7 @@ class Test_SimplePivot( unittest.TestCase ) :
 
 	def test_exception( self ) :
 		try :
-			pivot = SimplePivot( None, self.startHandler  )
+			bridge = SimpleBridge( None, self.startHandler  )
 			test = False
 		except TypeError :
 			test = True

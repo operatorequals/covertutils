@@ -34,7 +34,7 @@ covertutils/orchestration/orchestrator.py
 covertutils/orchestration/simpleorchestrator.py
 covertutils/orchestration/stegoorchestrator.py
 covertutils/orchestration/streamidentifier.py
-covertutils/pivots/__init__.py
-covertutils/pivots/simplepivot.py
+covertutils/bridges/__init__.py
+covertutils/bridges/simplebridge.py
 covertutils/shells/__init__.py
 covertutils/shells/textshell.py

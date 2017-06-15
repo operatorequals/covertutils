@@ -1,13 +1,13 @@
-covertutils.pivots package
+covertutils.bridges package
 ==========================
 
 Submodules
 ----------
 
-covertutils.pivots.simplepivot module
+covertutils.bridges.simplebridge module
 -------------------------------------
 
-.. automodule:: covertutils.pivots.simplepivot
+.. automodule:: covertutils.bridges.simplebridge
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ covertutils.pivots.simplepivot module
 Module contents
 ---------------
 
-.. automodule:: covertutils.pivots
+.. automodule:: covertutils.bridges
     :members:
     :undoc-members:
     :show-inheritance:

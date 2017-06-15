@@ -10,7 +10,7 @@ Subpackages
     covertutils.datamanipulation
     covertutils.handlers
     covertutils.orchestration
-    covertutils.pivots
+    covertutils.bridges
     covertutils.shells
 
 Submodules
