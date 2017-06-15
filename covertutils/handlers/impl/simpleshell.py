@@ -33,7 +33,7 @@ class SimpleShellHandler ( FunctionDictHandler ) :
 
 	def onMessage( self, stream, message ) :
 		stream, resp = super( SimpleShellHandler, self ).onMessage( stream, message )
-		self.sendAdHoc( resp, stream )
+		self.preferred_send( resp, stream )
 
 
 	def onChunk( self, stream, message ) :

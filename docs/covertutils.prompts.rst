@@ -1,13 +1,13 @@
-covertutils.prompts package
+covertutils.shells package
 ===========================
 
 Submodules
 ----------
 
-covertutils.prompts.textprompt module
+covertutils.shells.textshell module
 -------------------------------------
 
-.. automodule:: covertutils.prompts.textprompt
+.. automodule:: covertutils.shells.textshell
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ covertutils.prompts.textprompt module
 Module contents
 ---------------
 
-.. automodule:: covertutils.prompts
+.. automodule:: covertutils.shells
     :members:
     :undoc-members:
     :show-inheritance:

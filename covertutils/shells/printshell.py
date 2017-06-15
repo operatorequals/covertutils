@@ -1,5 +1,5 @@
 import cmd
-from covertutils.prompts import BasePrompt
+from covertutils.shells import BaseShell
 import covertutils
 
 from covertutils.helpers import defaultArgMerging
@@ -11,7 +11,7 @@ def _dummyprint( message ) :
 	print message
 
 
-class PrintPrompt( BasePrompt ) :
+class PrintShell( BaseShell ) :
 
 	def __init__( self, handler, **kwargs ) :
 
@@ -33,4 +33,4 @@ class PrintPrompt( BasePrompt ) :
 		# kwargs['log_messages'] = True
 		# kwargs['log_chunks'] = False
 		# kwargs['log_unrecognised'] = True
-		BasePrompt.__init__( self, handler, **kwargs )
+		BaseShell.__init__( self, handler, **kwargs )

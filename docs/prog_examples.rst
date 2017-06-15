@@ -172,7 +172,7 @@ Traffic Sample
 	-rw-r--r--  1 unused unused 1107 Jun  8 12:20 makefile
 	-rw-r--r--  1 unused unused 1509 Jun 14 23:13 MANIFEST
 	-rw-r--r--  1 unused unused   36 Jun  2 13:42 MANIFEST.in
-	-rw-r--r--  1 unused unused  845 Jun  8 14:19 prompt_manual_test.py
+	-rw-r--r--  1 unused unused  845 Jun  8 14:19 shell_manual_test.py
 	drwxr-xr-x  2 unused unused 4096 Jun  8 16:11 __pycache__
 	-rw-------  1 unused unused  242 Jun  2 13:42 .pypirc
 	-rw-r--r--  1 unused unused 3678 Jun  2 13:42 README.md

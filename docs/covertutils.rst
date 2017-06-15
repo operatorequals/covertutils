@@ -11,7 +11,7 @@ Subpackages
     covertutils.handlers
     covertutils.orchestration
     covertutils.pivots
-    covertutils.prompts
+    covertutils.shells
 
 Submodules
 ----------

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.prompts import PrintPrompt
+from covertutils.shells import PrintShell
 
 import sys
 import socket
@@ -43,5 +43,5 @@ class MyHandler( BaseHandler ) :
 
 handler = MyHandler( recv, send, orch )
 
-prompt = PrintPrompt(handler, prompt = "(%s:%d) [stream:{0}]$ " % addr)
-prompt.start()
+shell = PrintShell(handler, prompt = "(%s:%d) [stream:{0}]$ " % addr)
+shell.start()

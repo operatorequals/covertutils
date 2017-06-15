@@ -11,7 +11,7 @@
 from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
-from covertutils.prompts import PrintPrompt
+from covertutils.shells import PrintShell
 
 from time import sleep
 from os import urandom
@@ -174,9 +174,9 @@ server_thread.start()
 #==========================================================================
 
 
-#============================== Prompt Design part ========================
-prompt = PrintPrompt( handler )
-prompt.start()
+#============================== Shell Design part ========================
+shell = PrintShell( handler )
+shell.start()
 
 #==========================================================================
 

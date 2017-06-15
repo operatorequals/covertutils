@@ -30,7 +30,7 @@ def handlerCallbackHook( handler_function, store_queue, store_condition ) :
 
 
 
-class BasePrompt( cmd.Cmd ) :
+class BaseShell( cmd.Cmd ) :
 
 	# __metaclass__ = ABCMeta
 

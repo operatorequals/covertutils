@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.prompts import TextPrompt
+from covertutils.shells import TextShell
 
 import sys
 import socket
@@ -60,5 +60,5 @@ handler = MyHandler( recv, send, orch )
 # 		handle.sendAdHoc( c, 'control' )
 # 	sleep(0.1)
 
-prompt = TextPrompt(handler, "(%s:%d) [stream:{0}]$ " % addr)
-prompt.cmdloop()
+shell = TextShell(handler, prompt = "(%s:%d) [stream:{0}]$ " % addr)
+shell.cmdloop()

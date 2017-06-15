@@ -36,5 +36,5 @@ covertutils/orchestration/stegoorchestrator.py
 covertutils/orchestration/streamidentifier.py
 covertutils/pivots/__init__.py
 covertutils/pivots/simplepivot.py
-covertutils/prompts/__init__.py
-covertutils/prompts/textprompt.py
+covertutils/shells/__init__.py
+covertutils/shells/textshell.py
