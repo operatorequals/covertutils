@@ -6,11 +6,12 @@ Subpackages
 
 .. toctree::
 
+    covertutils.bridges
     covertutils.crypto
     covertutils.datamanipulation
     covertutils.handlers
     covertutils.orchestration
-    covertutils.bridges
+    covertutils.payloads2
     covertutils.shells
 
 Submodules

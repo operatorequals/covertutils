@@ -1,13 +1,13 @@
-covertutils.shells package
+covertutils.bridges package
 ===========================
 
 Submodules
 ----------
 
-covertutils.shells.textshell module
--------------------------------------
+covertutils.bridges.simplebridge module
+---------------------------------------
 
-.. automodule:: covertutils.shells.textshell
+.. automodule:: covertutils.bridges.simplebridge
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ covertutils.shells.textshell module
 Module contents
 ---------------
 
-.. automodule:: covertutils.shells
+.. automodule:: covertutils.bridges
     :members:
     :undoc-members:
     :show-inheritance:

@@ -68,3 +68,9 @@ exe :
 publish :
 	python setup.py sdist build
 	twine upload dist/*
+
+
+
+nui_elf :
+	nuitka --standalone --remove-output ${PY}
+	# wine /home/unused/.wine/drive_c/Python27/python.exe /home/unused/.wine/drive_c/Python27/Scripts/nuitka --standalone --remove-output ${PY}

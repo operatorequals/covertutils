@@ -31,7 +31,9 @@ def handlerCallbackHook( handler_function, store_queue, store_condition ) :
 
 
 class BaseShell( cmd.Cmd ) :
-
+	"""
+The base class of the package. It implements basics, like hooking the :class:`covertutils.handlers.basehandler.BaseHandler` and giving a handle for further incoming message proccessing.
+	"""
 	# __metaclass__ = ABCMeta
 
 	stream_preamp_char = "!"
@@ -99,7 +101,10 @@ class BaseShell( cmd.Cmd ) :
 
 
 	def updatePrompt( self ) :
-		self.prompt = self.prompt_templ.format( self.current_stream )
+		try :
+			self.prompt = self.prompt_templ.format( self.current_stream )
+		except :
+			self.prompt = self.prompt_templ
 
 
 	def availableStreams(self) :
