@@ -9,11 +9,6 @@ clean :
 test :
 	clear;$(PY) -m unittest  discover -v  ./tests
 
-
-# docs :
-# 	mkdir docs
-
-
 doc :
 	# cd docs/;
 	sphinx-apidoc ./covertutils/ -P -f -o docs/
@@ -52,7 +47,7 @@ run :
 
 
 compile :
-	cython ${SRC} --embed -o cythoned.c
+	cython ${PY} --embed -o cythoned.c
 	gcc cythoned.c -lpython2.7  -I "/usr/include/python2.7" -o ${EX} -ldl
 	rm cythoned.c
 
@@ -63,6 +58,11 @@ elf :
 	rm -r build/
 	rm ${EX}.spec
 
+exe :
+	wine ~/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --hidden-import 'covertutils' -n ${EX} ${PY}
+	mv dist/${EX} .
+	rm -r build/
+	rm ${EX}.spec
 
 
 publish :
