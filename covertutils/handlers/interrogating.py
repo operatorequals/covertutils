@@ -42,30 +42,6 @@ This handler can be nicely coupled with :class:`covertutils.handlers.ResponseOnl
 		self.fetcher_thread.daemon = True
 		self.fetcher_thread.start()
 
-		self.to_send_list = []
-		self.to_send_raw = []
-
-
-
-	def queueSend( self, message, stream = None ) :
-		"""
-:param str message: The message that will be stored for sending upon request.
-:param str stream: The stream where the message will be sent.
-"""
-		if stream == None :
-			stream = self.orchestrator.getDefaultStream()
-		self.to_send_list.append( (message, stream) )
-
-
-	def readifyQueue( self ) :
-
-		if self.to_send_list :
-			message, stream = self.to_send_list.pop(0)
-			chunks = self.orchestrator.readyMessage( message, stream )
-			self.to_send_raw.extend( chunks )
-			return True
-		return False
-
 
 
 	def __fetcher_function( self, ) :

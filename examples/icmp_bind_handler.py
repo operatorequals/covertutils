@@ -75,12 +75,11 @@ sniff_thread.start()			# Run the ICMP reply collector in a thread
 class Handler( ResponseOnlyHandler ) :
 
 	def onMessage( self, stream, message ) :	# When a Message arrives
-		print				# make a linefeed
-		print message		# Print it!
 		global icmp_seq		# Make the Ping Sequence Number 1/256 again
 		icmp_seq = 1
 		global icmp_id		# Simulate a new 'ping' execution
 		icmp_id = randint( 0, 65535 )
+		# The PrintShell class will automatically handle the response (print it to the user)
 
 
 	def onChunk( self, stream, message ) :	# When a Chunk arrives

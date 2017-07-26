@@ -1,6 +1,6 @@
 from abc import ABCMeta
 
-from covertutils.handlers import BaseHandler
+from covertutils.handlers import BaseHandler, ResponseOnlyHandler
 from covertutils.helpers import defaultArgMerging
 import covertutils
 
@@ -37,16 +37,21 @@ class BaseShell( cmd.Cmd ) :
 	stream_preamp_char = "!"
 	control_preamp_char = ":"
 	ruler = "><"
-	Defaults = { 'prompt' : "(%s v%s)[{0}]> " % ( covertutils.__name__, covertutils.__version__ ) }
+	Defaults = {
+		'prompt' : "(%s v%s)[{0}]> " % ( covertutils.__name__, covertutils.__version__ ),
+		'ignore_messages' : set([ResponseOnlyHandler.Defaults['request_data']])
+	}
+
 
 	def __init__( self, handler,
-		message_function_dict = None,
+		message_function_dict = None, ignore_messages = None,
 		log_messages = True, log_chunks = False, log_unrecognised = False, **kw ) :
 
 		cmd.Cmd.__init__(self)
 
 		arguments = defaultArgMerging(self.Defaults, kw)
 		self.prompt_templ = arguments['prompt']
+		self.ignore_messages = arguments['ignore_messages']
 
 		self.orchestrator = handler.getOrchestrator()
 		self.current_stream = self.orchestrator.getDefaultStream()
@@ -88,7 +93,8 @@ class BaseShell( cmd.Cmd ) :
 			if queue.empty() :
 				condition.wait()
 			stream, message = queue.get()
-			self.message_function_dict[stream]( message )
+			if message not in self.ignore_messages :
+				self.message_function_dict[stream]( message )
 			condition.release()
 
 

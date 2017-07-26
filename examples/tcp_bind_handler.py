@@ -36,7 +36,8 @@ class MyHandler( BaseHandler ) :
 		pass
 
 	def onMessage( self, stream, message ) :
-		print message
+		# The PrintShell class will automatically handle the response (print it to the user)
+		pass
 
 	def onNotRecognised( self ) :
 		print "Got Garbage!"

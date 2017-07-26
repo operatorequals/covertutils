@@ -48,8 +48,8 @@ class MyHandler( BaseHandler ) :
 	def onNotRecognised( self ) :	pass
 
 	def onMessage( self, stream, message ) :
-		print message
-
+		# The PrintShell class will automatically handle the response (print it to the user)
+		pass
 
 handler = MyHandler( recv, send, orch )
 
@@ -60,5 +60,5 @@ handler = MyHandler( recv, send, orch )
 # 		handle.sendAdHoc( c, 'control' )
 # 	sleep(0.1)
 
-shell = TextShell(handler, prompt = "(%s:%d) [stream:{0}]$ " % addr)
+shell = PrintShell(handler, prompt = "(%s:%d) [stream:{0}]$ " % addr)
 shell.cmdloop()

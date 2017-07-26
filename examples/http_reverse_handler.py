@@ -79,9 +79,8 @@ class MyHandler ( ResponseOnlyHandler ) :	#
 			self.queueSend("X", 'main');	# Make it respond anyway with 'X' (see Client)
 			responded = super( MyHandler, self ).onMessage( stream, message )
 			assert responded == True		# This way we know it responsed!
-		if message != self.request_data :
-			print
-			print message					# If the message was real data print it
+		# The PrintShell class will automatically handle the response (print it to the user)
+
 
 	def onChunk( self, stream, message ) :
 		if message : return					# If this chunk is the last and message is assembled let onMessage() handle it
@@ -175,7 +174,8 @@ server_thread.start()
 
 
 #============================== Shell Design part ========================
-shell = PrintShell( handler )
+shell = PrintShell( handler,
+	ignore_messages = set(['X']) )	# It is also the default argument in BaseShell
 shell.start()
 
 #==========================================================================

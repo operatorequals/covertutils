@@ -24,9 +24,6 @@ Can be nicely paired with :class:`covertutils.handlers.InterrogatingHandler` for
 		arguments = defaultArgMerging( self.Defaults, kw )
 		self.request_data = arguments['request_data']
 
-		self.to_send_list = []
-		self.to_send_raw = []
-
 		self.preferred_send = self.queueSend
 
 
@@ -42,23 +39,3 @@ Can be nicely paired with :class:`covertutils.handlers.InterrogatingHandler` for
 			self.send_function( to_send )
 			return True
 		return False
-
-
-	def readifyQueue( self ) :
-
-		if self.to_send_list :
-			message, stream = self.to_send_list.pop(0)
-			chunks = self.orchestrator.readyMessage( message, stream )
-			self.to_send_raw.extend( chunks )
-			return True
-		return False
-
-
-	def queueSend( self, message, stream = None ) :
-		"""
-:param str message: The message that will be stored for sending upon request.
-:param str stream: The stream where the message will be sent.
-"""
-		if stream == None :
-			stream = self.orchestrator.getDefaultStream()
-		self.to_send_list.append( (message, stream) )
