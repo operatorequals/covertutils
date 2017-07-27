@@ -9,7 +9,7 @@ import marshal, types
 
 from threading import Thread
 # from multiprocessing import Queue
-from queue import Queue
+from Queue import Queue
 
 
 class FunctionDictHandler( BaseHandler ) :
