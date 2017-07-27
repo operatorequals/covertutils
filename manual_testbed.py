@@ -1,5 +1,5 @@
 from covertutils.handlers.impl import SimpleShellHandler
-from covertutils.handlers import FunctionDictHandler, BaseHandler
+from covertutils.handlers import FunctionDictHandler, BaseHandler, StageableHandler
 
 from covertutils.orchestration import SimpleOrchestrator
 
@@ -17,14 +17,14 @@ in_length = 20
 
 orch1 = SimpleOrchestrator( "passphrase",
 	2, out_length, in_length,
-	# streams = ['main', 'shellcode']
+	streams = ['main', 'shellcode', 'python']
 	)
 
 
 orch2 = SimpleOrchestrator( "passphrase",
 	2, out_length, in_length,
 	reverse = True,
-	streams = ['main', 'shellcode'],
+	streams = ['main', 'shellcode', 'python'],
 	)
 
 toAgent = []
@@ -54,11 +54,11 @@ def dummy_send2( raw ) :
 chunks_sent = 0
 chunks_received = 0
 
-class AgentHandler( FunctionDictHandler ) :
+class AgentHandler( StageableHandler ) :
 
 	def onMessage(self, stream, message) :
 		global chunks_sent
-		stream, ret = super( AgentHandler, self).onMessage( stream, message )
+		ret = super( AgentHandler, self).onMessage( stream, message )
 		self.preferred_send(ret)
 		print "Agent: Chunks Received: %d" % chunks_sent
 		chunks_sent = 0
@@ -79,8 +79,10 @@ f_dict = {
 	# 'control' : CommonStages['shell']['function'],
 	# 'main' : CommonStages['sysinfo']['function'],
 	# 'shellcode' : LinuxStages['shellcode']['function'] ,
+	'control':CommonStages['shell_proc']['marshal'],
+	'python':CommonStages['python']['marshal'],
 
-CommonStages['shell_proc']
+	'main':CommonStages['shell_proc']['marshal']
 }
 
 # agent = SimpleShellHandler( dummy_receive1, dummy_send1, orch1)

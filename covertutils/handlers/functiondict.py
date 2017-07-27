@@ -66,7 +66,6 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 		# 	raise NoFunctionAvailableException( "No Function dict provided to contructor" )
 
 
-
 	def onMessage( self, stream, message ) :
 		"""
 :raises: :exc:`NoFunctionAvailableException`
@@ -74,21 +73,19 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 		super( FunctionDictHandler, self ).onMessage( stream, message )
 		# print message
 		self.stage_storage[stream]['queue'].put( message )
-		print "Put to Queue"
+		# print "Put to Queue"
 		ret = self.processed_responses.get(True)
-		print "Processed: "+ret
+		# print "Processed: "+ret
 		return ret
-
 
 	def onChunk( self, stream, message ) : pass
 	def onNotRecognised( self ) : pass
 
-	def stageWorker( self, init, worker, storage ) :
 
+	def stageWorker( self, init, worker, storage ) :
 		# print "Handler: Worker Started"
 		if not init(storage) : return
 		# print "Handler: Init Run Started"
-
 		while storage['on'] :
 			# print "Try to GET from Queue"
 			message = storage['queue'].get( block = True )
@@ -96,12 +93,12 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 			ret = worker(storage, message)
 			# print ret, type(ret)
 			self.processed_responses.put( ret )
-
 		self.stage_storage[stream] = {}
 
 
-
 	def getStage( self, stage_obj ) :
+		# print stage_obj
+
 		stage_dict = marshal.loads( stage_obj )
 		# print  stage_dict
 		# print  stage_dict['init']
@@ -120,7 +117,7 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 		self.stage_storage[stream]['queue'] = Queue()
 		self.stage_storage[stream]['on'] = True
 		self.stage_storage[stream]['COMMON'] = self.stage_storage['COMMON']
-
+		# print stream
 		stage_init, stage_worker = self.getStage( stage_obj )
 		self.orchestrator.addStream( stream )
 

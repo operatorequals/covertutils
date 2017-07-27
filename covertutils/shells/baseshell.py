@@ -135,9 +135,10 @@ The base class of the package. It implements basics, like hooking the :class:`co
 
 	def start( self ) :
 
+		# try :
 		while True :
 			try :
-				self.cmdloop()
+					self.cmdloop()
 			except KeyboardInterrupt :
 				# sys.exit(0)			# Test purposes ONLY!
 				print
@@ -145,3 +146,4 @@ The base class of the package. It implements basics, like hooking the :class:`co
 				if exit_input == 'y' :
 					print "Aborted by the user..."
 					sys.exit(0)
+				

