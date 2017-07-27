@@ -62,7 +62,8 @@ shell.start()
 ```
 ```bash
 (covertutils v0.2.1)[control]> 
-(covertutils v0.2.1)[control]> 
+(covertutils v0.2.1)[control]> !main 
+(covertutils v0.2.1)[main]> 
 <Ctrl-C>
 Really Control-C [y/N]? y
 Aborted by the user...
