@@ -1,9 +1,15 @@
-from abc import ABCMeta, abstractmethod
-
+# from abc import ABCMeta, abstractmethod
+from covertutils.exceptions import *
 from covertutils.handlers import BaseHandler
 
 from covertutils.payloads import CommonStages
 from covertutils.helpers import defaultArgMerging
+
+import marshal, types
+
+from threading import Thread
+# from multiprocessing import Queue
+from queue import Queue
 
 
 class FunctionDictHandler( BaseHandler ) :
@@ -40,26 +46,89 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 
 	"""
 
-	__metaclass__ = ABCMeta
+	# __metaclass__ = ABCMeta
 
 	def __init__( self,  recv, send, orchestrator, **kw ) :
 		"""
 :param dict function_dict: A dict containing `(stream_name, function)` tuples. Every time a message is received from `stream_name`, `function(message)` will be automatically executed.
 		"""
 		super( FunctionDictHandler, self ).__init__( recv, send, orchestrator, **kw )
-		try :
-			self.function_dict = kw['function_dict']
-		except :
-			raise NoFunctionAvailableException( "No Function dict provided to contructor" )
+		self.stage_storage = {}
+		self.stage_storage['COMMON'] = {}
+		self.stage_storage['COMMON']['handler'] = self
+		self.processed_responses = Queue()
+		# try :
+			# self.function_dict = kw['function_dict']
+		for stream, stage in kw['function_dict'].items() :
+			self.addStage( stream, stage )
+
+		# except :
+		# 	raise NoFunctionAvailableException( "No Function dict provided to contructor" )
+
 
 
 	def onMessage( self, stream, message ) :
 		"""
 :raises: :exc:`NoFunctionAvailableException`
 		"""
-		# super( FunctionDictHandler, self ).onMessage( stream, message )
-		if stream in self.function_dict.keys() :
-			resp = self.function_dict[ stream ]( message )
-			return stream, resp
+		super( FunctionDictHandler, self ).onMessage( stream, message )
+		# print message
+		self.stage_storage[stream]['queue'].put( message )
+		print "Put to Queue"
+		ret = self.processed_responses.get(True)
+		print "Processed: "+ret
+		return ret
+
+
+	def onChunk( self, stream, message ) : pass
+	def onNotRecognised( self ) : pass
+
+	def stageWorker( self, init, worker, storage ) :
+
+		# print "Handler: Worker Started"
+		if not init(storage) : return
+		# print "Handler: Init Run Started"
+
+		while storage['on'] :
+			# print "Try to GET from Queue"
+			message = storage['queue'].get( block = True )
+			# print "Handler: Work() Run"
+			ret = worker(storage, message)
+			# print ret, type(ret)
+			self.processed_responses.put( ret )
+
+		self.stage_storage[stream] = {}
+
+
+
+	def getStage( self, stage_obj ) :
+		stage_dict = marshal.loads( stage_obj )
+		# print  stage_dict
+		# print  stage_dict['init']
+		if stage_dict['init'] == None :
+			stage_init = _dummy_init
 		else :
-			raise NoFunctionAvailableException( "The stream '%s' does not have a corresponding function." % stream )
+			stage_init = types.FunctionType(stage_dict['init'], globals(), "stage_init_func")
+		stage_work = types.FunctionType(stage_dict['work'], globals(), "stage_work_func")
+		# print  stage_init
+		return stage_init, stage_work
+
+
+	def addStage( self, stream, stage_obj ) :
+
+		self.stage_storage[stream] = {}
+		self.stage_storage[stream]['queue'] = Queue()
+		self.stage_storage[stream]['on'] = True
+		self.stage_storage[stream]['COMMON'] = self.stage_storage['COMMON']
+
+		stage_init, stage_worker = self.getStage( stage_obj )
+		self.orchestrator.addStream( stream )
+
+		stage_thread = Thread( target = self.stageWorker, args = ( stage_init, stage_worker, self.stage_storage[stream] ) )
+		stage_thread.daemon = True
+		stage_thread.start()
+		pass
+
+
+def _dummy_init (storage) :
+	return True

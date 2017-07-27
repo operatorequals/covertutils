@@ -80,7 +80,7 @@ class Test_ResponseOnlyHandler( unittest.TestCase ) :
 			self.test_handler.sendAdHoc( ResponseOnlyHandler.Defaults['request_data'] )
 
 			while testable == False :
-				sleep(0.05)
+				sleep(0.01)
 
 			self.failUnless( testable == message )
 			testable = False
@@ -110,7 +110,7 @@ class Test_ResponseOnlyHandler( unittest.TestCase ) :
 				self.test_handler.sendAdHoc( ResponseOnlyHandler.Defaults['request_data'] )
 				sleep(0.01)
 			while testable == False :
-				sleep(0.05)
+				sleep(0.01)
 
 			self.failUnless( testable == message2 )
 			testable = False

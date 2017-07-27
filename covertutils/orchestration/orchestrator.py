@@ -45,18 +45,11 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 			streams.insert( 0, self.default_stream )
 
 		self.streams_buckets = {}
-		key_generator = passGenerator.encrypt( self.__pass_encryptor )
+		self.__key_generator = passGenerator.encrypt( self.__pass_encryptor )
+
 		for stream in streams :
 			self.addStream( stream )
-			key_generator = passGenerator.encrypt( key_generator )
-
-			not_hard_stream = self.streamIdent.getHardStreamName() != stream
-			encryption_key = StandardCyclingKey( key_generator, cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
-			decryption_key = StandardCyclingKey( key_generator[::-1], cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
-			if reverse :
-				encryption_key, decryption_key = decryption_key, encryption_key
-			self.streams_buckets[stream]['keys']['encryption'] = encryption_key
-			self.streams_buckets[stream]['keys']['decryption'] = decryption_key
+			# self.__key_generator = passGenerator.encrypt( self.__key_generator )
 
 		self.tag_length = tag_length
 		self.history_queue = []
@@ -102,6 +95,8 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 
 	def addStream( self, stream ) :
+
+		if stream in self.getStreams() : return False
 		if stream not in self.streamIdent.getStreams() :
 			self.streamIdent.addStream( stream )
 
@@ -109,6 +104,16 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		self.streams_buckets[ stream ]['message'] = ''
 		self.streams_buckets[ stream ]['chunker'] = None
 		self.streams_buckets[ stream ]['keys'] = { 'decryption' : None, 'encryption' : None }
+
+		not_hard_stream = self.streamIdent.getHardStreamName() != stream
+		encryption_key = StandardCyclingKey( self.__key_generator+stream, cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
+		decryption_key = StandardCyclingKey( self.__key_generator[::-1]+stream, cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
+
+		if self.reverse  :
+			encryption_key, decryption_key = decryption_key, encryption_key
+		self.streams_buckets[stream]['keys']['encryption'] = encryption_key
+		self.streams_buckets[stream]['keys']['decryption'] = decryption_key
+		return True
 
 
 	def getChunkerForStream( self, stream ) :
