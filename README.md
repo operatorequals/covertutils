@@ -46,11 +46,26 @@ Handlers tie together the raw byte input/output with the `orchestrators` to prov
 * `onChunk()`
 * `onMessage()`
 * `onNotRecognized()`
+
 #### Example :
-```
+```python
 def onMessage( message, stream ) :
   if stream == 'shell' :
     os.system( message )
+```
+
+### The `Shell`
+A shell interface with prompt and `stream` control can be spawned from a `Handler` instance with:
+``` python
+shell = PrintShell( handler )
+shell.start()
+```
+```bash
+(covertutils v0.2.1)[control]> 
+(covertutils v0.2.1)[control]> 
+<Ctrl-C>
+Really Control-C [y/N]? y
+Aborted by the user...
 ```
 
 ## Networking
