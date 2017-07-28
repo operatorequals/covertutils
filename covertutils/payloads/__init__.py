@@ -18,12 +18,15 @@ def __str_to_module( module_str ) :
 
 
 
-def import_stage_from_module( module_str ) :
+def import_stage_from_module_str( module_str ) :
 	ret = {}
 	module = __str_to_module( module_str )
 	init, work = import_payload_from_module (module)
 	return __form_stage_from_function( init, work )
 
+def import_stage_from_module( module ) :
+	init, work = import_payload_from_module (module)
+	return __form_stage_from_function( init, work )
 
 
 
@@ -55,17 +58,17 @@ def __form_stage_from_function( init, work ) :
 
 
 GenericStages = {}
-GenericStages['echo'] = import_stage_from_module('generic.echo')
-GenericStages['shell'] = import_stage_from_module('generic.shell')
-GenericStages['shellprocess'] = import_stage_from_module('generic.shellprocess')
-GenericStages['pythonapi'] = import_stage_from_module('generic.pythonapi')
-GenericStages['control'] = import_stage_from_module('generic.control')
+GenericStages['echo'] = import_stage_from_module_str('generic.echo')
+GenericStages['shell'] = import_stage_from_module_str('generic.shell')
+GenericStages['shellprocess'] = import_stage_from_module_str('generic.shellprocess')
+GenericStages['pythonapi'] = import_stage_from_module_str('generic.pythonapi')
+GenericStages['control'] = import_stage_from_module_str('generic.control')
 
 LinuxStages = {}
-LinuxStages['shellcode'] = import_stage_from_module('linux.shellcode')
+LinuxStages['shellcode'] = import_stage_from_module_str('linux.shellcode')
 
 WindowsStages = {}
-WindowsStages['shellcode'] = import_stage_from_module('windows.shellcode')
+WindowsStages['shellcode'] = import_stage_from_module_str('windows.shellcode')
 #
 # print GenericStages
 # print
