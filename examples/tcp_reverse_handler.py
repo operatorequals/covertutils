@@ -2,9 +2,7 @@
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
 
-from covertutils.shells import BaseShell
-from covertutils.shells.impl import StandardShell
-from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell, ControlSubShell
+from covertutils.shells.impl import StandardShell, ExtendableShell
 
 
 import sys
@@ -54,6 +52,6 @@ class MyHandler( BaseHandler ) :
 
 
 handler = MyHandler( recv, send, orch )
-shell = StandardShell(handler, prompt = "(%s:%d)> " % client_addr )
+shell = ExtendableShell(handler, prompt = "(%s:%d)> " % client_addr )
 
 shell.start()

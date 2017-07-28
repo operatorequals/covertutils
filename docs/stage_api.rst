@@ -114,7 +114,7 @@ Typically, the `Agent` will automatically load the ``stage_obj['marshal']`` obje
 Breakin' on through to the Other Side
 -------------------------------------
 
-When the `stage` is ready, `marshaled` and all, the :func:`covertutils.handlers.StageableHandler.createStageMessage` has to be used to pack it as a message. The other side must also be equipped with a :class:`covertutils.handlers.StageableHandler` to be able to dynamically load the stage to a separate thread, connect it to the `stream` and do the business. This typically gets automated by the :class:`covertutils.shells.StandardShell` (raging TODO) to the point of ``!stage load stage_file.py``.
+When the `stage` is ready, `marshaled` and all, the :func:`covertutils.handlers.StageableHandler.createStageMessage` has to be used to pack it as a message. The other side must also be equipped with a :class:`covertutils.handlers.StageableHandler` to be able to dynamically load the stage to a separate thread, connect it to the `stream` and do the business. This typically gets automated by the :class:`covertutils.shells.StandardShell` (raging TODO) to the point of ``!stage fload /tmp/stage_file.py`` and ``!stage mload covertutils.payloads.windows.shellcode`` (this `stage` actually exists @ :mod:`covertutils.payloads.windows.shellcode`).
 
 
 

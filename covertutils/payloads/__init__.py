@@ -4,10 +4,7 @@ import marshal
 def dinit( storage ) :
 	return 1
 
-def import_payload_from_module( module_str ) :
-	module = __import__(module_str, globals(), locals(), ['object'], -1)
-	init_str = "%s.init" % module_str
-	work_str = "%s.work" % module_str
+def import_payload_from_module( module ) :
 	try :
 		init = module.init
 	except  :
@@ -16,10 +13,23 @@ def import_payload_from_module( module_str ) :
 	return  init, work
 
 
+def __str_to_module( module_str ) :
+	return __import__(module_str, globals(), locals(), ['object'], -1)
+
+
 
 def import_stage_from_module( module_str ) :
 	ret = {}
-	init, work = import_payload_from_module (module_str)
+	module = __str_to_module( module_str )
+	init, work = import_payload_from_module (module)
+	return __form_stage_from_function( init, work )
+
+
+
+
+
+def __form_stage_from_function( init, work ) :
+	ret = {}
 	dict_ = {'init' : init, 'work' : work}
 	code = {'init' : init.func_code, 'work' : work.func_code}
 
@@ -40,6 +50,8 @@ def import_stage_from_module( module_str ) :
 	ret['marshal'] = marshaled
 
 	return ret
+
+
 
 
 GenericStages = {}

@@ -4,6 +4,14 @@ covertutils.shells.subshells package
 Submodules
 ----------
 
+covertutils.shells.subshells.StageSubShell module
+-------------------------------------------------
+
+.. automodule:: covertutils.shells.subshells.StageSubShell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.shells.subshells.controlsubshell module
 ---------------------------------------------------
 
