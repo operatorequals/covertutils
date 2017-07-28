@@ -11,7 +11,7 @@ Subpackages
     covertutils.datamanipulation
     covertutils.handlers
     covertutils.orchestration
-    covertutils.payloads2
+    covertutils.payloads
     covertutils.shells
 
 Submodules
@@ -29,14 +29,6 @@ covertutils.helpers module
 --------------------------
 
 .. automodule:: covertutils.helpers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-covertutils.payloads module
----------------------------
-
-.. automodule:: covertutils.payloads
     :members:
     :undoc-members:
     :show-inheritance:

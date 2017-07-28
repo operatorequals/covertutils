@@ -36,7 +36,7 @@ def import_stage_from_module( module_str ) :
 		dilled = dill.dumps(code)
 	except ImportError:
 		dilled = None
-	ret['dilled'] = dilled
+	ret['dill'] = dilled
 	ret['marshal'] = marshaled
 
 	return ret

@@ -12,6 +12,14 @@ covertutils.handlers.impl.simpleshell module
     :undoc-members:
     :show-inheritance:
 
+covertutils.handlers.impl.standardshell module
+----------------------------------------------
+
+.. automodule:: covertutils.handlers.impl.standardshell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

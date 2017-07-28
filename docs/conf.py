@@ -32,6 +32,7 @@ sys.path.insert(0, u'..')
 # ones.
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.todo',
+    # 'sphinx.ext.autosectionlabel',
     'sphinx.ext.viewcode']
 
 # Add any paths that contain templates here, relative to this directory.

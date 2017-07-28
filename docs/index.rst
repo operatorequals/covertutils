@@ -3,6 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+
+	 .. moduleauthor:: John Torakis <john.torakis@gmail.com>
+
+
 Welcome to CovertUtils's documentation!
 =======================================
 
@@ -26,6 +30,7 @@ https://securosophy.com/2017/04/22/reinventing-the-wheel-for-the-last-time-the-c
  prog_examples
  native_execs
  stages
+ stage_api
 
 .. toctree::
  :maxdepth: -1

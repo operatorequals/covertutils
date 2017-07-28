@@ -1,8 +1,8 @@
 Components
 ===========
 
-Here you can find code snippets from `covertutils` basic internal components.
-They are documented under the :ref:`covertutils` pages, but here they will parade in all their glory.
+Here you can find code snippets from *covertutils* basic internal components.
+They are documented under the :mod:`covertutils` pages, but here they will parade in all their glory.
 
 Their understanding is essential in case you want to create a new Orchestrator (:class:`covertutils.orchestration.orchestrator.Orchestrator`) class, or generally tinker with the internals.
 

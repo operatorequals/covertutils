@@ -11,6 +11,7 @@ class PythonAPISubShell ( SimpleSubShell ) :
 	intented_prompt = '...'
 	unintented_prompt = '>>>'
 	special_comm_char = '@'
+	append_comm_char = '+'
 
 
 	def __init__( self, stream, handler, queue_dict, base_shell, ignore_messages = set(['X']), prompt_templ = "[{stream}] {intent_str} ") :
@@ -18,6 +19,7 @@ class PythonAPISubShell ( SimpleSubShell ) :
 		SimpleSubShell.__init__( self, stream, handler, queue_dict, base_shell, ignore_messages, prompt_templ )
 		self.indentation = False
 		self.python_buffer = ''
+		self.file_buffer = ''
 		# self.use_rawinput = False
 		self.updatePrompt( )
 		self.special_commands = {
@@ -25,7 +27,8 @@ class PythonAPISubShell ( SimpleSubShell ) :
 			'pyload' : self.loadFile,
 			'show' : self.showBuffer,
 			'clear' : self.clearBuffer,
-			'send' : self.sendPythonBuffer,
+			'send' : self.sendFileBuffer,
+			'append' : self.appendFileBuffer,
 		}
 
 
@@ -33,22 +36,25 @@ class PythonAPISubShell ( SimpleSubShell ) :
 	def parseline(self, line) :
 		return None, None, line		# Do not do any autmatic parsing. indentation gets fucked up
 
-	def sendPythonBuffer( self ) :
-		if not self.python_buffer :
+	def sendPythonBuffer( self, buffer_ = None ) :
+		if not buffer_ :
+			buffer_ = self.python_buffer
+		if not buffer_ :
 			print "Nothing to send"
 			return
 		try:
-			compile(self.python_buffer, "<local>", "exec")
+			compile(buffer_, "<local>", "exec")
 		except Exception as e:
 			print "\t==== Local Syntax Check ===="
 			print "Problem: %s" % e
 			print "\tChecked code:"
-			print self.python_buffer
-			self.python_buffer = ''
+			print buffer_
+			buffer_ = ''
 			print "\t<Nothing Transmitted>"
 			return
-		self.handler.preferred_send( self.python_buffer, self.stream )
+		self.handler.preferred_send( buffer_, self.stream )
 		self.python_buffer = ''
+		self.file_buffer = ''
 
 
 	def default( self, line ) :
@@ -108,18 +114,26 @@ class PythonAPISubShell ( SimpleSubShell ) :
 		if not filename :
 			print "No filename specified!"
 			return
-		with open(filename, 'r') as f :
-			self.python_buffer += f.read()
-		print "File '%s' loaded!" % filename
+		try :
+			with open(filename, 'r') as f :
+				self.file_buffer += f.read()
+			print "File '%s' loaded!" % filename
+		except IOError :
+			print "File '%s' doesn't exist!" % filename
 
 	def showBuffer( self, line ) :
-		if not self.python_buffer :
+		if not self.file_buffer :
 			print "Buffer is empty"
 			return
 		print self.ruler*20
-		print self.python_buffer
+		print self.file_buffer
 		print self.ruler*20
 
+	def appendFileBuffer( self, line ) :
+		self.file_buffer += line + '\n'
+
+	def sendFileBuffer( self, line ) :
+		self.sendPythonBuffer( self.file_buffer )
 
 
 	def specialCommand( self, line ) :

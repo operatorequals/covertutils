@@ -1,6 +1,14 @@
 covertutils.shells package
 ==========================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    covertutils.shells.impl
+    covertutils.shells.subshells
+
 Submodules
 ----------
 
@@ -8,14 +16,6 @@ covertutils.shells.baseshell module
 -----------------------------------
 
 .. automodule:: covertutils.shells.baseshell
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-covertutils.shells.printshell module
-------------------------------------
-
-.. automodule:: covertutils.shells.printshell
     :members:
     :undoc-members:
     :show-inheritance:
