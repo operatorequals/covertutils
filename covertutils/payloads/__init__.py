@@ -47,6 +47,7 @@ GenericStages['echo'] = import_stage_from_module('generic.echo')
 GenericStages['shell'] = import_stage_from_module('generic.shell')
 GenericStages['shellprocess'] = import_stage_from_module('generic.shellprocess')
 GenericStages['pythonapi'] = import_stage_from_module('generic.pythonapi')
+GenericStages['control'] = import_stage_from_module('generic.control')
 
 LinuxStages = {}
 LinuxStages['shellcode'] = import_stage_from_module('linux.shellcode')

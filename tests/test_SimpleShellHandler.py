@@ -47,7 +47,7 @@ class Test_ShellHandler (unittest.TestCase) :
 
 	def test_shell_usage( self, ) :
 		echoed = '111111111111'
-		chunk = orch1.readyMessage( "echo '%s' " % echoed, 'main' )
+		chunk = orch1.readyMessage( "echo '%s' " % echoed )	# In SimpleShellHandler all communication goes through the 'control' stream
 
 		chunks.extend( chunk )
 		# sleep(0.9)

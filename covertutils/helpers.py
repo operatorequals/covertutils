@@ -43,6 +43,10 @@ def defaultArgMerging( defaults, kwargs ) :
 			ret[k] = kwargs[k]
 		except :
 			ret[k] = defaults[k]
+
+	for k in list( kwargs.keys() ) :
+		ret[k] = kwargs[k]
+
 	return ret
 
 

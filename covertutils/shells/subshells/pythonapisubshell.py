@@ -13,9 +13,9 @@ class PythonAPISubShell ( SimpleSubShell ) :
 	special_comm_char = '@'
 
 
-	def __init__( self, stream, handler, queue_dict, ignore_messages = set(['X']), prompt_templ = "[{stream}] {intent_str} ") :
+	def __init__( self, stream, handler, queue_dict, base_shell, ignore_messages = set(['X']), prompt_templ = "[{stream}] {intent_str} ") :
 		# print ShellcodeSubShell
-		SimpleSubShell.__init__( self, stream, handler, queue_dict, ignore_messages, prompt_templ )
+		SimpleSubShell.__init__( self, stream, handler, queue_dict, base_shell, ignore_messages, prompt_templ )
 		self.indentation = False
 		self.python_buffer = ''
 		# self.use_rawinput = False

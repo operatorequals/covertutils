@@ -19,11 +19,11 @@ class TestOrchestrator( unittest.TestCase ) :
 
 		passp_ = "passphrase"
 		self.orch1 = SimpleOrchestrator( passp_,
-			2, self.out_length, self.in_length,
+			2, self.out_length, self.in_length, streams = ['main'],
 			# cycling_algorithm = sha512
 			 )
 		self.orch2 = SimpleOrchestrator( passp_,
-			2, self.out_length, self.in_length,
+			2, self.out_length, self.in_length, streams = ['main'],
 			# cycling_algorithm = sha512,
 			reverse = True)
 

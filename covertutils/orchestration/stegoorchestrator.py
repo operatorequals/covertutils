@@ -35,7 +35,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 The `StegoOrchestrator` packs `(stream, message)` pairs in predefined data templates.
 	"""
 
-	def __init__( self, passphrase, stego_config, main_template, transformation_list = [], tag_length = 2, cycling_algorithm = None, streams = ['main'], hex_inject = False, reverse = False ) :
+	def __init__( self, passphrase, stego_config, main_template, transformation_list = [], tag_length = 2, cycling_algorithm = None, streams = [], hex_inject = False, reverse = False ) :
 		"""
 :param str stego_config: The configuration that is passed to :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`.
 :param str main_template: The default template that will be used in :func:`readyMessage()` `template` argument.

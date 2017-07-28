@@ -158,3 +158,9 @@ If `stream` is `None`, the default Orchestrator's stream will be used.
 
 		"""
 		return self.orchestrator
+
+
+	def reset( self ) :
+		self.orchestrator.reset()
+		self.to_send_list = []
+		self.to_send_raw = []

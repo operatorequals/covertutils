@@ -52,9 +52,9 @@ class ShellcodeSubShell ( SimpleSubShell ) :
 	fire_word = 'GO'
 
 
-	def __init__( self, stream, handler, queue_dict, ignore_messages = set(['X']), prompt_templ = "[{stream}]> ") :
+	def __init__( self, stream, handler, queue_dict, base_shell, ignore_messages = set(['X']), prompt_templ = "[{stream}]> ") :
 		# print ShellcodeSubShell
-		SimpleSubShell.__init__( self, stream, handler, queue_dict, ignore_messages, prompt_templ )
+		SimpleSubShell.__init__( self, stream, handler, queue_dict, base_shell, ignore_messages, prompt_templ )
 		self.shellcode_buffer = ''
 
 

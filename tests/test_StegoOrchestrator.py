@@ -26,11 +26,11 @@ simple_alt='''41420000000000000000XXXX'''
 
 	def setUp(self) :
 
-		self.orch1 = StegoOrchestrator( "a", self.stego_conf, "simple" )
-		self.orch2 = StegoOrchestrator( "a", self.stego_conf, "simple", reverse = True )
+		self.orch1 = StegoOrchestrator( "a", self.stego_conf, "simple", streams = ['main'] )
+		self.orch2 = StegoOrchestrator( "a", self.stego_conf, "simple", streams = ['main'], reverse = True )
 
-		self.orch3 = StegoOrchestrator( "a", self.stego_conf, "simple", self.alt_configuration)
-		self.orch4 = StegoOrchestrator( "a", self.stego_conf, "simple", self.alt_configuration, reverse = True )
+		self.orch3 = StegoOrchestrator( "a", self.stego_conf, "simple", self.alt_configuration, streams = ['main'])
+		self.orch4 = StegoOrchestrator( "a", self.stego_conf, "simple", self.alt_configuration, streams = ['main'], reverse = True )
 
 
 	def test_functionality( self, n = 30, l = 40 ) :
@@ -84,7 +84,7 @@ simple_alt='''41420000000000000000XXXX'''
 		simple_alt='''41420000000000000000XXXX'''
 			"""
 
-		orch1 = StegoOrchestrator( "a", stego_conf, "simple", hex_inject = True )
+		orch1 = StegoOrchestrator( "a", stego_conf, "simple", hex_inject = True, streams = ['main'] )
 		chunks = orch1.readyMessage( "a", 'main' )
 
 		# print chunks

@@ -2,8 +2,7 @@
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
 
-from covertutils.shells.baseshell import BaseShell
-from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell
+from covertutils.shells.impl import StandardShell
 
 import sys
 import socket
@@ -55,5 +54,6 @@ class MyHandler( BaseHandler ) :
 
 handler = MyHandler( recv, send, orch )
 
-shell = BaseShell(handler, subshells = {'control' : SimpleSubShell, 'python' : PythonAPISubShell, 'main' : (SimpleSubShell, {'prompt_templ':'[{stream}]> '} ), 'shellcode' : ShellcodeSubShell } )
+shell = StandardShell(handler, )
+
 shell.start()
