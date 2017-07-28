@@ -106,8 +106,8 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		self.streams_buckets[ stream ]['keys'] = { 'decryption' : None, 'encryption' : None }
 
 		not_hard_stream = self.streamIdent.getHardStreamName() != stream
-		encryption_key = StandardCyclingKey( self.__key_generator+stream, cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
-		decryption_key = StandardCyclingKey( self.__key_generator[::-1]+stream, cycling_algorithm = self.cycling_algorithm, cycle_enabled = not_hard_stream )
+		encryption_key = StandardCyclingKey( self.__key_generator+stream, cycling_algorithm = self.cycling_algorithm, cycle = not_hard_stream )
+		decryption_key = StandardCyclingKey( self.__key_generator[::-1]+stream, cycling_algorithm = self.cycling_algorithm, cycle = not_hard_stream )
 
 		if self.reverse  :
 			encryption_key, decryption_key = decryption_key, encryption_key
