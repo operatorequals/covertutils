@@ -66,7 +66,7 @@ req = """%s"""
 #============================== Handler Overriding part ===================
 
 # Making a dict to map every 'stream' to a function to be called with the message as argument
-# _function_dict = { 'control' : CommonStages['shell']['function'], 'main' : CommonStages['shell']['function'] }
+# _function_dict = { 'control' : GenericStages['shell']['function'], 'main' : GenericStages['shell']['function'] }
 
 # We need a handler that will ask for and deliver data, initiating a communication once every 2-3 seconds.
 # This behavior is modelled in the 'InterrogatingHandler' with the 'delay_between' argument.

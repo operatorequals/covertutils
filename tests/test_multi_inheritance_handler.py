@@ -8,12 +8,12 @@ in_len = 100
 
 
 
-from covertutils.payloads import CommonStages
+from covertutils.payloads import GenericStages
 
 
 fdict = {
-	'control' : CommonStages['shell_proc']['marshal'],
-	'main' : CommonStages['shell_proc']['marshal'],
+	'control' : GenericStages['shellprocess']['marshal'],
+	'main' : GenericStages['shellprocess']['marshal'],
 }
 
 

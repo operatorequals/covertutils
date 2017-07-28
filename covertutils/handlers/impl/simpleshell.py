@@ -10,7 +10,7 @@ from covertutils.handlers import FunctionDictHandler
 from covertutils.payloads import LinuxStages, GenericStages
 
 pls = {
-	'control' : CommonStages['shell_proc']['marshal'],
+	'control' : GenericStages['shellprocess']['marshal'],
 	'shellcode' : LinuxStages['shellcode']['marshal'],
 	'main' : GenericStages['shell']['marshal'],
 	'python' : GenericStages['pythonapi']['marshal'],

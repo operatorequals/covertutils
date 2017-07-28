@@ -63,8 +63,8 @@ sniff_thread.start()			# Run the ICMP echo collector in a thread
 #============================== Handler Overriding part ===================
 
 # A dict that designates what function is going to run if Messages come from certain streams
-# _function_dict = { 'control' : CommonStages['shell']['function'],
-# 					'main' : CommonStages['shell']['function']
+# _function_dict = { 'control' : GenericStages['shell']['function'],
+# 					'main' : GenericStages['shell']['function']
 # 					}
 # Here all streams will be used for a typical 'system' function (raw shell).
 # FEEL FREE TO CREATE YOUR OWN!

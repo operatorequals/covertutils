@@ -3,7 +3,7 @@ import unittest
 from covertutils.handlers.impl import SimpleShellHandler
 from covertutils.handlers import StageableHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.payloads import CommonStages
+from covertutils.payloads import GenericStages
 
 from os import urandom
 from time import sleep
@@ -61,8 +61,8 @@ class Test_StageableHandler (unittest.TestCase) :
 
 	def setUp( self ) :
 		pls = {
-			'control' : CommonStages['shell_proc']['marshal'],
-			'main' : CommonStages['shell_proc']['marshal'],
+			'control' : GenericStages['shellprocess']['marshal'],
+			'main' : GenericStages['shellprocess']['marshal'],
 		}
 		self.p_handler = AgentHandler( dummy_receive, dummy_send, orch2, function_dict = pls )
 		print self.p_handler.getOrchestrator().getStreams()
@@ -70,7 +70,7 @@ class Test_StageableHandler (unittest.TestCase) :
 	def test_stage_addition( self, ) :
 
 		r_stream = urandom(4).encode('hex')
-		stage_obj = StageableHandler.createStageMessage(r_stream, CommonStages['echo']['marshal'])
+		stage_obj = StageableHandler.createStageMessage(r_stream, GenericStages['echo']['marshal'])
 		# print self.p_handler.orchestrator.streams_buckets[self.p_handler.stage_stream]
 
 		chunk = orch1.readyMessage( stage_obj, 'stage' )

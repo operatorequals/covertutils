@@ -2,7 +2,7 @@
 from covertutils.exceptions import *
 from covertutils.handlers import BaseHandler
 
-from covertutils.payloads import CommonStages
+from covertutils.payloads import GenericStages
 from covertutils.helpers import defaultArgMerging
 
 import marshal, types
@@ -39,8 +39,8 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 
 .. code:: python
 
-	from covertutils.payloads import CommonStages
-	pprint( CommonStages )
+	from covertutils.payloads import GenericStages
+	pprint( GenericStages )
 	{'shell': {'function': <function __system_shell at 0x7fc347472320>,
 		   'marshal': 'c\\x01\\x00\\x00\\x00\\x03\\x00\\x00\\x00\\x02\\x00\\x00\\x00C\\x00\\x00\\x00s&\\x00\\x00\\x00d\\x01\\x00d\\x02\\x00l\\x00\\x00m\\x01\\x00}\\x01\\x00\\x01|\\x01\\x00|\\x00\\x00\\x83\\x01\\x00j\\x02\\x00\\x83\\x00\\x00}\\x02\\x00|\\x02\\x00S(\\x03\\x00\\x00\\x00Ni\\xff\\xff\\xff\\xff(\\x01\\x00\\x00\\x00t\\x05\\x00\\x00\\x00popen(\\x03\\x00\\x00\\x00t\\x02\\x00\\x00\\x00osR\\x00\\x00\\x00\\x00t\\x04\\x00\\x00\\x00read(\\x03\\x00\\x00\\x00t\\x07\\x00\\x00\\x00messageR\\x00\\x00\\x00\\x00t\\x06\\x00\\x00\\x00result(\\x00\\x00\\x00\\x00(\\x00\\x00\\x00\\x00s\\x15\\x00\\x00\\x00covertutils/Stages.pyt\\x0e\\x00\\x00\\x00__system_shell\\x04\\x00\\x00\\x00s\\x06\\x00\\x00\\x00\\x00\\x01\\x10\\x01\\x12\\x01'}}
 

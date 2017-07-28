@@ -6,7 +6,7 @@ from covertutils.orchestration import SimpleOrchestrator
 from covertutils.shells.baseshell2 import BaseShell
 from covertutils.shells.subshells.simplesubshell import SimpleSubShell
 
-from covertutils.payloads import CommonStages, LinuxStages
+from covertutils.payloads import GenericStages, LinuxStages
 
 from os import urandom
 from time import sleep
@@ -77,13 +77,13 @@ class AgentHandler( StageableHandler ) :
 
 
 f_dict = {
-	# 'control' : CommonStages['shell']['function'],
-	# 'main' : CommonStages['sysinfo']['function'],
+	# 'control' : GenericStages['shell']['function'],
+	# 'main' : GenericStages['sysinfo']['function'],
 	# 'shellcode' : LinuxStages['shellcode']['function'] ,
-	'control':CommonStages['shell_proc']['marshal'],
-	'python':CommonStages['python']['marshal'],
+	'control':GenericStages['shellprocess']['marshal'],
+	'python':GenericStages['python']['marshal'],
 
-	'main':CommonStages['shell_proc']['marshal']
+	'main':GenericStages['shellprocess']['marshal']
 }
 
 # agent = SimpleShellHandler( dummy_receive1, dummy_send1, orch1)

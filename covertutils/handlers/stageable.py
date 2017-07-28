@@ -4,7 +4,7 @@ import marshal, types
 
 from covertutils.handlers import BaseHandler, FunctionDictHandler
 
-from covertutils.payloads import CommonStages
+from covertutils.payloads import GenericStages
 from covertutils.helpers import defaultArgMerging
 
 
