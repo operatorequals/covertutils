@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.shells import PrintShell
+
+from covertutils.shells.baseshell import BaseShell
+from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell
+
 
 import sys
 import socket
@@ -51,5 +54,5 @@ class MyHandler( BaseHandler ) :
 
 handler = MyHandler( recv, send, orch )
 
-shell = PrintShell(handler, prompt = "(%s:%d) [stream:{0}]$ " % client_addr )
+shell = BaseShell(handler, subshells = {'control' : SimpleSubShell, 'python' : PythonAPISubShell, 'main' : (SimpleSubShell, {'prompt_templ':'(%s:%d)[{stream}]> ' % client_addr} ), 'shellcode' : ShellcodeSubShell }, prompt = "(%s:%d)> " % client_addr )
 shell.start()

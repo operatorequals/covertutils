@@ -7,47 +7,51 @@ import covertutils
 from functools import wraps
 
 from threading import Condition, Thread
-from multiprocessing import Queue
+from Queue import Queue
 
 import sys
 import cmd
 
 
-def handlerCallbackHook( handler_function, store_queue, store_condition ) :
+def handlerCallbackHook( on_chunk_function, stream_dict ) :
 
 	# print "In the Hook"
-	@wraps(handler_function)
+	@wraps(on_chunk_function)
 	def wrapper( *args, **kwargs ) :
 		# print "In the Wrapper"
-		store_condition.acquire()
-		store_queue.put( args )
-		store_condition.notify()
-		store_condition.release()
+		stream, message = args
+		# print stream, message
 
-		handler_function( *args, **kwargs )		# Not honoring return values
-		return handler_function
+		if message :
+			stream_dict[stream]['queues']['condition'].acquire()
+			stream_dict[stream]['queues']['messages'].put( message )
+			stream_dict[stream]['queues']['condition'].notify()
+			stream_dict[stream]['queues']['condition'].release()
+			stream_dict[stream]['queues']['chunks'] = 0
+		else :
+			stream_dict[stream]['queues']['chunks'] += 1
+
+		on_chunk_function( *args, **kwargs )		# Not honoring return values
+		return on_chunk_function
 	return wrapper
-
 
 
 class BaseShell( cmd.Cmd ) :
 	"""
 The base class of the package. It implements basics, like hooking the :class:`covertutils.handlers.basehandler.BaseHandler` and giving a handle for further incoming message proccessing.
 	"""
-	# __metaclass__ = ABCMeta
 
 	stream_preamp_char = "!"
 	control_preamp_char = ":"
 	ruler = "><"
 	Defaults = {
-		'prompt' : "(%s v%s)[{0}]> " % ( covertutils.__name__, covertutils.__version__ ),
+		'prompt' : "({package} v{version})> " ,
 		'ignore_messages' : set([ResponseOnlyHandler.Defaults['request_data']])
 	}
 
 
-	def __init__( self, handler,
-		message_function_dict = None, ignore_messages = None,
-		log_messages = True, log_chunks = False, log_unrecognised = False, **kw ) :
+	def __init__( self, handler, subshells = {},
+		ignore_messages = None, log_unrecognised = False, **kw ) :
 
 		cmd.Cmd.__init__(self)
 
@@ -55,82 +59,83 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		self.prompt_templ = arguments['prompt']
 		self.ignore_messages = arguments['ignore_messages']
 
-		self.orchestrator = handler.getOrchestrator()
-		self.current_stream = self.orchestrator.getDefaultStream()
-		self.updatePrompt()
-
+		self.subshells = {}
 		self.handler = handler
-		self.message_list = Queue()
-		self.chunk_list = Queue()
-		self.not_recognised_list = Queue()
 
-		if log_messages :
-			queue, condition = self.start_response_worker( "message" )
-			handler.onMessage = handlerCallbackHook( handler.onMessage, queue, condition )
+		for stream_name, subshell_attrs in subshells.items() :
+			if type(subshell_attrs) is tuple :
+				subshell_class, subshell_kwargs = subshell_attrs
+			else :
+				subshell_class, subshell_kwargs = (subshell_attrs, dict())
 
-		if log_chunks :
-			queue, condition = self.start_response_worker( "chunks" )			# A lingering bug on queue and condition names
-			handler.onChunk = handlerCallbackHook( handler.onChunk, queue, condition )
-
-		if log_unrecognised :
-			queue, condition = self.start_response_worker( "notRecognised" )			# A lingering bug on queue and condition names
-			handler.onNotRecognised = handlerCallbackHook( handler.onNotRecognised, queue, condition )
-
-		self.message_function_dict = message_function_dict
+			self.addSubShell( stream_name, subshell_class, subshell_kwargs )
 
 
-	def start_response_worker( self, name ) :
-		condition = Condition()
-		queue = Queue()
-		messageCallbackThread = Thread( target = self.__response_worker, args = (queue, condition) )
-		messageCallbackThread.name = name
-		messageCallbackThread.daemon = True
-		messageCallbackThread.start()
-		return queue, condition
+		handler.onChunk = handlerCallbackHook( handler.onChunk, self.subshells )
+		self.updatePrompt()
+		pass
 
 
-	def __response_worker( self, queue, condition ) :
-		while True :
-			condition.acquire()
-			if queue.empty() :
-				condition.wait()
-			stream, message = queue.get()
-			if message not in self.ignore_messages :
-				self.message_function_dict[stream]( message )
-			condition.release()
+	def addSubShell( self, stream, subshell_class, subshell_kwargs ) :
+		self.subshells[stream] = {}
+		self.subshells[stream]['queues'] = {}
+		self.subshells[stream]['queues']['messages'] = Queue()
+		self.subshells[stream]['queues']['chunks'] = 0
+		self.subshells[stream]['queues']['condition'] = Condition()
+		self.subshells[stream]['shell'] = subshell_class(stream, self.handler, self.subshells[stream]['queues'], self.ignore_messages, **subshell_kwargs )
 
+		self.handler.orchestrator.addStream( stream )
 
-	def updatePrompt( self ) :
-		try :
-			self.prompt = self.prompt_templ.format( self.current_stream )
-		except :
-			self.prompt = self.prompt_templ
-
-
-	def availableStreams(self) :
-		return self.orchestrator.getStreams()
 
 
 	def default( self, line ) :
-		if not line.startswith( self.stream_preamp_char ) :
-			self.handler.preferred_send( line, self.current_stream )
-			return
-		line = line[1:]
-		if line in self.availableStreams() :
-			self.current_stream = line
-		else :
-			print ( "Available streams:\n	[+] " + '	\n	[+] '.join(self.availableStreams()) )
-		self.updatePrompt()
-		return
+
+		if line.startswith( self.stream_preamp_char ) :
+			rest = line[1:]
+			command = None
+			try :
+				tok_len = len( rest.split() )
+				if tok_len == 1 :
+					stream_name = rest.strip()
+				else :
+					stream_name, command = rest.split(None, 1)
+			except ValueError :
+				print "*** Shouldn't Happen ***"
+				self.__print_streams()
+				return
+			if stream_name not in self.availableStreams() :
+				self.__print_streams()
+				self.updatePrompt()
+				return
+			if not command :
+				self.subshells[stream_name]['shell'].start()	#	should contain a stream name
+				return
+			else :
+				self.subshells[stream_name]['shell'].onecmd( command )
 
 
-	def emptyline( self ) :
-		return
+
+	def do_streams( self, line ) :
+		self.__print_streams()
 
 
-	def do_EOF( self, line ) :
-		print
-		return
+	# Quit keywords
+	def do_exit( self, line ) : self.do_q( line )
+	def do_quit( self, line ) : self.do_q( line )
+	def do_q( self, line ) : self.quitPrompt()
+
+
+	def updatePrompt( self ) :
+		self.prompt = self.prompt_templ.format( package = covertutils.__name__, version = covertutils.__version__  )
+
+
+	def availableStreams(self) :
+		return self.handler.orchestrator.getStreams()
+
+
+	def __print_streams( self ) :
+		print ( "Available streams:\n	[+] " + '	\n	[+] '.join(self.availableStreams()) )
+
 
 
 	def start( self ) :
@@ -138,12 +143,42 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		# try :
 		while True :
 			try :
-					self.cmdloop()
+				self.cmdloop()
 			except KeyboardInterrupt :
-				# sys.exit(0)			# Test purposes ONLY!
+				self.streamMenu()
+
+	def emptyline( self ) :
+		return
+
+
+	def streamMenu( self ) :
+		numb_streams = dict(enumerate( self.availableStreams() ))
+		numb_streams[99] = 'EXIT'
+
+		option = None
+		while option not in numb_streams.keys() :
+			print
+			print "Available Streams:"
+			for n, stream in numb_streams.items():
+				print "\t[{:2}] - {stream}".format(n, stream = stream)
+
+			try :
+				option = int(raw_input( "Select stream: " ))
+			except :
 				print
-				exit_input = raw_input("Really Control-C [y/N]? ")
-				if exit_input == 'y' :
-					print "Aborted by the user..."
-					sys.exit(0)
-				
+				print self.ruler * 20
+				pass
+
+		if option == 99 :
+			print "Aborted by user..."
+			sys.exit(0)
+
+		selected_stream = numb_streams[option]
+		self.subshells[selected_stream]['shell'].start()
+
+
+	def quitPrompt( self ) :
+		exit_input = raw_input("\tQuit shell? [y/N] ")
+		if exit_input.lower() == 'y' :
+			print "Aborted by the user..."
+			sys.exit(0)

@@ -3,7 +3,9 @@
 
 from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.shells import PrintShell
+
+from covertutils.shells.baseshell import BaseShell
+from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell
 
 from scapy.all import sniff, IP, ICMP, Raw		# Never bloat scapy import with *
 from scapy.all import send as scapy_send	# unexpected things will happen
@@ -117,8 +119,10 @@ handler.preferred_send = handler.sendAdHoc	# Change the preferred method to use 
 
 
 #============================== Shell Design part ========================
-shell = PrintShell( handler )
+
+shell = BaseShell(handler, subshells = {'control' : SimpleSubShell, 'python' : PythonAPISubShell, 'main' : (SimpleSubShell), 'shellcode' : ShellcodeSubShell } )
 shell.start()
+
 
 #==========================================================================
 

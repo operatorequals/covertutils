@@ -7,17 +7,14 @@ from abc import ABCMeta, abstractmethod
 from covertutils.helpers import defaultArgMerging
 from covertutils.handlers import FunctionDictHandler
 
-from covertutils.payloads import CommonStages
-
+from covertutils.payloads import LinuxStages, GenericStages
 
 pls = {
 	'control' : CommonStages['shell_proc']['marshal'],
-	'main' : CommonStages['shell']['marshal'],
+	'shellcode' : LinuxStages['shellcode']['marshal'],
+	'main' : GenericStages['shell']['marshal'],
+	'python' : GenericStages['pythonapi']['marshal'],
 }
-# pls = {
-# 	'control' : CommonStages['shell']['marshal'],
-# 	'main' : CommonStages['shell']['marshal'],
-# }
 
 class SimpleShellHandler ( FunctionDictHandler ) :
 	"""

