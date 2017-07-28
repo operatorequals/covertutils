@@ -1,6 +1,7 @@
 import marshal
 
-
+# from covertutils.shells.subshells import SimpleSubShell
+# print "Importing %s" %  __name__
 def dinit( storage ) :
 	return 1
 
@@ -14,15 +15,24 @@ def import_payload_from_module( module ) :
 
 
 def __str_to_module( module_str ) :
-	return __import__(module_str, globals(), locals(), ['object'], -1)
-
+	# print globals()
+	ret_mod = __import__(module_str, globals(), locals(), ['object'], -1)
+	return ret_mod
 
 
 def import_stage_from_module_str( module_str ) :
+	from covertutils.shells.subshells import SimpleSubShell
 	ret = {}
 	module = __str_to_module( module_str )
-	init, work = import_payload_from_module (module)
-	return __form_stage_from_function( init, work )
+	ret = import_stage_from_module( module )
+	try :
+		shell_class = module.shell
+	except Exception as e:
+		# print e
+		shell_class = SimpleSubShell
+		# shell_class = None
+	ret['shell'] = shell_class		# import the shell in the module if available
+	return ret
 
 def import_stage_from_module( module ) :
 	init, work = import_payload_from_module (module)
@@ -54,21 +64,31 @@ def __form_stage_from_function( init, work ) :
 
 	return ret
 
+GenericStages, WindowsStages, LinuxStages = None, None, None
+
+def generatePayloads( ) :
+
+	global GenericStages
+	global WindowsStages
+	global LinuxStages
+
+	LinuxStages = {}
+	LinuxStages['shellcode'] = import_stage_from_module_str('linux.shellcode')
+
+	WindowsStages = {}
+	WindowsStages['shellcode'] = import_stage_from_module_str('windows.shellcode')
+
+	GenericStages = {}
+	GenericStages['echo'] = import_stage_from_module_str('generic.echo')
+	GenericStages['shell'] = import_stage_from_module_str('generic.shell')
+	GenericStages['shellprocess'] = import_stage_from_module_str('generic.shellprocess')
+	GenericStages['pythonapi'] = import_stage_from_module_str('generic.pythonapi')
+	GenericStages['control'] = import_stage_from_module_str('generic.control')
+
+	return GenericStages, WindowsStages, LinuxStages
 
 
-
-GenericStages = {}
-GenericStages['echo'] = import_stage_from_module_str('generic.echo')
-GenericStages['shell'] = import_stage_from_module_str('generic.shell')
-GenericStages['shellprocess'] = import_stage_from_module_str('generic.shellprocess')
-GenericStages['pythonapi'] = import_stage_from_module_str('generic.pythonapi')
-GenericStages['control'] = import_stage_from_module_str('generic.control')
-
-LinuxStages = {}
-LinuxStages['shellcode'] = import_stage_from_module_str('linux.shellcode')
-
-WindowsStages = {}
-WindowsStages['shellcode'] = import_stage_from_module_str('windows.shellcode')
+generatePayloads()
 #
 # print GenericStages
 # print

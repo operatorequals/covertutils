@@ -114,7 +114,7 @@ Typically, the `Agent` will automatically load the ``stage_obj['marshal']`` obje
 Breakin' on through to the Other Side
 -------------------------------------
 
-When the `stage` is ready, `marshaled` and all, the :func:`covertutils.handlers.StageableHandler.createStageMessage` has to be used to pack it as a message. The other side must also be equipped with a :class:`covertutils.handlers.StageableHandler` to be able to dynamically load the stage to a separate thread, connect it to the `stream` and do the business. This typically gets automated by the :class:`covertutils.shells.StandardShell` (raging TODO) to the point of ``!stage fload /tmp/stage_file.py`` and ``!stage mload covertutils.payloads.windows.shellcode`` (this `stage` actually exists @ :mod:`covertutils.payloads.windows.shellcode`).
+When the `stage` is ready, `marshaled` and all, the :func:`covertutils.handlers.StageableHandler.createStageMessage` has to be used to pack it as a message. The other side must also be equipped with a :class:`covertutils.handlers.StageableHandler` to be able to dynamically load the stage to a separate thread, connect it to the `stream` and do the business. This typically gets automated by the :class:`covertutils.shells.ExtendableShell` to the point of ``!stage fload /tmp/stage_file.py`` and ``!stage mload covertutils.payloads.windows.shellcode`` (this `stage` actually exists @ :mod:`covertutils.payloads.windows.shellcode`).
 
 
 
@@ -136,5 +136,14 @@ From this `stage` one can dynamically change, all `Agent's` handler fields and m
 Example of the PythonAPI `stage` can be found at :ref:`pythonapi-stage`.
 
 So, if the `pythonapi` stage can do all those, any custom `stage` can. Tinkering with the internals at run time is not only possible but commonly used. The :mod:`covertutils.payloads.generic.control` stage uses such techniques to reset keys and change access passwords, all at runtime.
+This is also the way that the :class:`covertutils.handlers.StageableHandler` loads `stages`. By using a pre-loaded stage to resolve stage messages. The stages ``work()`` function can be found at :func:`covertutils.handlers.stageable.stager_worker`
 
 This is the nature of all `covertutils` backdoors - reprogrammable at runtime. This is the nature of Python and interpreted languages...
+
+
+
+
+What about a Custom SubShell too?
+---------------------------------
+
+Custom SubShells can also be created and paired for its `stage` .

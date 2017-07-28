@@ -17,7 +17,7 @@ The Python Stage
 A Python shell with access to all internals is available.
 
 The sent code runs directly in the `covertutils stage API`,
-so it is able to access the `storage` and `storage['COMMON']` dictionaries and change internals objects at runtime.
+so it is able to access the ``storage`` and ``storage['COMMON']`` dictionaries and change internals objects at runtime.
 
 .. code:: bash
 

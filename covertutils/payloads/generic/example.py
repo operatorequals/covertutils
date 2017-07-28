@@ -1,5 +1,5 @@
 """
-This code isn't really useful and it is meant to be a guide for making custom `stages` using the `covertutils` API 
+This code isn't really useful and it is meant to be a guide for making custom `stages` using the `covertutils` API
 """
 def init(storage) :
 	'''
@@ -17,7 +17,6 @@ def work(storage, message) :
 :rtype: str
 :return: The response to message that arrived. This exact response will reach the `Handler` in the other side.
 	'''
-	print "Running for handlers message '%s'" % message
-
+	print "Running for handler's message '%s'" % message
 	print "Returning the message in reverse"
 	return message[::-1]

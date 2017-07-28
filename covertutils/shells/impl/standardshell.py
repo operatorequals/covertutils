@@ -1,5 +1,5 @@
 from covertutils.shells import BaseShell
-from covertutils.shells.subshells import *
+from covertutils.shells.subshells import ControlSubShell, PythonAPISubShell, SimpleSubShell
 
 from covertutils.helpers import defaultArgMerging
 

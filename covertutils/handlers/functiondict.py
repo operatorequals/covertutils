@@ -2,7 +2,6 @@
 from covertutils.exceptions import *
 from covertutils.handlers import BaseHandler
 
-from covertutils.payloads import GenericStages
 from covertutils.helpers import defaultArgMerging
 
 import marshal, types

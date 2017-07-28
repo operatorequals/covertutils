@@ -2,9 +2,8 @@ from abc import ABCMeta, abstractmethod
 
 import marshal, types
 
-from covertutils.handlers import BaseHandler, FunctionDictHandler
+from covertutils.handlers import FunctionDictHandler
 
-from covertutils.payloads import GenericStages
 from covertutils.helpers import defaultArgMerging
 
 
@@ -45,7 +44,6 @@ To running `StageableHandler`s, additional functions can be packed with the :fun
 
 		arguments = defaultArgMerging( self.Defaults, kw )
 		self.stage_stream = arguments['stage_stream']
-
 		self.addStage( self.stage_stream, stage_obj )
 		# print orchestrator.streams_buckets[self.stage_stream]
 		# if  self.stage_stream not in self.orchestrator.getStream() :

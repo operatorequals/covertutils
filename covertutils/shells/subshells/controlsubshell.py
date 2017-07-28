@@ -1,9 +1,13 @@
 import cmd
 import re
 
+# from covertutils.payloads.generic.control import Commands as control_commands
 from covertutils.shells.subshells import SimpleSubShell
 
-from covertutils.payloads.generic.control import Commands as control_commands
+Commands = {
+	'reset' : 'RST',
+	'identity' : 'ID',
+}
 
 
 class ControlSubShell ( SimpleSubShell ) :
@@ -16,12 +20,12 @@ class ControlSubShell ( SimpleSubShell ) :
 
 		comm, args, line = self.parseline(line)
 		try :
-			command = control_commands[comm]
+			command = Commands[comm]
 		except :
 			print "No such control command!"
 			return
 		# print "Sending '%s' command" % command
-		if command == control_commands['reset'] :
+		if command == Commands['reset'] :
 			print "Reseting handler"
 			self.resetHandler()
 

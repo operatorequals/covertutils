@@ -1,8 +1,4 @@
 
-Commands = {
-	'reset' : 'RST',
-	'identity' : 'ID',
-}
 
 def init( storage ) :
 	Commands = {
@@ -14,7 +10,7 @@ def init( storage ) :
 
 def work( storage, message ) :
 	print "Control message: %s" % message
-	# command = 
+	# command =
 	if message == storage['commands']['reset'] :
 		storage['COMMON']['handler'].reset()
 		return 'OK'

@@ -4,6 +4,14 @@ covertutils.handlers.impl package
 Submodules
 ----------
 
+covertutils.handlers.impl.extendableshell module
+------------------------------------------------
+
+.. automodule:: covertutils.handlers.impl.extendableshell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.handlers.impl.simpleshell module
 --------------------------------------------
 

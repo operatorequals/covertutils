@@ -1,10 +1,10 @@
-
 import cmd
 import re
 import imp
+import traceback
 
-from covertutils.shells.subshells import SimpleSubShell
-from covertutils.handlers import StageableHandler
+from covertutils.shells.subshells import SimpleSubShell		# fallback shell
+from covertutils.handlers import StageableHandler		# For the static method
 
 from covertutils.payloads import import_stage_from_module, import_stage_from_module_str
 
@@ -24,14 +24,16 @@ class StageSubShell ( SimpleSubShell ) :
 
 
 	def __remoteLoadModule( self, stream_name, stage_obj ) :
-		# print stage_obj['marshal']
 		stage_message = StageableHandler.createStageMessage(stream_name, stage_obj['marshal'])
 		self.handler.preferred_send( stage_message, StageableHandler.Defaults['stage_stream'] )
 
 
-	def __localLoadModule( self, stream_name, shell_class, **kwargs ) :
-		self.base_shell.addSubShell( stream_name, shell_class, kwargs )
+	def __localLoadModule( self, stream_name, stage ) :
 
+		shell_class = stage['shell']
+		print shell_class
+		kwargs = {}
+		self.base_shell.addSubShell( stream_name, shell_class, kwargs )
 
 
 	def do_fload( self, line ) :
@@ -60,16 +62,12 @@ class StageSubShell ( SimpleSubShell ) :
 		try :
 			stage_mod = import_stage_from_module_str( stage_mod_name )
 			self.__remoteLoadModule( stream_name, stage_mod )
-		except :
+		except Exception as e:
 			print "Module '%s' could not be loaded!" %  stage_mod_name
+			traceback.print_exc()
+			print e
 			return
-		try :
-			shell_class = stage_mod.shell
-		except :
-			shell_class = SimpleSubShell
-		kwargs = {}
-		self.__localLoadModule( stream_name, shell_class, **kwargs )
-
+		self.__localLoadModule( stream_name, stage_mod )
 		return
 
 
@@ -78,6 +76,7 @@ class StageSubShell ( SimpleSubShell ) :
 		print "\tfload <filepath>"
 		print "fload example:"
 		print "\tfload /tmp/code.py"
+
 
 	def help_mload( self ) :
 		print "mload usage:"

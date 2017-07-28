@@ -17,3 +17,6 @@ def work( storage, message ) :
 		# print "Exception on execution of '%s'" % message
 	# print e
 	return ret
+
+
+from covertutils.shells.subshells import PythonAPISubShell as shell

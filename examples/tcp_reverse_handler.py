@@ -2,7 +2,7 @@
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
 
-from covertutils.shells.impl import StandardShell, ExtendableShell
+from covertutils.shells.impl import ExtendableShell
 
 
 import sys

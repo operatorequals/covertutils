@@ -1,6 +1,6 @@
 from abc import ABCMeta
 
-from covertutils.handlers import BaseHandler, ResponseOnlyHandler
+# from covertutils.handlers import ResponseOnlyHandler
 from covertutils.helpers import defaultArgMerging
 import covertutils
 
@@ -48,8 +48,9 @@ The base class of the package. It implements basics, like hooking the :class:`co
 	ruler = "><"
 	Defaults = {
 		'prompt' : "({package} v{version})> " ,
-		'ignore_messages' : set([ResponseOnlyHandler.Defaults['request_data']])
-	}
+		# 'ignore_messages' : set([ResponseOnlyHandler.Defaults['request_data']])
+		'ignore_messages' : set()
+		}
 
 	def __init__( self, handler, log_unrecognised = False, **kw ) :
 
