@@ -10,7 +10,7 @@ from covertutils.helpers import defaultArgMerging
 def stager_worker( storage, message ) :
 
 	handler = storage['COMMON']['handler']
-	stream, action, stage_obj = message.split( ':', 3 )
+	stream, action, stage_obj = message.split( ':', 2 )
 	handler.addStage( stream, stage_obj )
 	return stream
 

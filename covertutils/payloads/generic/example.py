@@ -20,3 +20,7 @@ def work(storage, message) :
 	print "Running for handler's message '%s'" % message
 	print "Returning the message in reverse"
 	return message[::-1]
+
+
+
+from covertutils.shells.subshells.examplesubshell import ExampleSubShell as shell
