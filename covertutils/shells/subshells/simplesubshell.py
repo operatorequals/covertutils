@@ -4,7 +4,7 @@ from threading import Thread
 
 
 
-def _print( str_ ) :
+def _print( str_, instance ) :
 	print str_
 
 
@@ -43,7 +43,7 @@ class SimpleSubShell ( cmd.Cmd ) :
 			message = self.queue_dict['messages'].get()
 			# print "Message acquired"
 			if message not in self.ignore_messages :
-				self.message_function( message )
+				self.message_function( message, self )
 				# print "Message processed"
 				self.queue_dict['messages'].task_done()
 			# print message not in self.ignore_messages

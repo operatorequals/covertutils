@@ -3,8 +3,9 @@ PY=$(which python)
 PY='python'
 
 clean :
-	find ./covertutils/ tests/ examples/ -name "*.pyc" -exec rm {} \;
-	rm -r docs/_build/
+	# find ./covertutils/ tests/ examples/ -name "*.pyc" -exec rm {} \;
+	find . -name "*.pyc" -exec rm {} \;
+	rm -r docs/_build/ __pycache__
 
 test :
 	clear;$(PY) -m unittest  discover -v  ./tests
@@ -53,13 +54,21 @@ compile :
 
 
 elf :
-	pyinstaller --onefile --noconsole --hidden-import 'covertutils' -n ${EX} ${PY}
+# --exclude-module 'Tkinter, numpy, curses, tcl, pywin'
+	pyinstaller --onefile --noconsole --hidden-import 'covertutils'  -n ${EX} ${PY}
 	mv dist/${EX} .
 	rm -r build/
 	rm ${EX}.spec
 
 exe :
-	wine ~/.wine/drive_c/Python27/Scripts/pyinstaller.exe --onefile --noconsole --hidden-import 'covertutils' -n ${EX} ${PY}
+# , covertutils.payloads.linux.shellcode'
+	wine ~/.wine/drive_c/Python27/Scripts/pyinstaller.exe\
+	 --onefile --noconsole\
+	 --hidden-import 'covertutils'\
+	 --hidden-import 'covertutils.payloads'\
+	 --hidden-import 'covertutils.payloads.linux'\
+	 --hidden-import 'covertutils.payloads.linux.shellcode'\
+	 --exclude-module 'Tkinter, numpy, curses, tcl, pywin, urllib, urllib2, xml, unittest, _gtkagg, _tkagg'  -n ${EX} ${PY}
 	mv dist/${EX} .
 	rm -r build/
 	rm ${EX}.spec

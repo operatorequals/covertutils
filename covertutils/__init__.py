@@ -6,7 +6,7 @@ The :class:`SimpleOrchestrator` handles all data manipulation, and the :class:`H
 The module does not provide networking functionalities. All networking has to be wrapped by two functions (a sender and a receiver functions) and Handlers will use those for raw_data.
 """
 
-__version__ = '0.2.8'
+__version__ = '0.3.0'
 __name__ = 'covertutils'
 __author__ = 'John Torakis - operatorequals'
 __email__ = 'john.torakis@gmail.com'

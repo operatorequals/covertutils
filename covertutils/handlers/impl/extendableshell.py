@@ -13,12 +13,13 @@ from covertutils.payloads import LinuxStages, GenericStages
 
 
 pls = {
+	'file' : GenericStages['file']['marshal'],
 	'control' : GenericStages['control']['marshal'],
 	'os-shell' : GenericStages['shell']['marshal'],
 	'python' : GenericStages['pythonapi']['marshal'],
 }
 
-class ExtendableShellHandler ( StandardShellHandler, StageableHandler ) :
+class ExtendableShellHandler ( StageableHandler ) :
 	"""
 	This class provides an implementation of Simple Remote Shell.
 	It can be used on any shell type and protocol (bind, reverse, udp, icmp, etc),by adjusting `send_function()` and `receive_function()`
@@ -38,7 +39,7 @@ class ExtendableShellHandler ( StandardShellHandler, StageableHandler ) :
 
 
 	def onMessage( self, stream, message ) :
-		resp = super( StandardShellHandler, self ).onMessage( stream, message )
+		resp = super( ExtendableShellHandler, self ).onMessage( stream, message )
 		self.preferred_send( resp, stream )
 
 

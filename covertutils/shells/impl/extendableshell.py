@@ -13,6 +13,7 @@ class ExtendableShell (BaseShell) :
 		'control' : ControlSubShell,
 		'python' : PythonAPISubShell,
 		'os-shell' : SimpleSubShell,
+		'file' : FileSubShell,
 		'stage' : StageSubShell,
 		}
 	Defaults['prompt'] = "({package} v{version})> "

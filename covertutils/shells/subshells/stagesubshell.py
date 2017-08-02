@@ -30,8 +30,13 @@ class StageSubShell ( SimpleSubShell ) :
 
 	def __localLoadModule( self, stream_name, stage ) :
 
-		shell_class = stage['shell']
+		try :
+			shell_class = stage['shell']
+		except :
+			shell_class = None
 		print shell_class
+		if shell_class == None :
+			shell_class = SimpleSubShell
 		kwargs = {}
 		self.base_shell.addSubShell( stream_name, shell_class, kwargs )
 
@@ -45,9 +50,17 @@ class StageSubShell ( SimpleSubShell ) :
 		filename = toks[0]
 		stream_name = ''.join(filename.split('/')[-1].split('.')[:-1])	# for /tmp/great.shell.stage.py : great.shell.stage
 		# try :
-		stage_mod = imp.load_source('stage', filename)
-		stage_dict = import_stage_from_module( stage_mod )
-		self.__remoteLoadModule( stream_name, stage_dict )
+		try :
+			stage_mod = imp.load_source('stage', filename)
+			stage_dict = import_stage_from_module( stage_mod )
+			self.__remoteLoadModule( stream_name, stage_dict )
+			self.__localLoadModule( stream_name, stage_dict )
+		except Exception as e:
+			print "File '%s' could not be loaded!" %  filename
+			traceback.print_exc()
+			print e
+			return
+
 		return
 
 
@@ -60,14 +73,14 @@ class StageSubShell ( SimpleSubShell ) :
 		stage_mod_name = toks[0]
 		stream_name = ''.join(stage_mod_name.split('.')[-1])	# for /tmp/great.shell.stage.py : great.shell.stage
 		try :
-			stage_mod = import_stage_from_module_str( stage_mod_name )
-			self.__remoteLoadModule( stream_name, stage_mod )
+			stage_dict = import_stage_from_module_str( stage_mod_name )
+			self.__remoteLoadModule( stream_name, stage_dict )
+			self.__localLoadModule( stream_name, stage_dict )
 		except Exception as e:
 			print "Module '%s' could not be loaded!" %  stage_mod_name
 			traceback.print_exc()
 			print e
 			return
-		self.__localLoadModule( stream_name, stage_mod )
 		return
 
 

