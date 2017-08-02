@@ -143,7 +143,53 @@ This is the nature of all `covertutils` backdoors - reprogrammable at runtime. T
 
 
 
-What about a Custom SubShell too?
----------------------------------
+What about a Custom `SubShell` too?
+-----------------------------------
 
-Custom SubShells can also be created and paired for its `stage` .
+`Custom SubShells` can also be created and paired with custom `Stages`. They are useful when you need to modify user input before sending to the `stage's` ``work()`` function, or for customizing prompts, etc.
+
+Creating one will require subclassing the :class:`covertutils.shells.subshells.SimpleSubShell` class. The ``SimpleSubShell`` class itself is a subclass of :class:`cmd.Cmd` which is a Python built-in (docs @ https://docs.python.org/2/library/cmd.html).
+
+The ``example`` `stage`, referenced above, is paired with the :class:`covertutils.shells.subshells.ExampleSubShell`.
+In order for a `SubShell` to be paired with a `stage`, the ``shell`` variable has to be defined as the SubShell's **class** (not object) in the `stage's` module.
+
+The `covertutils`' :class:`ExtendedShell`, will automatically add the `SubShell` class specified in the `stage's` module to the `stream` when the ``!stage mload`` or ``!stage fload`` commands are used.
+
+.. code:: bash
+
+	(127.0.0.1:50960)>
+	(127.0.0.1:50960)> !stage mload covertutils.payloads.generic.example
+	(127.0.0.1:50960)> example
+
+	(127.0.0.1:50960)>
+	Available Streams:
+		[ 0] - control
+		[ 1] - python
+		[ 2] - os-shell
+		[ 3] - example
+		[ 4] - stage
+		[99] - EXIT
+	Select stream: 3
+
+	This is an Example Shell. It has a custom prompt, and reverses all input before sending to the stage.
+
+	 ExampleSubShell Stream:[example]==> hello
+	Sending 'olleh' to the 'example' agent!
+	 hello
+
+	 ExampleSubShell Stream:[example]==>
+	(127.0.0.1:50960)>
+	Available Streams:
+		[ 0] - control
+		[ 1] - python
+		[ 2] - os-shell
+		[ 3] - example
+		[ 4] - stage
+		[99] - EXIT
+	Select stream: 99
+
+
+
+The :class:`ExampleSubShell`'s code is the following:
+
+.. literalinclude:: ../covertutils/shells/subshells/examplesubshell.py

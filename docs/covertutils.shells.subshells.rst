@@ -12,6 +12,14 @@ covertutils.shells.subshells.controlsubshell module
     :undoc-members:
     :show-inheritance:
 
+covertutils.shells.subshells.examplesubshell module
+---------------------------------------------------
+
+.. automodule:: covertutils.shells.subshells.examplesubshell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.shells.subshells.filesubshell module
 ------------------------------------------------
 
