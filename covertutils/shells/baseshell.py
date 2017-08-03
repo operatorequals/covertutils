@@ -115,11 +115,10 @@ The base class of the package. It implements basics, like hooking the :class:`co
 	def do_streams( self, line ) :
 		self.__print_streams()
 
-
 	# Quit keywords
-	def do_exit( self, line ) : self.do_q( line )
-	def do_quit( self, line ) : self.do_q( line )
-	def do_q( self, line ) : self.quitPrompt()
+	def do_exit( self, *args ) : return self.do_q( *args )
+	def do_quit( self, *args ) : return self.do_q( *args )
+	def do_q( self, *args ) : return self.quitPrompt()
 
 
 	def updatePrompt( self ) :
@@ -139,8 +138,11 @@ The base class of the package. It implements basics, like hooking the :class:`co
 
 		# try :
 		while True :
+			ret = None
 			try :
-				self.cmdloop()
+				ret = self.cmdloop()
+				# if ret :
+				break
 			except KeyboardInterrupt :
 				self.streamMenu()
 
@@ -148,14 +150,27 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		return
 
 
+	def do_help( self, line ) :
+		self.streamCharacterHelp( )
+
 	def streamCharacterHelp( self ) :
-		print "'%s' Character:" % self.stream_preamp_char
-		print "\t%sstream <command> <argument1> <argument2> ..." % self.stream_preamp_char
-		print
+		print """
+Jump to SubShell:
+\t<Ctrl-C>
+
+The '{char}' Character:
+\t{char}stream <command> <argument1> <argument2> ...
+
+streams
+\tJust prints the available streams
+
+Exit with 'exit', 'quit', 'q'
+
+		""".format(char = self.stream_preamp_char)
 
 	def streamMenu( self ) :
 		numb_streams = dict(enumerate( self.availableStreams() ))
-		numb_streams[99] = 'EXIT'
+		numb_streams[99] = 'Back'
 
 		option = None
 		while option not in numb_streams.keys() :
@@ -172,15 +187,19 @@ The base class of the package. It implements basics, like hooking the :class:`co
 				pass
 
 		if option == 99 :
-			print "Aborted by user..."
-			sys.exit(0)
+			return True
+		# 	print "Aborted by user..."
+		# 	sys.exit(0)
 
 		selected_stream = numb_streams[option]
 		self.subshells_dict[selected_stream]['shell'].start()
 
 
-	def quitPrompt( self ) :
-		exit_input = raw_input("\tQuit shell? [y/N] ")
+	def quitPrompt( self, *args ) :
+		# print args
+		exit_input = raw_input("[!]\tQuit shell? [y/N] ")
 		if exit_input.lower() == 'y' :
 			print "Aborted by the user..."
-			sys.exit(0)
+			# sys.exit(0)
+			return True
+		return False

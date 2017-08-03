@@ -1,3 +1,5 @@
+.. _stage_api_page:
+
 Creating Custom Stages and Modules
 ==================================
 

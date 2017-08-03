@@ -65,6 +65,8 @@ This makes it an efficient One-Time-Pad Scheme.
 	K���/}�oe�|�8�
 	>>>
 
+.. _streamidentifier_component:
+
 
 Stream Identification
 ---------------------
@@ -92,6 +94,7 @@ Docs @ :class:`covertutils.orchestration.streamidentifier.StreamIdentifier`
 	>>>
 
 
+.. _compressor_component:
 
 Compressor
 ----------

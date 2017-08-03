@@ -19,11 +19,12 @@ def work( storage, message ) :
 		return storage['COMMON']['handler'].orchestrator.getIdentity()[:8]
 
 	elif message == storage['commands']['sysinfo'] :
-		import platform, json, getpass
+		import platform, json, getpass, locale
 		ret = "+".join([				   # 113 bytes
 			platform.node(),
 			platform.machine(),
 			platform.version(),
+			'-'.join(locale.getdefaultlocale()),
 			platform.platform(),
 			platform.release(),
 			platform.system(),

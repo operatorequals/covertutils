@@ -12,6 +12,8 @@ def _response_manager( message, instance ) :
 			print "Uploading '%s' failed" % instance.upload
 		else :
 			print "Unknown error"
+			instance.upload= None
+			instance.download= None
 		return
 
 	if message == "OK" :

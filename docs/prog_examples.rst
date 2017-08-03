@@ -1,4 +1,6 @@
 
+.. _programming_examples :
+
 Programming Examples
 =====================
 

@@ -20,3 +20,4 @@ class StandardShell (BaseShell) :
 		) :
 		args = defaultArgMerging(StandardShell.Defaults, kw)
 		BaseShell.__init__( self, handler, log_unrecognised, **args )
+		self.sysinfo = None

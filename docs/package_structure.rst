@@ -1,4 +1,6 @@
 
+.. _package_structure :
+
 Package, subpackage and module structure
 ========================================
 

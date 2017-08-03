@@ -20,6 +20,7 @@ General:
 	Host: {}
 	Machine: {}
 	Version: {}
+	Locale: {}
 	Platform: {}
 	Release: {}
 	System: {}
@@ -32,6 +33,7 @@ Specifics:
 
 		""".format( *sysinfo )
 # 	MacOS: {}
+		instance.base_shell.sysinfo = sysinfo
 		instance.sysinfo = False
 	else :
 		print message
