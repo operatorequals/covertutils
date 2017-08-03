@@ -1,7 +1,7 @@
 # covertutils
 A framework for Remote Code Execution Agent programming.
 
-[![Documentation Status](https://readthedocs.org/projects/covertutils/badge/?version=latest)](http://covertutils.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/covertutils.svg)](https://pypi.python.org/pypi/covertutils)          [![GitHub version](https://badge.fury.io/gh/operatorequals%2Fcovertutils.svg)](https://github.com/Foperatorequals/covertutils) [![Build Status](https://travis-ci.org/operatorequals/covertutils.svg?branch=master)](https://travis-ci.org/operatorequals/covertutils)
+[![Documentation Status](https://readthedocs.org/projects/covertutils/badge/?version=latest)](http://covertutils.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/covertutils.svg)](https://pypi.python.org/pypi/covertutils)          [![GitHub version](https://badge.fury.io/gh/operatorequals%2Fcovertutils.svg)](https://github.com/operatorequals/covertutils) [![Build Status](https://travis-ci.org/operatorequals/covertutils.svg?branch=master)](https://travis-ci.org/operatorequals/covertutils)
 
 [Documentation Page](https://covertutils.readthedocs.io)
 
