@@ -19,7 +19,7 @@ class TestCyclingAlgorithm(unittest.TestCase):
 	def test_entropy( self ) :
 		h = StandardCyclingAlgorithm( urandom(16) ).digest()
 		e = entr(h)
-		print( "Entropy Level: %f" % e
+		print( "Entropy Level: %f" % e )
 		self.failUnless( e > self.entropy_floor)
 
 
