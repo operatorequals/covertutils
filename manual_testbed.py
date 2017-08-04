@@ -34,7 +34,7 @@ toHandler = []
 def dummy_receive1( ) :
 	while not toAgent :
 		sleep(0.01)
-	# print "Receiving"
+	# print( "Receiving" )
 	return toAgent.pop(0)
 
 def dummy_send1( raw ) :
@@ -45,7 +45,7 @@ def dummy_send1( raw ) :
 def dummy_receive2( ) :
 	while not toHandler :
 		sleep(0.01)
-	# print "Receiving"
+	# print( "Receiving" )
 	return toHandler.pop(0)
 
 def dummy_send2( raw ) :
@@ -61,7 +61,7 @@ class AgentHandler( StageableHandler ) :
 		global chunks_sent
 		ret = super( AgentHandler, self).onMessage( stream, message )
 		self.preferred_send(ret)
-		print "Agent: Chunks Received: %d" % chunks_sent
+		print( "Agent: Chunks Received: %d" % chunks_sent )
 		chunks_sent = 0
 
 	def onChunk(self, stream, message) :
@@ -96,19 +96,19 @@ class MyHandler (BaseHandler) :
 
 	def onMessage(self, stream, message) :
 		global chunks_sent
-		print "Handler: Chunks Received: %d" % chunks_sent
+		print( "Handler: Chunks Received: %d" % chunks_sent )
 		chunks_sent = 0
-		# print message
+		# print( message )
 		pass
 	def onChunk(self, stream, message) :
 		global chunks_sent
 		if chunks_sent == 0 :
 			print
 		chunks_sent += 1
-		# print "Handler: <Chunk>"
+		# print( "Handler: <Chunk>" )
 		pass
 	def onNotRecognised(self, stream, message) :
-		# print "Handler: <Unrecognised>"
+		# print( "Handler: <Unrecognised>"  )
 		pass
 
 
