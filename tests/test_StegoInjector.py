@@ -52,9 +52,9 @@ data2 = "4444XXXXXXXX4545"
 			stego_pkt = psi.injectByTag(inj_dict, template = 'data1')
 			testable = 'DDDD%sAAAA%s' % ('a' * (i/2), 'b' * (i/2))
 
-			# print stego_pkt, testable
+			# print( stego_pkt, testable )
 			extr_dict = psi.extractByTag( stego_pkt, 'data1' )
-			# print extr_dict, inj_dict
+			# print( extr_dict, inj_dict )
 			self.failUnless( extr_dict == inj_dict )
 
 
@@ -115,7 +115,7 @@ data1 = """XXXXYYYY"""
 
 		pkt1 = psi.inject(data, 'data1')
 		pkt2 = psi.injectByTag( data_dict, 'data1' )
-		# print pkt1.encode('hex'), pkt2.encode('hex')
+		# print( pkt1.encode('hex'), pkt2.encode('hex') )
 		self.failUnless( pkt1 == pkt2 )
 		extr1 = psi.extract( pkt1, 'data1' )
 		extr_dict = psi.extractByTag( pkt2, 'data1' )
@@ -172,7 +172,7 @@ data2="""41414142XXYY"""
 		pkt2 = 'AAAdfg'
 
 		res, score = psi.guessTemplate( pkt1 )
-		# print res
+		# print( res )
 
 		self.failUnless( res == 'data1' )
 
@@ -194,7 +194,7 @@ data1="""%s"""
 		psi = StegoInjector( config )
 		cap = psi.getCapacity( 'data1' )
 		inj = psi.inject(cap*'~', 'data1' )
-		print "Changed %d bytes" % cap
+		print( "Changed %d bytes" % cap )
 		self.failUnless( inj == pkt )
 
 
@@ -228,9 +228,9 @@ data2="""44X44X4141Y4141Y44X43X"""
 
 		inj_pkt = psi.inject( "\x00"*3, 'data1', pkt )
 
-		# print inj_pkt.encode('hex')
+		# print( inj_pkt.encode('hex') )
 		testable = "\xFF\x0F\xF0\xFF\xFF\x0F\xFF\xF0\xFF\x0F\xF0"
-		# print testable.encode('hex')
+		# print( testable.encode('hex') )
 		self.failUnless( inj_pkt == testable)
 
 
