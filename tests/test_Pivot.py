@@ -85,7 +85,7 @@ class EndHandler( BaseHandler ) :
     def onMessage( self, stream, message ) :
 		global end
 		end = message
-		# print "%s : (%s: %s)" % ( "End", stream, message )
+		# print( "%s : (%s: %s)" % ( "End", stream, message ) )
 		self.sendAdHoc( message, stream )			# echo the input back
 
 
@@ -96,7 +96,7 @@ class StartHandler( BaseHandler ) :
     def onMessage( self, stream, message ) :
 		global start
 		start = message
-		# print "%s : (%s: %s)" % ( "Start", stream, message )
+		# print( "%s : (%s: %s)" % ( "Start", stream, message ) )
 
 
 class IntermediateHandler( BufferingHandler ) :
@@ -104,7 +104,7 @@ class IntermediateHandler( BufferingHandler ) :
     def onChunk( self, stream, message ) :	pass
     def onNotRecognised( self ) :	pass
     def onMessage( self, stream, message ) :
-		# print "BufferingHandler : (%s: %s)" % ( stream, message )
+		# print( "BufferingHandler : (%s: %s)" % ( stream, message ) )
 		super( IntermediateHandler, self ).onMessage( stream, message )
 
 
@@ -127,7 +127,7 @@ class Test_SimpleBridge( unittest.TestCase ) :
 
 		while not end :
 			sleep(0.01)
-		# print start, end
+		# print( start, end )
 		start = False
 		self.failUnless( data == end )
 
@@ -138,7 +138,7 @@ class Test_SimpleBridge( unittest.TestCase ) :
 
 		while not start :
 			sleep(0.01)
-		# print start, end
+		# print( start, end )
 		end = False
 		self.failUnless( data == start )
 
