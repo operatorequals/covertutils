@@ -32,7 +32,7 @@ This handler can reset the :class:`covertutils.orchestration.SimpleOrchestrator`
 
 
 	def sendReset( self ) :
-		self.preferred_send( ResettableHandler.Defaults[reset_data] )
+		self.preferred_send( ResettableHandler.Defaults['reset_data'] )
 
 
 	def onMessage( self, stream, message ) :
