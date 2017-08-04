@@ -81,12 +81,12 @@ Runs all Tranformations in the `transformation_list` that relate to the specifie
 #		==========================
 			_data_ = structed_data
 			output_data = eval( eval_str )
-			# print structed_data, eval_str, output_data
+			# print( structed_data, eval_str, output_data )
 #		==========================
 			injectable_data = pack( in_struct, output_data )
 			# injectable_dict = {'X' : injectable_data }
-			# print injectable_data.encode('hex')
-			# print self.injector.getCapacity( template ), len( injectable_data)
+			# print( injectable_data.encode('hex') )
+			# print( self.injector.getCapacity( template ), len( injectable_data) )
 			# pkt = self.injector.injectByTag( injectable_dict, template, pkt  )
 			pkt = self.injector.inject( injectable_data, template, pkt  )
 
