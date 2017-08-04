@@ -95,7 +95,7 @@ class TestOrchestrator( unittest.TestCase ) :
 				pload = urandom( l )
 				byte_n += len( pload )
 				d[s] = pload
-			# print d
+			# print( d )
 
 
 			chunks = []
@@ -113,9 +113,9 @@ class TestOrchestrator( unittest.TestCase ) :
 
 			d2 = orch2.getStreamDict()
 			# pprint( d )
-			# print '============'
+			# print( '============' )
 			# pprint( d2 )
-			print "[*] Round %d. Accumulated %d bytes" % ( repetition, byte_n )
+			print( "[*] Round %d. Accumulated %d bytes" % ( repetition, byte_n ) )
 			self.failUnless( d == d2 )
 
 			orch1, orch2 = orch2, orch1
@@ -134,7 +134,7 @@ class TestOrchestrator( unittest.TestCase ) :
 		for key in keys :
 			ctext = key.encrypt( message )
 			ciphertexts.add( ctext )
-			# print ctext
+			# print( ctext )
 
-		print "Generated %d keys and %d distinct ciphertexts" % (len(keys), len(ciphertexts))
+		print( "Generated %d keys and %d distinct ciphertexts" % (len(keys), len(ciphertexts)) )
 		self.failUnless( len(ciphertexts) == len(keys) )
