@@ -14,5 +14,5 @@ This is an Example Shell. It has a custom prompt, and reverses all input before 
 
 	def default( self, line ) :
 		command = line[::-1]	# Reversing the user input string
-		print "Sending '%s' to the 'example' agent!" % command
+		print( "Sending '%s' to the 'example' agent!" % command )
 		self.handler.preferred_send( command, self.stream )
