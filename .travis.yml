@@ -1,18 +1,23 @@
 language: python
 python:
-  # - "2.6"
-  - "2.7.13"
-  # - "2.7"
-  # - "3.2"
-  # - "3.3"
-  # - "3.4"
+  - 2.7.13
+  # - 3.4
+  # - 3.5
+  - 3.6
   # PyPy versions
-  # - "pypy"  # PyPy2 2.5.0
-  # - "pypy3" # Pypy3 2.4.0
-  # - "pypy-5.3.1"
+  # - pypy   # PyPy2 5.8
+  # - pypy3  # Pypy3 5.8
+matrix:
+  allow_failures:
+    - python: 3.6
 # command to install dependencies
+before_install:
+  - pip install flake8
+  # stop the build if there are Python syntax errors or undefined names
+  - flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
+  # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
+  - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 install:
-  - pip install .
   - pip install -r requirements.txt
 # command to run tests
 script: make test
