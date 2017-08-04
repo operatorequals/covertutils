@@ -7,17 +7,17 @@ from covertutils.shells.subshells import SimpleSubShell
 def _response_manager( message, instance ) :
 	if message == "ERR" :
 		if instance.download :
-			print "Downloading '%s' failed" % instance.download
+			print( "Downloading '%s' failed" % instance.download )
 		elif instance.upload :
-			print "Uploading '%s' failed" % instance.upload
+			print( "Uploading '%s' failed" % instance.upload )
 		else :
-			print "Unknown error"
+			print( "Unknown error" )
 			instance.upload= None
 			instance.download= None
 		return
 
 	if message == "OK" :
-		print "File uploaded succesfully!"
+		print( "File uploaded succesfully!" )
 		instance.upload= None
 		return
 
@@ -26,17 +26,17 @@ def _response_manager( message, instance ) :
 		f = open(instance.download, 'wb')
 		f.write( content )
 		f.close()
-		print "File downloaded!"
+		print( "File downloaded!" )
 		instance.download = None
 	else :
-		print "Not recognized response opcode"
+		print( "Not recognized response opcode" )
 
 
 class FileSubShell ( SimpleSubShell ) :
 
 
 	def __init__( self, stream, handler, queue_dict, base_shell, ignore_messages = set(['X']), prompt_templ = "=|{stream}]> ~ ") :
-		# print ShellcodeSubShell
+		# print( ShellcodeSubShell )
 		SimpleSubShell.__init__( self, stream, handler, queue_dict, base_shell, ignore_messages, prompt_templ )
 		self.shellcode_buffer = ''
 
@@ -47,7 +47,7 @@ class FileSubShell ( SimpleSubShell ) :
 
 
 	def default( self, line ) :
-		print "No such command"
+		print( "No such command" )
 
 
 
@@ -73,12 +73,12 @@ class FileSubShell ( SimpleSubShell ) :
 
 
 	def help_download( self ) :
-		print "download <remote-file> [<location>]"
-		print
+		print( "download <remote-file> [<location>]" )
+		print( "" )
 
 	def help_upload( self ) :
-		print "upload  <local-file> [<remote-location>]"
-		print
+		print( "upload  <local-file> [<remote-location>]" )
+		print( "" )
 
 
 	def do_upload( self, line ) :
@@ -94,7 +94,7 @@ class FileSubShell ( SimpleSubShell ) :
 			content = f.read()
 			f.close()
 		except :
-			print "Could not open '%s' file" % local
+			print( "Could not open '%s' file" % local )
 			return
 		if len(args) == 1 :
 			remote = local.split('/')[-1]
