@@ -25,5 +25,5 @@ simple='''41420000XXXX'''
 		data = 'AB\x00\x00CD'
 		data2 = self.trans.runAll( data, 'simple' )
 		alt_part = data2.encode('hex')[-4:]
-		print( data2.encode('hex')
+		print( data2.encode('hex') )
 		self.failUnless( alt_part == '4345') # added 1 to 4344
