@@ -77,7 +77,7 @@ class StageSubShell ( SimpleSubShell ) :
 			self.__remoteLoadModule( stream_name, stage_dict )
 			self.__localLoadModule( stream_name, stage_dict )
 		except Exception as e:
-			print( "Module '%s' could not be loaded!" %  stage_mod_nameprint )
+			print( "Module '%s' could not be loaded!" %  stage_mod_name )
 			traceback.print_exc()
 			print( e )
 			return
