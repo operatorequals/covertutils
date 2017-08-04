@@ -37,7 +37,7 @@ while True :
 		except :
 			closed = True
 			return ''
-			# print "Connection Terminated"
+			# print( "Connection Terminated" )
 			# ret = 'X'
 		return ret
 
