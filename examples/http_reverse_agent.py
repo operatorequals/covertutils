@@ -90,13 +90,13 @@ class ShellHandler ( InterrogatingHandler, StandardShellHandler ) :
 																				#through the corresponding function
 			# stream, message = super( ShellHandler, self ).onMessage( stream, message )	# Run
 
-			print "[+] Command Run!"
-			# print "[+] Command Run: '%s'!" % output
-			# print "Got to send %d bytes" % len(output)
+			print( "[+] Command Run!" )
+			# print( "[+] Command Run: '%s'!" % output )
+			# print( "Got to send %d bytes" % len(output) )
 			self.queueSend( output, stream )			# Queue the output to send in next interval
 
 
-	def onNotRecognised( self ) : print "[!] < Unrecognised >"
+	def onNotRecognised( self ) : print( "[!] < Unrecognised >" )
 
 
 #==========================================================================
@@ -127,7 +127,7 @@ def send( raw ) :
 			client_socket.send( raw )			# Send the data
 			same_con = True			# make the 'recv' unblock
 		except Exception as e:
-			# print e
+			# print( e )
 			sleep( 2 )	# Retry to connect to handler every 2 seconds
 
 def recv( ) :
