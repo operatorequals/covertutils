@@ -14,8 +14,8 @@ from hashlib import sha512
 try :
 	program, port, passphrase = sys.argv
 except :
-	print """Usage:
-	%s <port> <passphrase>""" % sys.argv[0]
+	print( """Usage:
+	%s <port> <passphrase>""" % sys.argv[0] )
 	sys.exit(1)
 
 addr = '0.0.0.0', int(port)
@@ -27,9 +27,9 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind( addr )		# Handling Networking
 s.listen(5)		# independently of covertutils
 
-print "Accepting"
+print( "Accepting" )
 client, client_addr = s.accept()		# Blocking the main thread
-print "Accepted"
+print( "Accepted" )
 
 def recv () :		# Create wrappers for networking
 	return client.recv( 50 )
@@ -44,11 +44,11 @@ class MyHandler( BaseHandler ) :
 		pass
 
 	def onMessage( self, stream, message ) :
-		# print message
+		# print( message )
 		pass
 
 	def onNotRecognised( self ) :
-		print "Got Garbage!"
+		print( "Got Garbage!" )
 		global s
 		s.close()
 
