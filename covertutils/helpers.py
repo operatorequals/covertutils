@@ -1,4 +1,4 @@
-from builtins import chr
+# from builtins import chr
 
 from difflib import SequenceMatcher
 

@@ -1,18 +1,19 @@
 from binascii import hexlify
 
 from abc import ABCMeta, abstractmethod
-from builtins import object
+# from builtins import object
 # from builtins import range
 # from builtins import chr, ord, str
 
-from future.utils import with_metaclass
+# from future.utils import with_metaclass
 
 from covertutils.helpers import sxor, permutate
 
 from copy import deepcopy
 
-class CyclingAlgorithm(with_metaclass( ABCMeta, object )) :
+class CyclingAlgorithm :
 
+	__metaclass__ = ABCMeta
 
 	def __init__( self, message ) :
 		self.message = message
@@ -53,7 +54,7 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 	__b7,
 	__b8 ]
 
-	def __init__( self, message, length = 32, cycles = 20 ) :
+	def __init__( self, message, length = 32, cycles = 4 ) :
 
 		super( StandardCyclingAlgorithm, self ).__init__( message )
 		self.length = length

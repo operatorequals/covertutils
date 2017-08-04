@@ -23,7 +23,7 @@ class TestCyclingAlgorithm(unittest.TestCase):
 		self.failUnless( e > self.entropy_floor)
 
 
-	def test_consistency( self, n = 100 ) :
+	def test_consistency( self, n = 20 ) :
 		for i in range(n) :
 			x = urandom(16)
 			h1 = StandardCyclingAlgorithm( x ).digest()
@@ -31,7 +31,7 @@ class TestCyclingAlgorithm(unittest.TestCase):
 			self.failUnless( h1 == h2 )
 
 
-	def test_sizes( self, n = 100 ) :
+	def test_sizes( self, n = 10 ) :
 
 		for i in range(1, n) :
 			l = randint(1, n)
