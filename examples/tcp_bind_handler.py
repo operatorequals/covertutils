@@ -13,8 +13,8 @@ from hashlib import sha512
 try :
 	program, ip, port, passphrase = sys.argv
 except :
-	print( """Usage: )
-	%s <ip> <port> <passphrase>""" % sys.argv[0]
+	print( """Usage:
+	%s <ip> <port> <passphrase>""" % sys.argv[0] )
 	sys.exit(1)
 
 client_addr = ip, int(port)
