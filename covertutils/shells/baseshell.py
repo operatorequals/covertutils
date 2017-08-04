@@ -15,12 +15,12 @@ import cmd
 
 def handlerCallbackHook( on_chunk_function, stream_dict ) :
 
-	# print "In the Hook"
+	# print( "In the Hook" )
 	@wraps(on_chunk_function)
 	def wrapper( *args, **kwargs ) :
-		# print "In the Wrapper"
+		# print( "In the Wrapper" )
 		stream, message = args
-		# print stream, message
+		# print( stream, message )
 		if stream not in stream_dict.keys()	:	# No subshell defined for the stream
 			return on_chunk_function
 
