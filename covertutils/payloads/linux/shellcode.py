@@ -6,16 +6,16 @@ def work( storage, message ) :
 	from multiprocessing import Process
 	shellcode = message
 	size = len(shellcode)
-	# print len(shellcode)
+	# print( len(shellcode) )
 
 	libc = CDLL('libc.so.6')
 	sc = c_char_p(shellcode)
 	addr = c_void_p(libc.valloc(size))
-	print "Memoving"
+	print( "Memoving" )
 	memmove(addr, sc, size)
-	print "Changing page protection"
+	print( "Changing page protection" )
 	libc.mprotect(addr, size, 0x7)
-	print "Making the process code"
+	print( "Making the process code" )
 	run = cast(addr, CFUNCTYPE(c_void_p))
 
 	# memorywithshell = create_string_buffer(shellcode, len(shellcode))
