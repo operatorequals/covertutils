@@ -1,4 +1,11 @@
 *.pyc
 htmlcov
 .coverage
+tox.ini
 .tox
+dist
+htmlcov
+covertutils.egg-info
+docs/_build
+docs/_static
+__pycache__

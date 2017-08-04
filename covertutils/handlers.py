@@ -9,7 +9,6 @@ from random import uniform
 
 import marshal, types
 from covertutils.payloads import CommonStages
-
 from covertutils.helpers import defaultArgMerging
 
 class BaseHandler :
@@ -24,7 +23,7 @@ The handler receives data chunks from the "`receive_function()`" and
         """
 :param function recv: A **blocking** function that returns every time a chunk is received. The return value must be return raw data.
 :param function send: A function that takes raw data as argument and sends it across.
-:param `StackOrchestrator.StackOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
+:param `orchestration.StackOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
         """
         self.receive_function = recv
         self.send_function = send
@@ -126,7 +125,7 @@ class CommandFetcherHandler( BaseHandler ) :
 :param str req_data: The actual payload that is used in messages thet request data. Defaults to :data:`CommandFetcherHandler.CommandFetcherHandler.request_data`.
 :param function receive_function: A **blocking** function that returns every time a chunk is received. The return value must be return raw data.
 :param function send_function: A function that takes raw data as argument and sends it across.
-:param `StackOrchestrator.StackOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
+:param `orchestration.StackOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
         """
         super(CommandFetcherHandler, self).__init__( recv, send, orchestrator, **kw )
 
@@ -152,24 +151,17 @@ class CommandFetcherHandler( BaseHandler ) :
 
 
 
-"""
-This module provides a per-stream function dict.
-If a message is received from a `stream`, a function corresponding to this particular stream will be executed with single argument the received message.
-The function's return value will be sent across that stream to the message's sender.
-
-Ideal for simple `remote shell` implementation.
-"""
-
-
-
-class NoFunctionAvailableException( Exception ) :
-    """ This Exception is raised when the received stream does not have a corresponding function. """
-    pass
-
 
 
 class FunctionDictHandler( BaseHandler ) :
     """
+
+This class provides a per-stream function dict.
+If a message is received from a `stream`, a function corresponding to this particular stream will be executed with single argument the received message.
+The function's return value will be sent across that stream to the message's sender.
+
+Ideal for simple `remote shell` implementation.
+
 The FunctionDictHandler class implements the `onMessage()` function of the BaseHandler class.
 The `function_dict` passed to this class `__init__()` must have the above format:
 
@@ -339,18 +331,15 @@ class ResettableHandler ( BaseHandler ) :
 
 
 
-"""
-This module provides an implementation of Simple Remote Shell.
-It can be used on any shell type (bind, reverse, udp, icmp, etc),by adjusting `send_function()` and `receive_function()`
-
-All communication is chunked and encrypted, as dictated by the :class:`covertutils.StackOrchestrator.StackOrchestrator` object.
-"""
-
-
 _function_dict = { 'control' : CommonStages['shell']['function'], 'main' : CommonStages['shell']['function'] }
 
 class SimpleShellHandler ( FunctionDictHandler ) :
     """
+	This class provides an implementation of Simple Remote Shell.
+	It can be used on any shell type and protocol (bind, reverse, udp, icmp, etc),by adjusting `send_function()` and `receive_function()`
+
+	All communication is chunked and encrypted, as dictated by the :class:`covertutils.orchestration.StackOrchestrator` object.
+
     This class directly executes commands on a System Shell (Windows or Unix) via the :func:`os.popen` function. The exact stage used to execute commands is explained in :mod:`covertutils.Stages`
 """
 
@@ -358,7 +347,7 @@ class SimpleShellHandler ( FunctionDictHandler ) :
         """
 :param function receive_function: A **blocking** function that returns every time a chunk is received. The return value must be return raw data.
 :param function send_function: A function that takes raw data as argument and sends it across.
-:param `StackOrchestrator.StackOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
+:param `orchestration.StackOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
         """
         super( SimpleShellHandler, self ).__init__( recv, send, orchestrator, function_dict =  _function_dict )
 

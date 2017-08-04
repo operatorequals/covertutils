@@ -1,4 +1,7 @@
+"""
+All exception of `covertutils` package are provided centrically in this module.
 
+"""
 
 class InvalidChunkException( Exception ) :
 	''' Exception thrown when the chunks are invalid '''
@@ -35,3 +38,10 @@ class StegoDataInjectionException( Exception ) :
 class StegoDataExtractionException( Exception ) :
 	''' This Exception is thrown whenever data extraction from a Data is not possible '''
 	pass
+
+
+
+
+class NoFunctionAvailableException( Exception ) :
+    """ This Exception is raised when the received stream does not have a corresponding function. """
+    pass

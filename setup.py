@@ -2,6 +2,13 @@ from setuptools import setup
 
 import covertutils
 
+import unittest
+
+
+def my_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('tests', pattern='test_*.py')
+    return test_suite
 
 setup(name=covertutils.__name__,
       version=covertutils.__version__,
@@ -11,4 +18,7 @@ setup(name=covertutils.__name__,
       author_email=covertutils.__email__,
       license='MIT',
       packages=[ covertutils.__name__ ],
-      zip_safe=False)
+      zip_safe=False,
+	  tests_require=['entropy'],
+	  test_suite = 'setup.my_test_suite'
+	  )

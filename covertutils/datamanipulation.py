@@ -1,6 +1,5 @@
 """
-Chunker module contains functionality on chunking, flagging and reassembling data chunks.
-
+This module provide classes that are relevant with Data Manipulation. Chunking, Compressing, Steganography and Alteration modules are included.
 """
 
 from covertutils.exceptions import *
@@ -10,13 +9,17 @@ from os import urandom
 import bz2
 import zlib
 
+import re
+
+from covertutils.helpers import sxor as _sxor_
+from covertutils.helpers import str_similar
 
 
 class Chunker :
 	"""
 The Chunker class is used to initialize chunk and de-chunk messages.
 
-"""
+	"""
 
 	__has_more_tag = '\x00'
 
@@ -180,17 +183,10 @@ Based on the assumption that any decompression algorithm raises an Exception if 
 
 
 
-import re
-
 from os import urandom
 import logging
 LOG = logging.getLogger( __name__ )
 
-
-
-
-from covertutils.helpers import sxor as _sxor_
-from covertutils.helpers import str_similar
 
 
 class StegoInjector :
@@ -198,8 +194,7 @@ class StegoInjector :
 	This module provides functionality for steganography.
 	It uses a configuration string with custom syntax to describe *where* and *how* will data be injected in a template.
 
-	Stego Configuration Syntax Description
-	--------------------------------------
+	**Stego Configuration Syntax Description**
 
 	* Tags
 		Tags are used to specify the functions that will be applied on each byte at injection and extraction.
