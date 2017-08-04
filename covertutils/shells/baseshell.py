@@ -12,6 +12,11 @@ from Queue import Queue
 import sys
 import cmd
 
+try:
+	raw_input          # Python 2
+except NameError:
+	raw_input = input  # Python 3
+
 
 def handlerCallbackHook( on_chunk_function, stream_dict ) :
 
