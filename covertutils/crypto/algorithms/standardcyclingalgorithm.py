@@ -33,19 +33,19 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 		self.cycles = cycles
 
 
-	def __cycler( self, s, result, reverse = False ) :
-		for c1_i, c1 in enumerate( s ) :
-			mod = ( c1 + len( result ) + c1_i) % len( self.__b_list )
-			if reverse :
-				h1 = ord( sxor( chr(c1), self.__b_list[mod] ) )
-			else :
-				h1 = ord(sxor( chr(c1), self.__b_list[ (len(self.__b_list) - 1) - mod ] ) )
-
-			if  ( h1 % 2 ) ^ reverse:
-				result.insert(len( result ), h1)
-			else :
-				result.insert(0, h1)
-		return result
+	# def __cycler( self, s, result, reverse = False ) :
+	# 	for c1_i, c1 in enumerate( s ) :
+	# 		mod = ( c1 + len( result ) + c1_i) % len( self.__b_list )
+	# 		if reverse :
+	# 			h1 = ord( sxor( chr(c1), self.__b_list[mod] ) )
+	# 		else :
+	# 			h1 = ord(sxor( chr(c1), self.__b_list[ (len(self.__b_list) - 1) - mod ] ) )
+	#
+	# 		if  ( h1 % 2 ) ^ reverse:
+	# 			result.insert(len( result ), h1)
+	# 		else :
+	# 			result.insert(0, h1)
+	# 	return result
 
 
 	def digest( self ) :
