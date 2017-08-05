@@ -71,7 +71,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption and str
 
 		templ = self.stego_injector.guessTemplate( chunk )[0]
 		extr_data = self.stego_injector.extract( chunk, templ )
-		print extr_data.encode('hex')
+		# print extr_data.encode('hex')
 
 		ret = super( StegoOrchestrator, self ).depositChunk( extr_data )
 

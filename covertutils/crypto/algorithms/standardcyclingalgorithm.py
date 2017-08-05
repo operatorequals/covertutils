@@ -26,7 +26,7 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 	__b7,
 	__b8 ]
 
-	def __init__( self, message, length = 32, cycles = 4 ) :
+	def __init__( self, message, length = 32, cycles = 20 ) :
 
 		super( StandardCyclingAlgorithm, self ).__init__( message )
 		self.length = length
@@ -49,53 +49,69 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 
 
 	def digest( self ) :
-		message = bytearray( self.message )
+
+		message = self.message
 		prev_result = message
-		message2 = deepcopy(message)
+		__result = ''
 
-		for m in message2 :
-			m2 = m / 2
-			m3 = (m * 2) % 256
-			message.append( m2 )
+		length = self.length
+		cycles = self.cycles
 
-		__result = bytearray()
+		for cycle in range(0, cycles + 1) :
 
-		for cycle in range( self.cycles + 1 ) :
-			for i, c in enumerate( message ) :
-				h = ( ( c**2 - 1 ) * ( len( message ) ** 2 - 1 ) * ( i ** 2 - 1 ) ) % 256
-				__result.append( h )
+			while len( __result ) != length :
 
-			while len( __result ) != self.length :
-
-				s1 = prev_result[:len( prev_result ) // 2]
-				s2 = prev_result[len( prev_result ) // 2:]
+				s1 = prev_result[:len( prev_result )/2]
+				s2 = prev_result[len( prev_result )/2:]
 				if cycle % 2 :
 					s1, s2 = s2, s1
 
-				__result = self.__cycler( s1, __result )
-				__result = self.__cycler( s2, __result, True )
+				for c1_i in range(len(s1)) :
+					c1 = s1[c1_i]
+					mod = (ord(c1) + len( __result) + c1_i) % 6
+					h1 = sxor( c1, self.__b_list[mod] )
+					if ord(h1) % 2 :
+						__result = h1 + __result
+					else :
+						__result = __result + h1
+
+				for c2_i in range(len(s2)) :
+					c2 = s2[c2_i]
+					mod = (ord(c2) + len( __result ) + c2_i) % 6
+					h2 = sxor( c2, self.__b_list[ (len(self.__b_list) - 1) - mod ] )
+					if ord(h2) % 2 :
+						__result = __result + h2
+					else :
+						__result = h2 + __result
 
 
-				d = self.length - len( __result )
+				d = length - len( __result )
 
 				__res_temp = ''
 				permut_list = []
 				if d != 0 :
 					for i in range( abs( d ) ) :
 						c = __result[i % len(__result)]
-						x = c % len( prev_result )
+						x = ord(c) % len( prev_result )
+						# print x
 						permut_list.append(x)
 						# print permut_list
 					if d > 0 :		# need more to reach Length
 						new_byte_list = permutate( prev_result, permut_list)
-						new_bytes = new_byte_list
-						__result.extend( new_bytes )
+						new_bytes = ''.join(new_byte_list)
+						__result = __result + new_bytes
+						# print new_bytes
 					else :
 						__result_list = bytearray(__result)
 						for x in permut_list :
+
 							__result_list.pop( x % len(__result_list) )
 							# pass
-						__result = __result_list
+						__result = str(__result_list)
 
-		__str_ret = str(__result)
-		return __str_ret
+
+			prev_result = __result[:]
+			portion = int((len(__result) * (float(cycle)/cycles)))
+			__result = __result[: portion]
+
+		return __result

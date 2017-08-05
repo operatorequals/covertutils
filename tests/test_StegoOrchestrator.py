@@ -42,16 +42,16 @@ control='''4142XXXXXXXXYYYYYYYY4344'''
 		data = "0"*50
 
 		chunks = self.orch1.readyMessage( data, 'simple' )
-		print chunks[0].encode('hex')
+		# print chunks[0].encode('hex')
 
-		print chunks[0].encode('hex')
+		# print chunks[0].encode('hex')
 
 
 		for chunk in chunks :
 			stream, message = self.orch2.depositChunk( chunk )
 			self.failUnless( chunk.encode('hex')[-4:] == '4345' )	# Testing the alteration
 
-			print stream ,message
+			# print stream ,message
 		self.failUnless( data == message )
 
 
