@@ -19,8 +19,6 @@ def __str_to_module( module_str ) :
 	return ret_mod
 
 
-
-
 def import_stage_from_module_str( module_str ) :
 	ret = {}
 	module = __str_to_module( module_str )
@@ -71,14 +69,13 @@ def generatePayloads( ) :
 
 	LinuxStages = {}
 	# LinuxStages['shellcode'] = import_stage_from_module_str('linux.shellcode')
-	import linux.shellcode as lshellcode
+	from .linux import shellcode as lshellcode
 	LinuxStages['shellcode'] = import_stage_from_module(lshellcode)
 
 	WindowsStages = {}
 	# WindowsStages['shellcode'] = import_stage_from_module_str('windows.shellcode')
-	import windows.shellcode as wshellcode
+	from .windows import shellcode as wshellcode
 	WindowsStages['shellcode'] = import_stage_from_module(wshellcode)
-
 
 	GenericStages = {}
 	# GenericStages['echo'] = import_stage_from_module_str('generic.echo')
@@ -87,18 +84,12 @@ def generatePayloads( ) :
 	# GenericStages['pythonapi'] = import_stage_from_module_str('generic.pythonapi')
 	# GenericStages['control'] = import_stage_from_module_str('generic.control')
 
-
-	import generic.control as control
+	from .generic import control, shell, shellprocess, pythonapi, echo, file as file_
 	GenericStages['control'] = import_stage_from_module(control)
-	import generic.shell as shell
 	GenericStages['shell'] = import_stage_from_module(shell)
-	import generic.shellprocess as shellprocess
 	GenericStages['shellprocess'] = import_stage_from_module(shellprocess)
-	import generic.pythonapi as pythonapi
 	GenericStages['pythonapi'] = import_stage_from_module(pythonapi)
-	import generic.echo as echo
 	GenericStages['echo'] = import_stage_from_module(echo)
-	import generic.file as file_
 	GenericStages['file'] = import_stage_from_module(file_)
 
 	return GenericStages, WindowsStages, LinuxStages
@@ -106,11 +97,11 @@ def generatePayloads( ) :
 
 generatePayloads()
 #
-# print GenericStages
-# print
-# print LinuxStages
-# print
-# print WindowsStages
+# print(GenericStages
+# print("")
+# print(LinuxStages)
+# print("")
+# print(WindowsStages)
 
 
 # if __name__ == '__main__' :
