@@ -271,7 +271,7 @@ Example ::
 		injection_dict = data_dict
 
 		pkt = self.__injectFromDict( pkt, injection_dict, sample_capacity )
-		pkt = str( pkt ).decode('hex')
+		pkt = codecs.decode(pkt, 'hex')
 
 		# print pkt
 		# print injection_dict
@@ -299,7 +299,7 @@ Example ::
 
 		# print injection_dict
 		# print inj_hex_pkt
-		pkt = str( inj_hex_pkt ).decode('hex')
+		pkt = codecs.decode(inj_hex_pkt, 'hex')
 
 		return pkt
 
@@ -323,9 +323,9 @@ Example ::
 
 		sample = bytearray( sample_packet )
 		pkt = bytearray( pkt )
-		# print sample
-		# print pkt
-		# print len(sample), len(pkt)
+		# print(sample)
+		# print(pkt)
+		# print(len(sample), len(pkt))
 
 		if len(sample) != len(pkt) :
 			raise StegoDataInjectionException( "Given packet has not the same length with the Sample." )
@@ -354,7 +354,7 @@ Example ::
 				injection_dict[ tag ] += half_byte_hex
 
 		for tag in injection_dict.keys() :
-			injection_dict[tag] = bytearray(injection_dict[tag].decode('hex') )
+			injection_dict[tag] = codecs.decode(bytearray(injection_dict[tag], 'hex'))
 
 		# print len( data_hex )
 		assert len( data_hex ) == 0
@@ -433,13 +433,13 @@ Example ::
 				sample_hex[ tag_index ] = '~'	# Remove the Tag
 				hex_str = hex1 + hex2
 
-				raw_byte_ = hex_str.decode('hex')
+				raw_byte_ = codecs.decode(hex_str, 'hex')
 				data_byte_ = self.__eval_environ\
 							( raw_byte_, extr_function, len(pkt), byte_index, sample_cap )
 				extract_data_ += data_byte_
 				# print hex_str+"->"+data_byte_.encode('hex')
 			if self.hex_inject :
-				extract_data_ = extract_data_.decode('hex')
+				extract_data_ = codecs.decode(extract_data_, 'hex')
 
 			extract_dict[tag] = bytearray( extract_data_ )
 
