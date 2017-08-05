@@ -7,7 +7,10 @@ import covertutils
 from functools import wraps
 
 from threading import Condition, Thread
-from Queue import Queue
+try:
+	from queue import Queue  # Python 3
+except ImportError:
+	from Queue import Queue  # Python 2
 
 import sys
 import cmd
