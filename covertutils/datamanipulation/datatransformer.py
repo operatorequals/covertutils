@@ -71,7 +71,7 @@ Runs all Tranformations in the `transformation_list` that relate to the specifie
 			(out_template_tag, in_template_tag) = templates
 			out_template, out_tag = out_template_tag.split(':')
 			in_template, in_tag = in_template_tag.split(':')
- 			(out_struct, in_struct) = struct_strs
+			(out_struct, in_struct) = struct_strs
 
 			# if template != out_template :
 			# 	continue
