@@ -1,7 +1,7 @@
 """
 
 This module provides a template for Automatic protocol creation.
-The base class :class:`covertutils.BaseHandler` provide an API with methods:
+The base class :class:`covertutils.handlers.BaseHandler` provide an API with methods:
  - onChunk()
  - onMessage()
  - onNotRecognized()
