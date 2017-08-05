@@ -61,8 +61,8 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 
 			while len( __result ) != length :
 
-				s1 = prev_result[:len( prev_result )/2]
-				s2 = prev_result[len( prev_result )/2:]
+				s1 = prev_result[:len( prev_result )//2]
+				s2 = prev_result[len( prev_result )//2:]
 				if cycle % 2 :
 					s1, s2 = s2, s1
 
