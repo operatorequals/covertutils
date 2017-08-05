@@ -14,6 +14,27 @@ class Test_StegoInjector(unittest.TestCase):
 
 
 
+	def test_group_str_similarity( self ) :
+
+		config = """
+X:_data_:
+
+data1 = '''4444444445454545'''X[2:6]
+data2 = "4444XXXXXXXX4545"
+
+		"""
+		psi = StegoInjector( config )
+
+		res1 = psi.inject("A"*4, 'data1')
+		res2 = psi.inject("A"*4, 'data2')
+
+		# print psi.getCapacity( 'data1' )
+		# print res1
+		# print res2
+		self.failUnless( res1 == res2 )
+
+
+
 	def test_injection_from_dict( self, n = 4 ) :
 
 		config = '''

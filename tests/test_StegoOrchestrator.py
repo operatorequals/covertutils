@@ -30,7 +30,13 @@ control='''4142XXXXXXXXYYYYYYYY4344'''
 
 	def test_functionality( self ) :
 
-		data = "0"*8
+		data = "0"*5
 
-		chunk = self.orch1.readyMessage( data, 'simple' )
-		print chunk
+		chunks = self.orch1.readyMessage( data, 'simple' )
+		print chunks[0].encode('hex')
+
+		for chunk in chunks :
+			stream, message = self.orch2.depositChunk( chunk )
+
+			print stream ,message
+		self.failUnless( data == message )

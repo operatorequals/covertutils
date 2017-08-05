@@ -52,14 +52,27 @@ The `StegoOrchestrator` class combines compression, chunking, encryption and str
 	def readyMessage( self, message, stream ) :
 
 		chunks = super( StegoOrchestrator, self ).readyMessage( message, stream )
+		# print chunks
 
 		ready_chunks = []
 		for chunk in chunks :
 
-			ready = chunk
-			transformed = self.data_tranformer.runAll( ready, stream )
-			injected = self.stego_injector.inject( message, stream, pkt = transformed )
+			print chunk.encode('hex')
+			injected = self.stego_injector.inject( chunk, stream )
+			transformed = self.data_tranformer.runAll( injected, stream )
 
 			ready_chunks.append( injected )
 
 		return ready_chunks
+
+
+
+	def depositChunk( self, chunk ) :
+
+		templ = self.stego_injector.guessTemplate( chunk )[0]
+		extr_data = self.stego_injector.extract( chunk, templ )
+		print extr_data.encode('hex')
+
+		ret = super( StegoOrchestrator, self ).depositChunk( extr_data )
+
+		return ret

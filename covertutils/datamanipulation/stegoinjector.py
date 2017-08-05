@@ -43,7 +43,7 @@ class StegoInjector :
 		# _sxor_: Function that gets 2 char bytes and returns their XOR'd value
 		#
 		# Data functions that are reflective [applied twice to an input returns the input (e.g XOR operation)], do not need the <ExtractionFunction> part.
-		# Do need the colon (:) though.
+		# Do need the last colon (:) though.
 		#
 		# Examples:
 		X:_data_:						# inject the data as provided
@@ -68,7 +68,7 @@ class StegoInjector :
 	"""
 	__comment_sign = '#'
 
-	__pkt_regex = """(\w+)\s*=\s*['"]{1,3}([\w*\s]*)['"]{1,3}\s*([\[\d+\:\d+\]\w,]*?)"""
+	__pkt_regex = """(\w+)\s*=\s*['"]{1,3}([\w*\s]*)['"]{1,3}\s*([\[\d+:\d+\]\,[A-Z]*)"""
 	__tag_regex = '([A-Za-z]+):(.*?):(.*)]?'
 	__data_regex = '[\s(]+_data_[,\s\.)]+'
 	__group_regex = '([A-Za-b])\[(\d+)+:(\d+)\]'
@@ -130,11 +130,19 @@ class StegoInjector :
 
 		pkt_list = re.findall( self.__pkt_regex, stego_template)
 		for pkt_name, hex_pkt, groups in pkt_list :
+			# print pkt_name, hex_pkt, groups
 			hex_pkt = re.sub("\s*",'', hex_pkt)
-			group_list = []
-			if groups :	# the groups Regex part returned something, handle the groups
-				for group_str in group_list :
-					group_list.append( re.findall( self.__group_regex, group_str)[0] )
+			# print "%s" % groups
+			if groups :
+				# print "Groups Found!"
+				group_str_list = groups.split(',')
+				group_list = []
+				for group_str in group_str_list :
+					if not group_str : continue
+					# print "+"+group_str
+					formatted_group = re.findall( self.__group_regex, group_str)[0]
+					# print formatted_group
+					group_list.append( formatted_group )
 				hex_pkt = self.__applyGroups( hex_pkt, group_list, tag_dict.keys())
 
 			if self.__checkPermittedChars( hex_pkt, tag_dict.keys() ) :
@@ -335,6 +343,7 @@ Example ::
 
 
 	def __injectFromDict( self, pkt_hex, injection_dict ) :
+		print injection_dict
 		for tag, data in injection_dict.items() :
 			data = bytearray(data)
 			while data :
@@ -373,11 +382,14 @@ Example ::
 :param str pkt: A packet that matches the template in size, that contains covert data the way the `template` provides.
 :param str template: The template that will be used to extract the data from. It must be the same with the one used to inject the data in the `pkt`.
 :rtype: str
-:return: The data exatrcted from the `pkt`
+:return: The data extracted from the `pkt`
 		"""
 		extract_dict = self.__initializeDataExtraction( pkt, template )
-		data = ''.join( extract_dict.values() )
-		return data
+		data = bytearray()
+		print extract_dict
+		for tag, value in sorted( extract_dict.iteritems() ) :
+			data.extend( value )
+		return str(data)
 
 
 	def extractByTag( self, pkt, template ) :
@@ -396,9 +408,9 @@ Example ::
 		if len(sample_hex) != len(pkt_hex) :
 			raise StegoDataExtractionException("Given packet and Sample packet have not the same length")
 
-		for tag, functions in self.__tags.iteritems() :
+		for tag, functions in sorted( self.__tags.iteritems() ) :
 			extr_function = functions['extr_function']
-			extract_dict[tag] = ''
+			extract_data_ = ''
 			while tag in sample_hex :
 				tag_index = sample_hex.index( tag )
 				hex1 = pkt_hex[ tag_index ]
@@ -412,11 +424,13 @@ Example ::
 				raw_byte_ = hex_str.decode('hex')
 				data_byte_ = self.__eval_environ\
 							( raw_byte_, extr_function, len(pkt), tag_index, sample_cap )
-				extract_dict[ tag ] += data_byte_
+				extract_data_ += data_byte_
 				# print hex_str+"->"+data_byte_.encode('hex')
+			extract_dict[tag] = bytearray( extract_data_ )
+			# extract_dict[tag] = extract_data_
 
 			# print sample_hex
-
+			# print extract_dict.keys()
 		return extract_dict
 
 
