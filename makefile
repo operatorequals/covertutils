@@ -43,10 +43,17 @@ coverage :
 
 
 run :
-	PYTHONPATH=".:PYTHONPATH" $(PY) ${EX}
+	PYTHONPATH=".:PYTHONPATH" ${EX}
 
 
 compile :
 	cython ${SRC} --embed -o cythoned.c
 	gcc cythoned.c -lpython2.7  -I "/usr/include/python2.7" -o ${EX} -ldl
 	rm cythoned.c
+
+
+elf :
+	pyinstaller --onefile --noconsole --hidden-import 'covertutils' -n ${EX} ${PY}
+	mv dist/${EX} .
+	rm -r build/
+	rm ${EX}.spec

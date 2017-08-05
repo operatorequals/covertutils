@@ -3,7 +3,7 @@ This module provides the :data:`CommonStages` dict which contains functions prop
 
 The :data:`payloads.CommonStages` contents are arranged by feature as follows::
 
-    CommonStages['shell']       # Contains another dict with keys every usable instance of the `shell` feature.
+    CommonStages['shell']       	# Contains another dict with keys every usable instance of the `shell` feature.
     CommonStages['shell']['function']       # Contains the actual pointer to the `shell` function. This function executes its argument directly to the Operating System's shell and returns the Standard Output.
     CommonStages['shell']['marshal']        # Contains a serialized representation of `shell` function using the `python marshal` build-in module.
 
