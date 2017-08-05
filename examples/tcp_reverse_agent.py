@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from covertutils.handlers.impl import SimpleShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 

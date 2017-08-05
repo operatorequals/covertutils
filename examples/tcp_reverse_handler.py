@@ -1,4 +1,5 @@
-from covertutils.handlers.impl import SimpleShellHandler, BaseHandler
+#!/usr/bin/env python
+from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
 
 import sys
