@@ -8,7 +8,7 @@ from struct import pack
 
 class Test_DataTranformer(unittest.TestCase) :
 
-	configuration = [( ('simple','simple'),('!H','!H'), '_data_+1' )]
+	configuration = [( ('simple:X','simple:X'),('!H','!H'), '_data_+1' )]
 
 	stego_conf = """
 
