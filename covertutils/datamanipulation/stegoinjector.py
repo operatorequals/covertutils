@@ -195,9 +195,9 @@ Example ::
 	def __getCapacityDict( self, pkt, tag_chars ) :
 		caps = {}
 		for tag in tag_chars :
-			caps[tag] = pkt.count(tag) / 2 	# in bytes
+			caps[tag] = pkt.count(tag) // 2 	# in bytes
 			if self.hex_inject :			# if bytes injected in hex
-				caps[tag] = caps[tag] / 2	# furtherly divide by 2
+				caps[tag] = caps[tag] // 2	# furtherly divide by 2
 
 		return caps
 
@@ -223,7 +223,7 @@ Example ::
 			if start > end :
 				raise StegoSchemeParseException( "Starting byte is greater than Ending Byte in Group %s" % group_repr)
 			for hex_index in xrange(0, len( pkt ), 2) :
-				byte_index = hex_index / 2
+				byte_index = hex_index // 2
 				# print hex_index, byte_index
 				if byte_index >= start and byte_index < end :
 					pkt[ hex_index ] = tag
@@ -371,7 +371,7 @@ Example ::
 				data_byte = chr(data.pop(0))
 
 				hex1_index = pkt_hex.index( tag )
-				byte_index = hex1_index / 2
+				byte_index = hex1_index // 2
 
 				evaled_byte = self.__eval_environ( data_byte, inj_function, len(pkt_hex), byte_index, sample_cap )
 				hex_byte = evaled_byte.encode('hex')
@@ -423,7 +423,7 @@ Example ::
 			extract_data_ = ''
 			while tag in sample_hex :
 				tag_index = sample_hex.index( tag )
-				byte_index = tag_index / 2
+				byte_index = tag_index // 2
 				hex1 = pkt_hex[ tag_index ]
 				sample_hex[ tag_index ] = '~'	# Remove the Tag
 
