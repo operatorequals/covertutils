@@ -5,7 +5,8 @@ from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import StegoInjector
 
 
-
+from random import randint
+from os import urandom
 
 class Test_StegoOrchestrator( unittest.TestCase ) :
 
@@ -37,22 +38,25 @@ control='''4142XXXXXXXXYYYYYYYY4344'''
 		self.orch2 = StegoOrchestrator( "a", self.stego_conf, transformation_list = self.configuration, reverse = True )
 
 
-	def test_functionality( self ) :
+	def test_functionality( self, n = 100, l = 100 ) :
 
-		data = "0"*5
+		for i in range(n) :
 
-		chunks = self.orch1.readyMessage( data, 'simple' )
-		print chunks[0].encode('hex')
-		print chunks
+			ldata = randint(1,l)
+			data = urandom( ldata )
 
+			chunks = self.orch1.readyMessage( data, 'simple' )
+			# print chunks[0].encode('hex')
+			# print chunks
+			# print i
 
-		for chunk in chunks :
-			stream, message = self.orch2.depositChunk( chunk )
-			self.failUnless( chunk.encode('hex')[-4:] == '4345' )	# Testing the alteration
+			for chunk in chunks :
+				stream, message = self.orch2.depositChunk( chunk )
+				self.failUnless( chunk.encode('hex')[-4:] == '4345' )	# Testing the alteration
 
-			# print stream ,message
-		print message
-		self.failUnless( data == message )
+				# print stream ,message
+			# print message
+			self.failUnless( data == message )
 
 
 

@@ -231,8 +231,8 @@ Example ::
 
 
 	def __blankifyPacketFields( self, pkt, sample ) :
-		for i in range(len(sample)) :
-			char = chr(sample[i])
+		for i in range( len(sample) ) :
+			char = chr( sample[i] )
 			if char in self.__tags.keys() :
 				pkt[i] = sample[i]
 		return pkt
@@ -449,12 +449,15 @@ This method tries to guess the used template of a data packet by computing simil
 		ret = []
 		for template in self.__packets.keys() :
 			cap = self.getCapacity( template )
-			payload = urandom( cap )
+			payload = "0" * cap
 			pkt_test = self.inject( payload, template )
+			templ_pkt = self.__packets[ template ][0]
+
 			if len( pkt_test ) != len( pkt ) :
 				continue
-			# self.__blankifyPacketFields( pkt, template )
-			sim_ratio = str_similar( pkt, pkt_test )
+
+			pkt_test2 = self.inject( payload, template, pkt )
+			sim_ratio = str_similar( pkt_test2, pkt_test )
 			ret.append( ( template, sim_ratio ) )
 
 		winner = sorted( ret, key = lambda tup:tup[1] )[-1]
