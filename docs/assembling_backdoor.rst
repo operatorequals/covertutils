@@ -220,7 +220,7 @@ Just do not forget the ``reverse = True`` argument to create the `complementary`
 .. warning :: Oh, and passing a different `passphrase` will result in your backdoor not working. I bet you could see that coming!
 
 
-Pretty straightforward, moving one...
+Pretty straightforward, moving on...
 
 
 Communication Channel Step

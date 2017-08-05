@@ -73,26 +73,37 @@ Stream Identification
 
 Docs @ :class:`covertutils.orchestration.streamidentifier.StreamIdentifier`
 
+This class is the `OTP provider` for the whole package.
 
 .. code:: python
 
-	>>> streams = ['main', 'secondary']
-	>>> id1 = sident("passphrase", streams)
+	>>> from covertutils.orchestration import StreamIdentifier as StreamIdent
 	>>>
-	>>> id2 = sident("passphrase", streams, reverse = True)
+	>>> streams = ['main','secondary','testing']
 	>>>
-	>>> id1.getStreams()	# There is always a hard-coded stream for safety reasons
-	['control', 'main', 'secondary']
+	>>> id1 = StreamIdent("Pa55phra531", streams)
+	>>> id2 = StreamIdent("Pa55phra531", streams, reverse = True)
 	>>>
 	>>> tag = id1.getIdentifierForStream('main', byte_len=4)
+	>>> tag2 = id1.getIdentifierForStream('main', byte_len=4)
+	>>> tag3 = id1.getIdentifierForStream('testing', byte_len=4)
 	>>>
-	>>> tag
-	'\x1e\xf33_'	# it is 4 bytes: \x1e,\xf3, 3, _
+	>>> tag4 = id1.getIdentifierForStream('secondary', byte_len=2)
 	>>>
 	>>> id2.checkIdentifier(tag)
 	'main'
+	>>> id2.checkIdentifier(tag2)
+	'main'
+	>>> id2.checkIdentifier(tag3)
+	'testing'
+	>>> id2.checkIdentifier(tag4)
+	'secondary'
 	>>>
-
+	>>> print (tag, tag2, tag3, tag4)
+	('`\xc9\xca\xeb', '\xe8\xf7$\x1f', '\x00\x03\xfa\xaf', 'v\x17')
+	>>>
+	>>> print (id2.checkIdentifier(tag))
+	None
 
 .. _compressor_component:
 
@@ -101,18 +112,46 @@ Compressor
 
 Docs @ :class:`covertutils.datamanipulation.compressor.Compressor`
 
+This class ensures that the data traveling through the wire are as minimal as possible.
+It does that by measuring the output of **several compression algorithms**.
+
+Decompression works through *trial & error*.
+
 .. code:: python
 
-	>>> from covertutils.datamanipulation import Compressor
-	>>> comp = Compressor()
-	>>> message = "A"*100
-	>>>
-	>>> compressed = comp.compress(message)
-	>>> print compressed
-	x�st�=�e
-	>>> comp.decompress(compressed)
-	'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-	>>>
+>>> from covertutils.datamanipulation import Compressor
+>>> from os import urandom
+>>>
+>>> rand_data = urandom(32)
+>>> plain_data = "AB"*16
+>>> print rand_data
+w!�w`:Ƀ�tU��Jr���?ב�K��lݽ�
+>>> print plain_data
+ABABABABABABABABABABABABABABABAB
+>>>
+>>> comp = Compressor()
+>>>
+>>> comp_rand_data = comp.compress(rand_data)	# Compressing random data is infeasible
+>>> print comp_rand_data
+w!�w`:Ƀ�tU��Jr���?ב�K��lݽ�
+>>> print comp_rand_data == rand_data	# So the returned bytearray is the initial data
+True
+>>> comp_plain_data = comp.compress(plain_data)	# Compressing repeated text
+>>> print comp_plain_data		# Is really efficient though!
+x�str�
+      �1
+>>> print comp_plain_data == plain_data	# So the best compression is returned
+False
+>>>
+>>> print comp.decompress( comp_rand_data )	# The decompression tries all compression schemes
+w!�w`:Ƀ�tU��Jr���?ב�K��lݽ�
+>>> print comp.decompress( comp_rand_data ) == comp_rand_data
+True			# And return the initial data if all of them fail
+>>> print comp.decompress( comp_plain_data ) == comp_plain_data
+False
+>>> print comp.decompress( comp_plain_data ) == plain_data	# But if the data is truly compressed
+True			# It returns the decompressed form
+>>>
 
 
 

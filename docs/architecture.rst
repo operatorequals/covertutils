@@ -3,7 +3,7 @@ Ingredients for Cooking a `Backdoor`
 
 Every program that uses the `covertutils` way of implementing communication has the following ingredients. No matter if it is the backdoors **Agent** (the one running on the compromised host), or the **Handler** (the one that is used by the `pentester`/`attacker`/`hoodie wearing guy`).
 
-All backdoors designed with `coverutils` are made with the below parts:
+All backdoors designed with `covertutils` are made with the below parts:
 
 
 `500gr` - ``Orchestrator``
@@ -109,7 +109,7 @@ Ad Hoc Behavior
 
 That is all good but a good `ol' Reverse TCP` needs none of them! For such cases the :meth:`covertutils.handlers.basehandler.BaseHandler.sendAdHoc` method saves the day. Just spits to the `Communication Channel` like there is no tomorrow (or IDS to trick).
 
-Both class methods are available in all behaviors (defined in `base class`) but each one has the `sending method` that fits the behavior that is trying to simulate. The :meth:`covertutils.handlers.basehandler.BaseHandler.preferred_send` always holds the `sending method` best fit for the ``Handler`` insatnce used.
+Both class methods are available in all behaviors (defined in `base class`) but each one has the `sending method` that fits the behavior that is trying to simulate. The :meth:`covertutils.handlers.basehandler.BaseHandler.preferred_send` always holds the `sending method` best fit for the ``Handler`` instance used.
 
 
 

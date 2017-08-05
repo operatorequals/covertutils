@@ -19,4 +19,4 @@ https://pypi.python.org/pypi/covertutils/
 
 
 Finally, the *makefile* in the git repo may contain useful commands, like *"compile"*. It may be wise to give it a look.
-Try compiling the *example* code locate at *examples/* directory in github repo.
+Try compiling the *example* code located at *examples/* directory in github repo.
