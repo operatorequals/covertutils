@@ -29,7 +29,6 @@ The Chunker class is used to initialize chunk and de-chunk messages.
 		"""
 :param int chunk_length: This parameter defines the size of the output chunks, containing tagging.
 :param int dechunk_length: This parameter defines the size of the input chunks, containing tagging.
-:param obj tag_checker: The Tagging object that will be used. If not defined the NullByteChunkChecker will be used.
 :param bool reverse: If `True` the `chunk_length` and `dechunk_length` are swapped. Useful when setting up 2 instances that have to match.
 		"""
 
