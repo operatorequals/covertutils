@@ -11,6 +11,7 @@ import marshal, types
 from covertutils.payloads import CommonStages
 from covertutils.helpers import defaultArgMerging
 
+
 class BaseHandler :
     """
 Subclassing this class and overriding its methods automatically creates a threaded handler.

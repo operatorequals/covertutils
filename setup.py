@@ -19,6 +19,8 @@ setup(name=covertutils.__name__,
       license='MIT',
       packages=[ covertutils.__name__ ],
       zip_safe=False,
-	  tests_require=['entropy'],
+	  tests_require=['entropy',
+	#   'pytest==2.9.2'
+	  ],
 	  test_suite = 'setup.my_test_suite'
 	  )

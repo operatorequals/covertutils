@@ -6,6 +6,7 @@ from covertutils.exceptions import *
 
 from os import urandom
 from struct import pack, unpack
+from copy import deepcopy
 
 import bz2
 import zlib
@@ -465,7 +466,10 @@ Example ::
 		sample_capacity = self.getCapacity( template )
 
 		if pkt == None :
-			pkt = sample_packet[:]	# COPY DEEPLY
+			pkt = deepcopy( sample_packet )			# COPY DEEPLY
+		else :
+			pkt = pkt.encode('hex')
+
 
 		if data_len != sample_capacity :
 			raise StegoDataInjectionException( "Incompatible Data Lengths. Packet is capable of %d bytes, %d bytes given" % ( sample_capacity, data_len ) )
@@ -474,10 +478,10 @@ Example ::
 		pkt = bytearray( pkt )
 		# print sample
 		# print pkt
-
 		# print len(sample), len(pkt)
+
 		if len(sample) != len(pkt) :
-			raise StegoDataInjectionException( "Given packet has not the same length with the Sample" )
+			raise StegoDataInjectionException( "Given packet has not the same length with the Sample." )
 
 		if pkt != sample :
 			pkt = self.__blankifyPacketFields(pkt, sample, )
