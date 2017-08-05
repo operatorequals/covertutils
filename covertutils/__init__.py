@@ -99,7 +99,7 @@ Packet Hex Dump ( `ls` command and response )::
 Notice: All data packets (PUSH flag) have a payload of exactly 50 bytes, which is encrypted with One-Time-Pad algorithm described in :class:`PseudoOTP.OTPKey`.
 """
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __name__ = 'covertutils'
 __author__ = 'John Torakis - operatorequals'
 __email__ = 'john.torakis@gmail.com'
