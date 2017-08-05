@@ -24,6 +24,8 @@ Packing and unpacking is done by the :meth:`covertutils.orchestration.orchestrat
 
 The ``Orchestrator`` instances are designed to create pairs of 2, in a way that data the first ``Orchestrator`` instance `packs` to `sendable forms` are able to be unpacked and read **only** by the second ``Orchestrator`` instance and `vice-versa`. This is done with the use of a `passphrase` to initialize all `encryption keys` and `stream OTPs`
 
+.. _streams_arch:
+
 Streams
 *******
 

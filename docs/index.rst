@@ -75,19 +75,37 @@ And all that with the abstraction of **Object Oriented Programming**, as this pa
 
 .. toctree::
  :maxdepth: 1
- :caption: Topics:
+ :caption: Basics:
 
  installation
  package_structure
- components
- architecture
- prog_examples
- ids_evasion
- shells
  native_execs
- stages
- stage_api
- assembling_backdoor
+
+.. toctree::
+	:maxdepth: 2
+	:caption: Internals:
+
+	components
+	architecture
+	shells
+	stages
+
+.. toctree::
+	:maxdepth: 2
+	:caption: Techniques:
+
+	ids_evasion
+
+
+.. toctree::
+	:maxdepth: 2
+	:caption: Tutorial'ish Material:
+
+	assembling_backdoor
+	prog_examples
+	stage_api
+
+
 
 All modules `[citation needed]` are documented automatically from comments with `Sphinx apidoc`. The output is below...
 
