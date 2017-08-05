@@ -63,6 +63,24 @@ For the Handler at the other side of the channel, to properly decrypt and handle
 
 	handler_obj2 = MyHandler( recv2, send2, orch2 )
 
+
+The Handler Classes are designed for Multiple Inheritance for further flexibility.
+For instance a Querying, Stageable agent can be implemented like above:
+
+.. code:: python
+
+	from covertutils.handlers import CommandFetcherHandler, StageableHandler
+
+ 	class MyHandler2( CommandFetcherHandler, StageableHandler ) :
+
+		def __init__( self, recv, send, orch, **kw ) :
+			super( MyHandler, self ).__init__( recv, send, orch, **kw )
+
+		def onChunk( self, stream, message ) :pass
+		def onNotRecognised( self ) :pass
+
+Now, creating a `MyHandler2` object needs the 3 standard arguments (inherited from :func:`covertutils.handlers.BaseHandler.__init__`), and all optional arguments that are needed by the provided `Parent Classes`.
+
 """
 
 from abc import ABCMeta, abstractmethod
