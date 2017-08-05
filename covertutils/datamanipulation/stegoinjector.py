@@ -343,7 +343,7 @@ Example ::
 
 
 	def __injectFromDict( self, pkt_hex, injection_dict ) :
-		print injection_dict
+		# print injection_dict
 		for tag, data in injection_dict.items() :
 			data = bytearray(data)
 			while data :
@@ -386,7 +386,7 @@ Example ::
 		"""
 		extract_dict = self.__initializeDataExtraction( pkt, template )
 		data = bytearray()
-		print extract_dict
+		# print extract_dict
 		for tag, value in sorted( extract_dict.iteritems() ) :
 			data.extend( value )
 		return str(data)
@@ -427,7 +427,6 @@ Example ::
 				extract_data_ += data_byte_
 				# print hex_str+"->"+data_byte_.encode('hex')
 			extract_dict[tag] = bytearray( extract_data_ )
-			# extract_dict[tag] = extract_data_
 
 			# print sample_hex
 			# print extract_dict.keys()

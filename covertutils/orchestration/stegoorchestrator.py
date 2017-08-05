@@ -57,11 +57,11 @@ The `StegoOrchestrator` class combines compression, chunking, encryption and str
 		ready_chunks = []
 		for chunk in chunks :
 
-			print chunk.encode('hex')
+			# print chunk.encode('hex')
 			injected = self.stego_injector.inject( chunk, stream )
-			transformed = self.data_tranformer.runAll( injected, stream )
+			transformed = self.data_tranformer.runAll( injected, stream+"_alt" )
 
-			ready_chunks.append( injected )
+			ready_chunks.append( transformed )
 
 		return ready_chunks
 
