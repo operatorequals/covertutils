@@ -1,14 +1,16 @@
 # from abc import ABCMeta, abstractmethod
 from covertutils.exceptions import *
 from covertutils.handlers import BaseHandler
-
 from covertutils.helpers import defaultArgMerging
 
 import marshal, types
 
 from threading import Thread
 # from multiprocessing import Queue
-from Queue import Queue
+try:
+	from queue import Queue  # Python 3
+except ImportError:
+	from Queue import Queue  # Python 2
 
 
 class FunctionDictHandler( BaseHandler ) :
