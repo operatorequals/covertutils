@@ -15,7 +15,11 @@ def stager_worker( storage, message ) :
 	return stream
 
 stager_stage = {}
-stager_stage['work'] = stager_worker.func_code
+try:
+	stager_stage['work'] = stager_worker.__code__   # Python 3
+except AttributeError:
+	stager_stage['work'] = stager_worker.func_code  # Ptyhon 2
+	
 stager_stage['init'] = None
 
 stage_obj = marshal.dumps(stager_stage)
