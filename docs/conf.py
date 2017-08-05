@@ -60,9 +60,10 @@ author = u'Author'
 # version = u''
 import covertutils
 
-# project = covertutils.__name__
-# author = covertutils.__author__
-# version = covertutils.__version__
+project = covertutils.__name__
+author = covertutils.__author__
+version = covertutils.__version__
+copyright = u'2017, %s' % author
 
 # The full version, including alpha/beta/rc tags.
 release = u''

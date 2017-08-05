@@ -1,7 +1,7 @@
 """
 
 This module provides a template for Automatic protocol creation.
-The base class :class.covertutils.BaseHandler provide an API with methods:
+The base class :class:covertutils.BaseHandler provide an API with methods:
  - onChunk()
  - onMessage()
  - onNotRecognized()
@@ -25,7 +25,7 @@ Subclassing the `BaseHandler` class needs an implementation of the above methods
 		def onNotRecognised( self ) :
 			print "Got Garbage Data"
 
-Creating a `Handler` Object needs 2 wrapper functions for raw data **sending** and **receiving**.
+Creating a `MyHandler` Object needs 2 wrapper functions for raw data **sending** and **receiving**.
 The receiving function needs to be **blocking**, just like :func:`socket.socket.recv`
 Also a :class:`covertutils.orchestration.StackOrchestrator` object is required to handle data chunking, compression and encryption.
 
@@ -46,15 +46,15 @@ Also a :class:`covertutils.orchestration.StackOrchestrator` object is required t
 	handler_obj = MyHandler( recv, send, orch )
 
 
-Then it is possible to send `messages` from other `Handler` instances using the `sendAdHoc()` method.
+Then it is possible to send `messages` to other `Handler` instances using the `sendAdHoc()` method.
 
 .. code:: python
 
 	handler_obj.sendAdHoc( "Hello from me" )
 
-Everytime a message is received, the ovwerriden `onMessage()` method will run.
+Everytime a message is received, the overriden `onMessage()` method will run.
 
-For the Handler at the other side of the channel, to properly decrypt and handle the binary sent by `handler_obj` it is needed to be instantiated with the StackOrchestrator argument **`reverse = True`**
+For the Handler at the other side of the channel, to properly decrypt and handle the binary sent by `handler_obj` it is needed to be instantiated with the :func:`covertutils.orchestration.StackOrchestrator.__init__` argument ""**reverse = True**""
 
 .. code:: python
 
@@ -64,8 +64,8 @@ For the Handler at the other side of the channel, to properly decrypt and handle
 	handler_obj2 = MyHandler( recv2, send2, orch2 )
 
 
-The Handler Classes are designed for Multiple Inheritance for further flexibility.
-For instance a Querying, Stageable agent can be implemented like above:
+The `Handler` Classes are designed for **Multiple Inheritance** for further flexibility.
+For instance a Querying, Stageable agent can be implemented like below:
 
 .. code:: python
 
