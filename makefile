@@ -43,4 +43,10 @@ coverage :
 
 
 run :
-	PYTHONPATH=".:PYTHONPATH" $(PY) ${EX} 
+	PYTHONPATH=".:PYTHONPATH" $(PY) ${EX}
+
+
+compile :
+	cython ${SRC} --embed -o cythoned.c
+	gcc cythoned.c -lpython2.7  -I "/usr/include/python2.7" -o ${EX} -ldl
+	rm cythoned.c

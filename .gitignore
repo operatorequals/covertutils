@@ -10,3 +10,5 @@ docs/_build
 docs/_static
 __pycache__
 .pypirc
+.cache
+.eggs
