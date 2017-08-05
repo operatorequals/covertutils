@@ -16,7 +16,7 @@ def init(storage) :
 	wintypes.PROCESS_INFORMATION = __PROCESS_INFORMATION
 
 	pid = wintypes.PROCESS_INFORMATION().dwProcessId
-	PROCESS_ALL_ACCESS = (0x000F0000L|0x00100000L|0xFFF)
+	PROCESS_ALL_ACCESS = (0x000F0000L|0x00100000L|0xFFF)  # noqa FIXME
 	handle = ctypes.windll.kernel32.OpenProcess(
 	                                    PROCESS_ALL_ACCESS,
 	                                    False,
