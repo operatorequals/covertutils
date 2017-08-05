@@ -117,6 +117,13 @@ class StreamIdentifier :
 
 
 
+class Orchestrator :
+
+	__metaclass__ = ABCMeta
+
+
+
+
 class SimpleOrchestrator :
 	"""
 The `SimpleOrchestrator` class combines compression, chunking, encryption and stream tagging, by utilizing the below `coverutils` classes:
@@ -280,3 +287,35 @@ This method resets all components of the `SimpleOrchestrator` instance, effectiv
 		self.encryption_key.reset()
 		self.decryption_key.reset()
 		self.streamIdent.reset()
+
+
+#
+#
+#
+#
+# class StegoOrchestrator :
+# 	"""
+# The `StegoOrchestrator` class combines compression, chunking, encryption and stream tagging, by utilizing the below `coverutils` classes:
+#
+#  - :class:`covertutils.datamanipulation.Chunker`
+#  - :class:`covertutils.datamanipulation.Compressor`
+#  - :class:`covertutils.crypto.keys.StandardCyclingKey`
+#  - :class:`covertutils.orchestration.StreamIdentifier`
+#
+# 	"""
+#
+# 	__pass_encryptor = ascii_letters * 10
+#
+# 	def __init__( self, passphrase, stego_config, transformation_list, cycling_algorithm = None, reverse = False ) :
+#
+# 		self.stego_injector = StegoInjector( stego_config )
+# 		self.data_tranformer = DataTransformer( stego_config, transformation_list )
+#
+# 		templates = self.stego_injector.getTemplates()
+# 		self.streamIdent = StreamIdentifier( passphrase, reverse = reverse, cycling_algorithm = self.cycling_algorithm, streams = templates )
+#
+#
+#
+#
+# 	def readyMessage( self, stream, message ) :
+# 		pass

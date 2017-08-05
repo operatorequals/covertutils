@@ -324,6 +324,10 @@ class StegoInjector :
 		return tag_dict, pkt_dict
 
 
+	def getTemplates( self ) :
+		return self.__packets.keys()
+
+
 	def getCapacityDict( self, template ) :
 		"""
 :param str template: The name of the template whose capacity dict is desired.
