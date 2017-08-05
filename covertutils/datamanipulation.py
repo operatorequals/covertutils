@@ -5,6 +5,7 @@ This module provide classes that are relevant with Data Manipulation. Chunking, 
 from covertutils.exceptions import *
 
 from os import urandom
+from struct import pack, unpack
 
 import bz2
 import zlib
@@ -664,3 +665,39 @@ Example:
 						for i in range( 0, len(pkt_hex) - 1, 2) ])
 	pkt_hex_spaced = pkt_hex_spaced.replace( marker_hex, substitute * 2 )
 	return pkt_hex_spaced.replace(' ', '')
+
+
+
+
+class DataTranformer :
+	"""
+This class provides automated data transformations
+
+	"""
+	def __init__( self, configuration, tranformation_list ) :
+
+		self.injector = StegoInjector( configuration )
+		self.tranformation_list = tranformation_list
+
+
+	def runAll( self, pkt, template ) :
+
+		for trans_tuple in self.tranformation_list :
+			templates, struct_strs, eval_str = trans_tuple
+			(out_template, in_template) = templates
+ 			(out_struct, in_struct) = struct_strs
+
+			if template != out_template :
+				continue
+
+			out_data = self.injector.extract( pkt, template )
+			structed_data = unpack( out_struct, out_data )[0]
+			_data_ = structed_data
+			output_data = eval( eval_str )
+			injectable_data = pack( in_struct, output_data )
+			# print injectable_data.encode('hex')
+			# print self.injector.getCapacity( template ), len( injectable_data)
+			pkt = self.injector.inject( injectable_data, template, pkt  )
+
+
+		return pkt
