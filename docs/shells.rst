@@ -73,7 +73,7 @@ This way SubShells with only one or two commands can be used without directly ac
 	(127.0.0.1:58504)> !control reset
 
 
-*The ``"!"`` can be used from SubShells too, making file transfers handy.
+The ``"!"`` can be used from SubShells too, making file transfers handy:
 
 .. code:: bash
 

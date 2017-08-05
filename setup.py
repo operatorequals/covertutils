@@ -1,5 +1,5 @@
-from distutils.core import setup
-# from setuputils import setup
+# from distutils.core import setup
+from setuptools import setup
 
 import covertutils
 

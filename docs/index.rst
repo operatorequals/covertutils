@@ -12,7 +12,7 @@ Welcome to `CovertUtils`'s documentation!
 
 This Project is free and open-source, available @ Github_
 
-.. _Github : https://github.com/operatorequals/covertutils.
+.. _Github : https://github.com/operatorequals/covertutils
 
 
 A Blog post about it, explaining *motivation* and *implementation internals* is located in my personal blog: Securosophy_
@@ -25,6 +25,7 @@ Not a Backdoor!
 
 Well, `almost` not a backdoor. This project is a `Python2 package` containing enough modules for implementing custom backdoors.
 Everything, from file transferring to customized shells are included.
+
 
 It is not a backdoor ready to be planted (well, most of the :ref:`programming_examples` are). If you are looking for backdoors, RATs and such stuff in `Python` there are some awesome projects already:
 
@@ -74,24 +75,39 @@ And all that with the abstraction of **Object Oriented Programming**, as this pa
 
 .. toctree::
  :maxdepth: 1
- :caption: Contents:
+ :caption: Topics:
 
  installation
  package_structure
  components
+ architecture
  prog_examples
+ ids_evasion
  shells
  native_execs
  stages
  stage_api
 
+
+All modules `[citation needed]` are documented automatically from comments with `Sphinx apidoc`. The output is below...
+
 .. toctree::
- :maxdepth: -1
- :caption: Basic Blocks:
+ :maxdepth: 3
+ :caption: The whole "apidoc" pages ahead:
 
- covertutils.handlers
- covertutils.orchestration
+ modules
+ covertutils
 
 
 
-As the *covertutils API* Toc-Tree is **huge** (due to the code organizing, see: :ref:`package_structure`), it is really handy to use the **search page** of **Sphinx**.
+
+As the *covertutils API* Toc-Tree is **huge** (due to the code organizing, see: :ref:`package_structure`), it is really handy to use the **search page** of **Sphinx** if you are looking for a specific `class` or `method`.
+
+
+
+
+
+.. note:: For `flawless backdoor creation` don't forget to fire up some Primus CDs or old blues standards while coding. Maybe light a cigar too.
+
+
+.. note:: Creating stealthy backdoors requires intelligence, and intelligence is **a terrible thing to waste**.

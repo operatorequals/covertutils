@@ -12,7 +12,7 @@ test :
 
 doc :
 	# cd docs/;
-	sphinx-apidoc ./covertutils/ -P -f -o docs/
+	sphinx-apidoc ./covertutils/ -P -f  -o docs/
 	cd docs/;make html
 
 

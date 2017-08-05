@@ -1,5 +1,5 @@
-Components
-===========
+Internal Components
+===================
 
 Here you can find code snippets from *covertutils* basic internal components.
 They are documented under the :mod:`covertutils` pages, but here they will parade in all their glory.
