@@ -314,7 +314,7 @@ Example ::
 		if pkt == None :
 			pkt = deepcopy( sample_packet )			# COPY DEEPLY
 		else :
-			pkt = pkt.encode('hex')
+			pkt = codecs.encode(pkt, 'hex')
 
 
 
