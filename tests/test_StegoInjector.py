@@ -4,6 +4,7 @@ from covertutils.datamanipulation import StegoInjector
 from covertutils.datamanipulation import asciiToHexTemplate
 
 from os import urandom
+import codecs
 
 from covertutils.exceptions import *
 
@@ -130,7 +131,7 @@ Y:_data_:
 
 data1="""44X44X4141Y4141Y44X43X"""
 '''
-		pkt = '4464464141641416446436'.decode('hex')
+		pkt = codecs.decode('4464464141641416446436', 'hex')
 		psi = StegoInjector( config )
 		extr_pkt = psi.extract(pkt, template = 'data1')
 		data = 'fff'
