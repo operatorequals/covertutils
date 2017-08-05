@@ -39,12 +39,11 @@ control='''4142XXXXXXXXYYYYYYYY4344'''
 
 	def test_functionality( self ) :
 
-		data = "0"*50
+		data = "0"*5
 
 		chunks = self.orch1.readyMessage( data, 'simple' )
-		# print chunks[0].encode('hex')
-
-		# print chunks[0].encode('hex')
+		print chunks[0].encode('hex')
+		print chunks
 
 
 		for chunk in chunks :
@@ -52,6 +51,7 @@ control='''4142XXXXXXXXYYYYYYYY4344'''
 			self.failUnless( chunk.encode('hex')[-4:] == '4345' )	# Testing the alteration
 
 			# print stream ,message
+		print message
 		self.failUnless( data == message )
 
 

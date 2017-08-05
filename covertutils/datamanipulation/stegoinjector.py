@@ -1,3 +1,57 @@
+"""
+This module provides functionality for steganography.
+It uses a configuration string with custom syntax to describe *where* and *how* will data be injected in a template.
+
+**Stego Configuration Syntax Description**
+
+* Tags
+	Tags are used to specify the functions that will be applied on each byte at injection and extraction.
+
+* Templates
+	Templates are hex strings containing the Tag Letters wherever arbitrary data can be injected.
+
+
+Example Syntax:
+
+.. code:: python
+
+	# Comments symbol is traditionally the '#'
+
+	# -- Tags --
+	# Those are the tags. Declared as:
+	# Letter:<InjectionFunction>:<ExtractionFunction>
+	# Functions get evaluated with python 'eval' under the following context:
+	# _data_: byte to be injected, extracted
+	# _len_: packet length
+	# _index_: index of the byte injected/extracted
+	# _capacity_: Byte capacity of the packet as declared below
+	# _sxor_: Function that gets 2 char bytes and returns their XOR'd value
+	#
+	# Data functions that are reflective [applied twice to an input returns the input (e.g XOR operation)], do not need the <ExtractionFunction> part.
+	# Do need the last colon (:) though.
+	#
+	# Examples:
+	X:_data_:						# inject the data as provided
+	K:_sxor_(_data_, '\\xaa'):				# inject the data xor'd with '\\xaa' byte. Use the same function for extraction
+	L:chr(ord(_data_) + 1):chr(ord(_data_) - 1)		# inject each byte incremented by 1. Decrement each byte before extraction.
+
+	# -- Packet Templates --
+	# Packet Templates, declared as:
+	# packet_template_name = '''Hex of the template packet with Tag Letters among the valid bytes''' []<groups>
+	# Groups are declared as:
+	# TagLetter[start:end]
+	# and will automatically replace all bytes between 'start' and 'end' with the given Tag Letter
+	#
+	# Those two templates are identical (Notice the Tag Letters between the Hex Values in `ip_tcp_syn2`)
+	ip_tcp_syn1 = '''450000280001000040067ccd7f0000017f00000100140050000000000000000050022000917c0000'''L[4:6],K[24:28],X[20:22]
+	ip_tcp_syn2 = '''45000028LLLL000040067ccd7f0000017f000001XXXX0050KKKKKKKK0000000050022000917c0000'''
+
+	# Whitespace and comments won't break the Strings
+	mac_ip_tcp_syn = '''ffffffffffff0000000000000800	# MAC header
+	450000280001000040067ccd7f0000017f000001		# IP header
+	00140050000000000000000050022000917c0000'''K[18:20],K[38:42],K[34:36]
+"""
+
 from covertutils.exceptions import *
 
 from os import urandom
@@ -13,59 +67,7 @@ from copy import deepcopy
 
 
 class StegoInjector :
-	"""
-	This module provides functionality for steganography.
-	It uses a configuration string with custom syntax to describe *where* and *how* will data be injected in a template.
 
-	**Stego Configuration Syntax Description**
-
-	* Tags
-		Tags are used to specify the functions that will be applied on each byte at injection and extraction.
-
-	* Templates
-		Templates are hex strings containing the Tag Letters wherever arbitrary data can be injected.
-
-
-	Example Syntax:
-
-	.. code:: python
-
-		# Comments symbol is traditionally the '#'
-
-		# -- Tags --
-		# Those are the tags. Declared as:
-		# Letter:<InjectionFunction>:<ExtractionFunction>
-		# Functions get evaluated with python 'eval' under the following context:
-		# _data_: byte to be injected, extracted
-		# _len_: packet length
-		# _index_: index of the byte injected/extracted
-		# _capacity_: Byte capacity of the packet as declared below
-		# _sxor_: Function that gets 2 char bytes and returns their XOR'd value
-		#
-		# Data functions that are reflective [applied twice to an input returns the input (e.g XOR operation)], do not need the <ExtractionFunction> part.
-		# Do need the last colon (:) though.
-		#
-		# Examples:
-		X:_data_:						# inject the data as provided
-		K:_sxor_(_data_, '\\xaa'):				# inject the data xor'd with '\\xaa' byte. Use the same function for extraction
-		L:chr(ord(_data_) + 1):chr(ord(_data_) - 1)		# inject each byte incremented by 1. Decrement each byte before extraction.
-
-		# -- Packet Templates --
-		# Packet Templates, declared as:
-		# packet_template_name = '''Hex of the template packet with Tag Letters among the valid bytes''' []<groups>
-		# Groups are declared as:
-		# TagLetter[start:end]
-		# and will automatically replace all bytes between 'start' and 'end' with the given Tag Letter
-		#
-		# Those two templates are identical (Notice the Tag Letters between the Hex Values in `ip_tcp_syn2`)
-		ip_tcp_syn1 = '''450000280001000040067ccd7f0000017f00000100140050000000000000000050022000917c0000'''L[4:6],K[24:28],X[20:22]
-		ip_tcp_syn2 = '''45000028LLLL000040067ccd7f0000017f000001XXXX0050KKKKKKKK0000000050022000917c0000'''
-
-		# Whitespace and comments won't break the Strings
-		mac_ip_tcp_syn = '''ffffffffffff0000000000000800	# MAC header
-		450000280001000040067ccd7f0000017f000001		# IP header
-		00140050000000000000000050022000917c0000'''K[18:20],K[38:42],K[34:36]
-	"""
 	__comment_sign = '#'
 
 	__pkt_regex = """(\w+)\s*=\s*['"]{1,3}([\w*\s]*)['"]{1,3}\s*([\[\d+:\d+\]\,[A-Z]*)"""
@@ -75,7 +77,7 @@ class StegoInjector :
 
 	__comment_regex = '%s.*' % __comment_sign
 
-	__not_permitted_chars = '1234567890ABCDEF'
+	__not_permitted_chars = '1234567890ABCDEFabcdef'
 	__tag_chars = ''
 
 
@@ -281,15 +283,17 @@ Example ::
 :rtype: str
 :return: Template or packet with the given data injected.
 		"""
-		data_len = self.getCapacity( template )
+		data_len = len( data )
 		pkt, sample_capacity = self.__initializeInjection( data_len, template, pkt )
 
 		injection_dict = self.__createInjectionDict( pkt, data, sample_capacity )
 
 		pkt = self.__injectFromDict( pkt, injection_dict )
-		pkt = str( pkt ).decode('hex')
 
 		# print injection_dict
+		# print pkt
+		pkt = str( pkt ).decode('hex')
+
 		return pkt
 
 
@@ -303,9 +307,8 @@ Example ::
 		else :
 			pkt = pkt.encode('hex')
 
-
 		if data_len != sample_capacity :
-			raise StegoDataInjectionException( "Incompatible Data Lengths. Packet is capable of %d bytes, %d bytes given" % ( sample_capacity, data_len ) )
+			raise StegoDataInjectionException( "Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity) )
 
 		sample = bytearray( sample_packet )
 		pkt = bytearray( pkt )
@@ -317,7 +320,7 @@ Example ::
 			raise StegoDataInjectionException( "Given packet has not the same length with the Sample." )
 
 		if pkt != sample :
-			pkt = self.__blankifyPacketFields(pkt, sample, )
+			pkt = self.__blankifyPacketFields( pkt, sample, )
 
 		return pkt, sample_capacity
 
@@ -366,13 +369,7 @@ Example ::
 			else :
 				inj_function = self.__tags[ tag ]['inj_function']
 
-#	============== Eval Environment ======
-			_len_ = len(pkt_hex)
-			_index_ = byte_index
-			_data_ = data_to_inj
-			_capacity_ = sample_cap
-			evaled = eval( inj_function )
-#	======================================
+			evaled = self.__eval_environ( data_to_inj, inj_function, len(pkt_hex), byte_index, sample_cap )
 			# print hex_index, evaled
 			return tag, evaled
 
@@ -433,27 +430,11 @@ Example ::
 		return extract_dict
 
 
-	def __eval_environ( self, _data_, function, _len_, _index,_capacity_ ) :
+	def __eval_environ( self, _data_, function, _len_, _index_,_capacity_ ) :
 #	============== Eval Environment ======
 		return eval( function )
 #	======================================
 
-
-	def __extractFromOffset( self, hex_index, pkt, sample_hex, sample_cap ) :
-		byte_index = hex_index/2
-		hex_digit = sample_hex[ hex_index ]
-		if hex_digit not in self.__tags.keys() :
-			return None, None
-
-		extr_function = self.__tags[ hex_digit ]['extr_function']
-#	============== Eval Environment ======
-		_len_ = len(pkt)
-		_index_ = byte_index
-		_data_ = pkt[ byte_index ]
-		_capacity_ = sample_cap
-		data_byte_ = self.__eval_environ( _data_, extr_function, _len_, _index,_capacity_)
-#	======================================
-		return hex_digit, data_byte_
 
 
 	def guessTemplate( self, pkt ) :
@@ -472,6 +453,7 @@ This method tries to guess the used template of a data packet by computing simil
 			pkt_test = self.inject( payload, template )
 			if len( pkt_test ) != len( pkt ) :
 				continue
+			# self.__blankifyPacketFields( pkt, template )
 			sim_ratio = str_similar( pkt, pkt_test )
 			ret.append( ( template, sim_ratio ) )
 

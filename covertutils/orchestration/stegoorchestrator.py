@@ -51,21 +51,18 @@ The `StegoOrchestrator` class combines compression, chunking, encryption and str
 
 		self.__simple_orchestrators = {}
 		for index, template in enumerate( streams ) :
-			stego_capacity = self.stego_injector.getCapacity( template ) - self.tag_length
+			stego_capacity = self.stego_injector.getCapacity( template )
 			# print stego_capacity
-			self.intermediate_function( urandom( stego_capacity ), True )
-			intermediate_cap = len( self.intermediate_function( urandom( stego_capacity ), True ) )	# check the capacity of the data length after the intermediate function
+			inter_product = self.intermediate_function( "0" * stego_capacity, False )	# Need a valid decodable data string "0000..." is valid hex
+			intermediate_cap = len( inter_product )	 - self.tag_length # check the capacity of the data length after the intermediate function
 
 			self.streams_buckets[ template ]['chunker'] = Chunker( intermediate_cap, intermediate_cap, reverse = reverse )
-
-
 
 
 
 	def readyMessage( self, message, stream ) :
 
 		chunks = super( StegoOrchestrator, self ).readyMessage( message, stream )
-		# print chunks
 
 		ready_chunks = []
 		for chunk in chunks :
@@ -86,10 +83,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption and str
 
 		templ = self.stego_injector.guessTemplate( chunk )[0]
 		extr_data = self.stego_injector.extract( chunk, templ )
-		# print extr_data.encode('hex')
-		chunk = self.intermediate_function( chunk, False )
+		chunk = self.intermediate_function( extr_data, False )
 
-
-		ret = super( StegoOrchestrator, self ).depositChunk( extr_data )
-
+		ret = super( StegoOrchestrator, self ).depositChunk( chunk )
 		return ret

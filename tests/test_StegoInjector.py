@@ -5,6 +5,8 @@ from covertutils.datamanipulation import asciiToHexTemplate
 
 from os import urandom
 
+from covertutils.exceptions import *
+
 
 class Test_StegoInjector(unittest.TestCase):
 
@@ -28,33 +30,32 @@ data2 = "4444XXXXXXXX4545"
 		res1 = psi.inject("A"*4, 'data1')
 		res2 = psi.inject("A"*4, 'data2')
 
-		# print psi.getCapacity( 'data1' )
-		# print res1
-		# print res2
 		self.failUnless( res1 == res2 )
 
 
 
-	def test_injection_from_dict( self, n = 4 ) :
+	def test_injection_from_dict( self, n = 100 ) :
 
-		config = '''
-X:_data_:
-Y:_sxor_(_data_, '\xaa'):
+		for i in range( 0, n, 2  ) :
+			config = '''
+	X:_data_:
+	Y:_sxor_(_data_, '\xaa'):
 
-data1="""44444444%s41414141%s"""
-		''' % ("X"*n, "Y"*n)
+	data1="""44444444%s41414141%s"""
+			''' % ("X"*i, "Y"*i)
 
-		inj_dict = { 'X':'a'* (n/2),
-					'Y':'b'* (n/2)
-				}
+			inj_dict = { 'X':'a'* (i/2),
+						'Y':'b'* (i/2)
+					}
 
-		psi = StegoInjector( config )
-		stego_pkt = psi.injectByTag(inj_dict, template = 'data1')
-		self.failUnless( stego_pkt == 'DDDDaaAAAAbb')
+			psi = StegoInjector( config )
+			stego_pkt = psi.injectByTag(inj_dict, template = 'data1')
+			testable = 'DDDD%sAAAA%s' % ('a' * (i/2), 'b' * (i/2))
+			self.failUnless( stego_pkt == testable )
 
 
 
-	def test_extraction_from_dict( self, n=4 ) :
+	def test_extraction_from_dict( self, n = 4 ) :
 		config = '''
 X:_data_:
 Y:_data_:
@@ -91,7 +92,7 @@ Y:_data_:
 
 data1="""44X44X4141Y4141Y44X43X"""
 '''
-		data = 'fff'
+		data = 'fff'	# 0x660x660x66
 		psi = StegoInjector( config )
 		stego_pkt = psi.inject(data, template = 'data1')
 
@@ -127,8 +128,9 @@ data1="""44X44X4141Y4141Y44X43X"""
 data2="""44X44X4141Y4141Y44X43X"""
 '''
 		psi = StegoInjector( config )
-		psi.getCapacity('data1')
-		psi.getCapacity('data2')
+		cap1 = psi.getCapacity('data1')
+		cap2 = psi.getCapacity('data2')
+
 
 
 	def test_pattern_guesser( self ) :
@@ -151,6 +153,7 @@ data2="""41414142XXYY"""
 		self.failUnless( res == 'data1' )
 
 
+
 	def test_ascii_to_hex_template( self, n = 1000 ) :
 		pkt = urandom( n )
 		pkt = pkt.replace(pkt[-1], '~')
@@ -169,3 +172,39 @@ data1="""%s"""
 		inj = psi.inject(cap*'~', 'data1' )
 		print "Changed %d bytes" % cap
 		self.failUnless( inj == pkt )
+
+
+
+	def test_syntax( self ) :
+		conf1 = "la:_data_:" # 2 letter tag
+		try :
+			p = StegoInjector( conf1 )
+		except Exception as e :
+			self.failUnless ( type(e) == StegoSchemeParseException )
+
+		conf2 = "C:_data_:" # Hex Letter
+		try :
+			p = StegoInjector( conf2 )
+		except Exception as e :
+			self.failUnless ( type(e) == StegoSchemeParseException )
+
+
+	def test_injection_with_pkt( self ) :
+		config = '''
+X:_data_:
+Y:_data_:
+
+data1="""44X44X4141Y4141Y44X43X"""
+
+data2="""44X44X4141Y4141Y44X43X"""
+'''
+		psi = StegoInjector( config )
+
+		pkt = "\xFF"*11
+
+		inj_pkt = psi.inject( "\x00"*3, 'data1', pkt )
+
+		# print inj_pkt.encode('hex')
+		testable = "\xFF\x0F\xF0\xFF\xFF\x0F\xFF\xF0\xFF\x0F\xF0"
+		# print testable.encode('hex')
+		self.failUnless( inj_pkt == testable)

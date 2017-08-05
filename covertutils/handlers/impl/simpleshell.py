@@ -1,4 +1,4 @@
-
+from covertutils.exceptions import *
 
 from time import sleep
 
@@ -22,7 +22,7 @@ class SimpleShellHandler ( FunctionDictHandler ) :
 	This class directly executes commands on a System Shell (Windows or Unix) via the :func:`os.popen` function. The exact stage used to execute commands is explained in :mod:`covertutils.Stages`
 """
 
-	def __init__( self, recv, send, orchestrator ) :
+	def __init__( self, recv, send, orchestrator, **kw ) :
 		"""
 :param function receive_function: A **blocking** function that returns every time a chunk is received. The return value must be return raw data.
 :param function send_function: A function that takes raw data as argument and sends it across.
