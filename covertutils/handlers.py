@@ -27,12 +27,12 @@ Subclassing the `BaseHandler` class needs an implementation of the above methods
 
 Creating a `MyHandler` Object needs 2 wrapper functions for raw data **sending** and **receiving**.
 The receiving function needs to be **blocking**, just like :func:`socket.socket.recv`
-Also a :class:`covertutils.orchestration.StackOrchestrator` object is required to handle data chunking, compression and encryption.
+Also a :class:`covertutils.orchestration.SimpleOrchestrator` object is required to handle data chunking, compression and encryption.
 
 .. code:: python
 
 	passphrase = "Th1s1sMyS3cr3t"
-	orch = StackOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50 )
+	orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50 )
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect( addr )
@@ -54,12 +54,12 @@ Then it is possible to send `messages` to other `Handler` instances using the `s
 
 Everytime a message is received, the overriden `onMessage()` method will run.
 
-For the Handler at the other side of the channel, to properly decrypt and handle the binary sent by `handler_obj` it is needed to be instantiated with the :func:`covertutils.orchestration.StackOrchestrator.__init__` argument ""**reverse = True**""
+For the Handler at the other side of the channel, to properly decrypt and handle the binary sent by `handler_obj` it is needed to be instantiated with the :func:`covertutils.orchestration.SimpleOrchestrator.__init__` argument ""**reverse = True**""
 
 .. code:: python
 
 	passphrase = "Th1s1sMyS3cr3t"
-	orch2 = StackOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True )
+	orch2 = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True )
 
 	handler_obj2 = MyHandler( recv2, send2, orch2 )
 
@@ -106,7 +106,7 @@ Subclassing this class and overriding its methods automatically creates a thread
 		"""
 :param `function` recv: A **blocking** function that returns every time a chunk is received. The return type must be raw data, directly fetched from the channel.
 :param `function` send: A function that takes raw data as argument and sends it across the channel.
-:param `orchestration.StackOrchestrator` orchestrator: An Object that is used to translate raw data to `(stream, message)` tuples.
+:param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw data to `(stream, message)` tuples.
 		"""
 		self.receive_function = recv
 		self.send_function = send
@@ -180,7 +180,7 @@ This method runs whenever a chunk is not recognised.
 
 	def sendAdHoc( self, message, stream = None, assert_len = 0 ) :
 		"""
-This method uses the object's `StackOrchestrator` instance to send raw data to the other side, throught the specified `Stream`.
+This method uses the object's `SimpleOrchestrator` instance to send raw data to the other side, throught the specified `Stream`.
 If `stream` is `None`, the default Orchestrator's stream will be used.
 
 :param str message: The `message` send to the other side.
@@ -429,7 +429,7 @@ Can be nicely paired with :class:`covertutils.handlers.CommandFetcherHandler` fo
 
 class ResettableHandler ( BaseHandler ) :
 	"""
-This handler can reset the :class:`covertutils.orchestration.StackOrchestrator` object (reset all crypto keys, stream identifiers, chunkers), in case the state between the agent and handler is lost.
+This handler can reset the :class:`covertutils.orchestration.SimpleOrchestrator` object (reset all crypto keys, stream identifiers, chunkers), in case the state between the agent and handler is lost.
 
 	"""
 	__metaclass__ = ABCMeta
@@ -468,7 +468,7 @@ class SimpleShellHandler ( FunctionDictHandler ) :
 	This class provides an implementation of Simple Remote Shell.
 	It can be used on any shell type and protocol (bind, reverse, udp, icmp, etc),by adjusting `send_function()` and `receive_function()`
 
-	All communication is chunked and encrypted, as dictated by the :class:`covertutils.orchestration.StackOrchestrator` object.
+	All communication is chunked and encrypted, as dictated by the :class:`covertutils.orchestration.SimpleOrchestrator` object.
 
 	This class directly executes commands on a System Shell (Windows or Unix) via the :func:`os.popen` function. The exact stage used to execute commands is explained in :mod:`covertutils.Stages`
 """
@@ -477,7 +477,7 @@ class SimpleShellHandler ( FunctionDictHandler ) :
 		"""
 :param function receive_function: A **blocking** function that returns every time a chunk is received. The return value must be return raw data.
 :param function send_function: A function that takes raw data as argument and sends it across.
-:param `orchestration.StackOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
+:param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
 		"""
 		super( SimpleShellHandler, self ).__init__( recv, send, orchestrator, function_dict =  _function_dict )
 

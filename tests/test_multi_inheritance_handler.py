@@ -1,6 +1,6 @@
 import unittest
 from covertutils.handlers import *
-from covertutils.orchestration import StackOrchestrator
+from covertutils.orchestration import SimpleOrchestrator
 # from covertutils.Handlers.BaseHandler import BaseHandler
 
 out_len = 100
@@ -16,7 +16,7 @@ def recv(  ) :
 def send(  raw ) :
     return None
 
-orch2 = StackOrchestrator("pass!", 4, out_len, in_len , reverse = True)
+orch2 = SimpleOrchestrator("pass!", 4, out_len, in_len , reverse = True)
 
 class MyHandler( FunctionDictHandler, CommandFetcherHandler, ResponseOnlyHandler ) :
 

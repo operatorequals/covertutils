@@ -42,6 +42,11 @@ coverage :
 	firefox htmlcov/index.html
 
 
+cov-badge :
+	-coverage run --source=covertutils/ -m unittest discover -s tests/
+	coverage-badge -o cov-badge.svg
+
+
 run :
 	PYTHONPATH=".:PYTHONPATH" ${EX}
 

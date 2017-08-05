@@ -3,7 +3,7 @@ import unittest
 from pprint import pprint
 from os import urandom
 from random import randint, choice, shuffle
-from covertutils.orchestration import StackOrchestrator
+from covertutils.orchestration import SimpleOrchestrator
 
 from hashlib import sha512
 
@@ -18,11 +18,11 @@ class TestOrchestrator( unittest.TestCase ) :
 		self.in_length = 11
 
 		passp_ = "passphrase"
-		self.orch1 = StackOrchestrator( passp_,
+		self.orch1 = SimpleOrchestrator( passp_,
 			2, self.out_length, self.in_length,
 			# cycling_algorithm = sha512
 			 )
-		self.orch2 = StackOrchestrator( passp_,
+		self.orch2 = SimpleOrchestrator( passp_,
 			2, self.out_length, self.in_length,
 			# cycling_algorithm = sha512,
 			reverse = True)

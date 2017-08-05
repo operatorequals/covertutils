@@ -1,7 +1,7 @@
 import unittest
 
 from covertutils.handlers import BaseHandler, ResponseOnlyHandler
-from covertutils.orchestration import StackOrchestrator
+from covertutils.orchestration import SimpleOrchestrator
 
 from os import urandom
 from time import sleep
@@ -14,11 +14,11 @@ in_length = 40
 
 passp = "passphrase"
 
-orch1 = StackOrchestrator( passp,
+orch1 = SimpleOrchestrator( passp,
     2, out_length, in_length,
     cycling_algorithm = sha512)
 
-orch2 = StackOrchestrator( passp,
+orch2 = SimpleOrchestrator( passp,
     2, out_length, in_length,
     cycling_algorithm = sha512, reverse = True)
 

