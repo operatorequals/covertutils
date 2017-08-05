@@ -66,6 +66,7 @@ The callbacks run when:
  - a `Chunk` has arrived, informing about the `Stream` that it received it, and if it was the last part of a `Message` - :meth:`covertutils.handlers.basehandler.BaseHandler.onChunk`
  - an unrecognized payload has arrived - :meth:`covertutils.handlers.basehandler.BaseHandler.onNotRecognised`
 
+.. _behaviors:
 
 Behaviors
 *********
