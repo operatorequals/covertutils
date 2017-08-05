@@ -1,4 +1,5 @@
-from setuptools import setup
+from distutils.core import setup
+# from setuputils import setup
 
 import covertutils
 
@@ -18,9 +19,10 @@ setup(name=covertutils.__name__,
       author_email=covertutils.__email__,
       license='MIT',
       packages=[ covertutils.__name__ ],
-      zip_safe=False,
-	  tests_require=['entropy',
+	  keywords = ['crypto', 'covert', 'backdoor', 'shell']
+    #   zip_safe=False,
+	#   tests_require=['entropy',
 	#   'pytest==2.9.2'
-	  ],
-	  test_suite = 'setup.my_test_suite'
+	#   ],
+	#   test_suite = 'setup.my_test_suite'
 	  )
