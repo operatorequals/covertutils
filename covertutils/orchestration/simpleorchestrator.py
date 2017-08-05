@@ -1,127 +1,15 @@
-"""
-This module provides classes for translating raw data into `(stream, message)` tuples, usable by the :class:`covertutils.handlers.BaseHandler` and subclasses.
-
-
-"""
-from string import ascii_letters
-from copy import deepcopy
-
-from covertutils.exceptions import *
 
 from covertutils.crypto.keys import StandardCyclingKey
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
+from covertutils.orchestration import StreamIdentifier
+
 from covertutils.datamanipulation import Chunker
 from covertutils.datamanipulation import Compressor
 
+from string import ascii_letters
 
-class StreamIdentifier :
-
-	__comparer = ascii_letters
-
-	def __init__( self, passphrase, stream_list = [], cycling_algorithm = None, reverse = False, hard_stream = 'control' ) :
-
-		self.cycle = False		# For testing
-		if cycling_algorithm == "No" :
-			self.cycle = False
-
-		self.cycling_algorithm = cycling_algorithm
-		if self.cycling_algorithm == None :
-			self.cycling_algorithm = StandardCyclingAlgorithm
-
-		self.__streams = {}
-		self.hashphrase = self.cycling_algorithm( passphrase ).digest()
-
-		stream_list = set( stream_list )
-		self.__hard_stream = hard_stream
-		stream_list.add( self.__hard_stream )	# be sure that the list contains a control stream
-		# self.__stream_generator = StandardCyclingKey( passphrase, cycling_algorithm )
-
-		self.reverse = reverse
-		for stream_name in stream_list :
-			self.addStream( stream_name )
-
-
-	def addStream( self, stream_name ) :
-		if stream_name in self.__streams.keys() :
-			raise StreamAlreadyExistsException( "Stream '%s' already exists" % stream_name )
-
-		inp_passphrase = self.cycling_algorithm( self.hashphrase + stream_name ).digest()
-		out_passphrase = self.cycling_algorithm( stream_name + self.hashphrase ).digest()
-
-		if self.reverse :
-			inp_passphrase, out_passphrase = out_passphrase, inp_passphrase
-
-		inp_StandardCyclingKey = StandardCyclingKey ( inp_passphrase, cycling_algorithm = self.cycling_algorithm  )
-		out_StandardCyclingKey = StandardCyclingKey ( out_passphrase, cycling_algorithm = self.cycling_algorithm )
-
-		StandardCyclingKey_tuple = ( inp_StandardCyclingKey, out_StandardCyclingKey )
-		self.__streams[stream_name] = StandardCyclingKey_tuple
-
-
-	def deleteStream( self, stream_name ) :
-		if stream_name == self.__hard_stream :
-			raise StreamDeletionException( "Control Stream cannot be deleted!" )
-		del self.__streams[ stream_name ]
-
-
-	def getHardStreamName( self ) :
-		return self.__hard_stream
-
-
-	def getIdentifierForStream( self, stream_name = None, byte_len = 2 ) :
-		if stream_name == None :
-			stream_name = self.__hard_stream
-
-		assert stream_name in self.__streams.keys()
-
-		StandardCyclingKeys = self.__streams[ stream_name ]
-		out_StandardCyclingKey = self.__streams[ stream_name ][1]
-
-		ident = out_StandardCyclingKey.xor( self.__comparer[:byte_len] )
-
-		hardIdentify = (stream_name == self.__hard_stream)
-		self.__cycleKey( out_StandardCyclingKey, hardIdentify )
-
-		return ident
-
-
-	def checkIdentifier( self, bytes_ ) :
-		byte_len = len( bytes_ )
-
-		for stream_name, StandardCyclingKeys in self.__streams.items() :
-			inp_StandardCyclingKey = StandardCyclingKeys[0]
-			hardIdentify = (stream_name == self.__hard_stream)
-
-			plain = inp_StandardCyclingKey.xor( bytes_ )
-			if plain == self.__comparer[:byte_len] :
-				self.__cycleKey( inp_StandardCyclingKey, hardIdentify )
-				return stream_name
-		return None
-
-
-	def __cycleKey( self, key, hardIdentify ) :
-		if not self.cycle : return
-		if not hardIdentify :
-			key.cycle()
-
-
-	def getStreams( self, ) :
-		return self.__streams.keys()
-
-
-	def reset( self ) :
-		for stream_name, StandardCyclingKeys in self.__streams.items() :
-			for key in StandardCyclingKeys :
-				key.reset()
-
-
-
-class Orchestrator :
-
-	__metaclass__ = ABCMeta
-
-
+from copy import deepcopy
 
 
 class SimpleOrchestrator :
@@ -160,15 +48,16 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 		pass1 = passGenerator.xor( self.__pass_encryptor )
 		pass2 = passGenerator.xor( self.__pass_encryptor )
 
+		self.encryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
+		self.decryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
+
+		self.reverse = reverse
+
 		self.streamIdent = StreamIdentifier( pass1, reverse = reverse, cycling_algorithm = self.cycling_algorithm )
 
 		self.default_stream = self.streamIdent.getHardStreamName()
 		streams.append( self.default_stream )
 
-		self.encryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
-		self.decryption_key = StandardCyclingKey( pass2, cycling_algorithm = self.cycling_algorithm )
-
-		self.reverse = reverse
 		self.streams_buckets = {}
 		for stream in streams :
 			self.addStream( stream )
@@ -177,32 +66,6 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 
 		del passGenerator
 		del passphrase
-
-
-	def getDefaultStream( self ) :
-		"""
-This method returns the stream that is used if no stream is specified in `readyMessage()`.
-
-:rtype: str
-		"""
-		return self.default_stream
-
-
-	def addStream( self, stream ) :
-
-		if stream != self.streamIdent.getHardStreamName() :
-			self.streamIdent.addStream( stream )
-
-		self.streams_buckets[ stream ] = {}
-		self.streams_buckets[ stream ]['message'] = ''
-		self.streams_buckets[ stream ]['chunker'] = Chunker( self.out_length,
-															self.in_length,
-															reverse = self.reverse )
-
-
-	def deleteStream( self, stream ) :
-		self.streamIdent.deleteStream( stream )
-		del self.streams_buckets[ stream ]
 
 
 	def readyMessage( self, message, stream = None ) :
@@ -252,6 +115,34 @@ This method returns the stream that is used if no stream is specified in `readyM
 		return stream, None
 
 
+	def getDefaultStream( self ) :
+		"""
+This method returns the stream that is used if no stream is specified in `readyMessage()`.
+
+:rtype: str
+		"""
+		return self.default_stream
+
+
+	def addStream( self, stream ) :
+
+		if stream != self.streamIdent.getHardStreamName() :
+			self.streamIdent.addStream( stream )
+
+		self.streams_buckets[ stream ] = {}
+		self.streams_buckets[ stream ]['message'] = ''
+		self.streams_buckets[ stream ]['chunker'] = Chunker( self.out_length,
+															self.in_length,
+															reverse = self.reverse )
+
+
+	def deleteStream( self, stream ) :
+		self.streamIdent.deleteStream( stream )
+		del self.streams_buckets[ stream ]
+
+
+
+
 	def getChunkerForStream( self, stream ) :
 		chunker = self.streams_buckets[ stream ]['chunker']
 		return chunker
@@ -287,35 +178,3 @@ This method resets all components of the `SimpleOrchestrator` instance, effectiv
 		self.encryption_key.reset()
 		self.decryption_key.reset()
 		self.streamIdent.reset()
-
-
-#
-#
-#
-#
-# class StegoOrchestrator :
-# 	"""
-# The `StegoOrchestrator` class combines compression, chunking, encryption and stream tagging, by utilizing the below `coverutils` classes:
-#
-#  - :class:`covertutils.datamanipulation.Chunker`
-#  - :class:`covertutils.datamanipulation.Compressor`
-#  - :class:`covertutils.crypto.keys.StandardCyclingKey`
-#  - :class:`covertutils.orchestration.StreamIdentifier`
-#
-# 	"""
-#
-# 	__pass_encryptor = ascii_letters * 10
-#
-# 	def __init__( self, passphrase, stego_config, transformation_list, cycling_algorithm = None, reverse = False ) :
-#
-# 		self.stego_injector = StegoInjector( stego_config )
-# 		self.data_tranformer = DataTransformer( stego_config, transformation_list )
-#
-# 		templates = self.stego_injector.getTemplates()
-# 		self.streamIdent = StreamIdentifier( passphrase, reverse = reverse, cycling_algorithm = self.cycling_algorithm, streams = templates )
-#
-#
-#
-#
-# 	def readyMessage( self, stream, message ) :
-# 		pass

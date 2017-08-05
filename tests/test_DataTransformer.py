@@ -1,12 +1,12 @@
 import unittest
 
-from covertutils.datamanipulation import DataTranformer
+from covertutils.datamanipulation import DataTransformer
 
 from random import randint
 
 from struct import pack
 
-class Test_DataTranformer(unittest.TestCase) :
+class Test_DataTransformer(unittest.TestCase) :
 
 	configuration = [( ('simple:X','simple:X'),('!H','!H'), '_data_+1' )]
 
@@ -19,7 +19,7 @@ simple='''4142XXXX4344'''
 	"""
 
 	def setUp( self ) :
-		self.trans = DataTranformer( self.stego_conf, self.configuration )
+		self.trans = DataTransformer( self.stego_conf, self.configuration )
 
 	def test_transformation (self) :
 

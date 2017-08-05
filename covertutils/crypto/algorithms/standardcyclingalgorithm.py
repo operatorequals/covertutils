@@ -1,37 +1,9 @@
-from binascii import hexlify
 
-from abc import ABCMeta, abstractmethod
-# from builtins import object
-# from builtins import range
-# from builtins import chr, ord, str
-
-# from future.utils import with_metaclass
+from covertutils.crypto.algorithms import CyclingAlgorithm
 
 from covertutils.helpers import sxor, permutate
 
 from copy import deepcopy
-
-class CyclingAlgorithm :
-
-	__metaclass__ = ABCMeta
-
-	def __init__( self, message ) :
-		self.message = message
-
-
-	def update( self, message ) :
-		self.message += message
-
-
-	@abstractmethod
-	def digest( self ) :
-		pass
-
-
-	def hexdigest( self ) :
-		bin_ = self.digest()
-		return hexlify( bin_ )
-
 
 
 class StandardCyclingAlgorithm ( CyclingAlgorithm ) :

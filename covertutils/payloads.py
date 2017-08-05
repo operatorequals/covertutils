@@ -23,7 +23,7 @@ The :data:`payloads.CommonStages` contents are arranged by feature as follows::
 
 import pickle
 import marshal
-from types import *
+# from types import *
 
 def __system_shell( message ) :
     from os import popen

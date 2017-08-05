@@ -18,14 +18,14 @@ def send(  raw ) :
 
 orch2 = SimpleOrchestrator("pass!", 4, out_len, in_len , reverse = True)
 
-class MyHandler( FunctionDictHandler, CommandFetcherHandler, ResponseOnlyHandler ) :
+class MyHandler( FunctionDictHandler, InterrogatingHandler, ResponseOnlyHandler ) :
 
 
 	def __init__( self, recv, send, orch, delay = None, function_dict = None ) :
 
 		super(MyHandler, self).__init__( recv, send, orch, delay_between = delay, function_dict = fdict, fetch_stream = 'control' )
 
-		# CommandFetcherHandler.__init__( self, recv, send, orch, delay_between = delay,  function_dict = fdict, fetch_stream = 'control' )
+		# InterrogatingHandler.__init__( self, recv, send, orch, delay_between = delay,  function_dict = fdict, fetch_stream = 'control' )
 		# FunctionDictHandler.__init__( self, recv, send, orch, function_dict = fdict )
 
 

@@ -1,64 +1,9 @@
-from abc import ABCMeta, abstractmethod
 
-# from future.utils import with_metaclass
-# from builtins import object
+from covertutils.crypto.keys import CyclingKey, EncryptionKey
 
 from covertutils.helpers import sxor
 
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
-
-# class CyclingKey(with_metaclass( ABCMeta, object )) :
-
-class CyclingKey :
-
-	__metaclass__ = ABCMeta
-
-	def __init__( self, passphrase, **kw ) :
-		pass
-
-	@abstractmethod
-	def cycle( self, rounds = 1) :
-		pass
-
-
-	@abstractmethod
-	def getUUIDBytes( self, length ) :
-		pass
-
-
-	@abstractmethod
-	def getKeyBytes( self, length ) :
-		pass
-
-
-	@abstractmethod
-	def getKeyLength( self ) :
-		"""
-:rtype: int
-:return: Returns the key length.
-		"""
-		pass
-
-
-	@abstractmethod
-	def reset( self ) : 	pass
-
-
-	@abstractmethod
-	def setCycle( self, cycle ) :	pass
-
-
-
-# class EncryptionKey(with_metaclass( ABCMeta, object )) :
-class EncryptionKey :
-
-	__metaclass__ = ABCMeta
-
-	@abstractmethod
-	def encrypt( self, plain ) : pass
-	@abstractmethod
-	def decrypt( self, crypt ) : pass
-
 
 
 

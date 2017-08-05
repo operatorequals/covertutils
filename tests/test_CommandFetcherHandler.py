@@ -1,6 +1,6 @@
 import unittest
 
-from covertutils.handlers import BaseHandler, ResponseOnlyHandler, CommandFetcherHandler
+from covertutils.handlers import BaseHandler, ResponseOnlyHandler, InterrogatingHandler
 from covertutils.orchestration import SimpleOrchestrator
 
 from os import urandom
@@ -45,7 +45,7 @@ def dummy_send2( raw ) :
 testable = False
 
 
-class CustomCommandFetcherHandler( CommandFetcherHandler ) :
+class CustomInterrogatingHandler( InterrogatingHandler ) :
 
     def onChunk( self, stream, message ) :  pass
     def onNotRecognised( self ) :  pass
@@ -63,11 +63,11 @@ class CustomRespOnlyHandler( ResponseOnlyHandler ) :
 
 
 
-class Test_CommandFetcherHandler( unittest.TestCase ) :
+class Test_InterrogatingHandler( unittest.TestCase ) :
 
 
     def setUp( self ) :
-        self.p_handler = CustomCommandFetcherHandler( dummy_receive1, dummy_send2, orch2 , req_data = 'X', delay_between = (0, 0.01), fetch_stream = 'control' )
+        self.p_handler = CustomInterrogatingHandler( dummy_receive1, dummy_send2, orch2 , req_data = 'X', delay_between = (0, 0.01), fetch_stream = 'control' )
         self.test_handler = CustomRespOnlyHandler( dummy_receive2, dummy_send1, orch1 , req_data = 'X' )
 
 

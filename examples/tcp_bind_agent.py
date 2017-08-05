@@ -1,4 +1,4 @@
-from covertutils.handlers import SimpleShellHandler
+from covertutils.handlers.impl import SimpleShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 
 import sys
