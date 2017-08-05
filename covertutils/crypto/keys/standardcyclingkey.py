@@ -11,14 +11,14 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 	# random bytes for global salting. Never transmitted.
 	__salt = codecs.decode(
-	b'b2fb06410b0623bae23b5db0c43414c0ce08ae24b40808f0a25f5ca39c69bc1c'
-	b'1bbc9a53a91a596d2b80991aaeb644b27f46a1338024fff3f27b8db412a38691'
-	b'e51b80349991d50bef8baa14c5ee0b446ddbe1af122bed442d282be0c4faf1f0'
-	b'423269aa5fbee1349672f4f30b1362ef18e5f1b68bdba3e6062e072bea79f5f1'
-	b'e0848b04a5be51ebe852177ab96e4f054c40f18c3b8ec3bbae4a847a3860c3cf'
-	b'630e0bb327aa9dc8609e0bc9b6dbee6bd3597108f62caecf9df60acdbf8134bd'
-	b'7cc4457979bb54f8c7cfeb076dc843222b24cb0727b423a434f52f37a7da106a'
-	b'6e576e05c48223a99aafce6e9fbd24b641217662b91d060524deae84de5588c9', 'hex')
+	'b2fb06410b0623bae23b5db0c43414c0ce08ae24b40808f0a25f5ca39c69bc1c'
+	'1bbc9a53a91a596d2b80991aaeb644b27f46a1338024fff3f27b8db412a38691'
+	'e51b80349991d50bef8baa14c5ee0b446ddbe1af122bed442d282be0c4faf1f0'
+	'423269aa5fbee1349672f4f30b1362ef18e5f1b68bdba3e6062e072bea79f5f1'
+	'e0848b04a5be51ebe852177ab96e4f054c40f18c3b8ec3bbae4a847a3860c3cf'
+	'630e0bb327aa9dc8609e0bc9b6dbee6bd3597108f62caecf9df60acdbf8134bd'
+	'7cc4457979bb54f8c7cfeb076dc843222b24cb0727b423a434f52f37a7da106a'
+	'6e576e05c48223a99aafce6e9fbd24b641217662b91d060524deae84de5588c9', 'hex')
 
 
 	def __init__ ( self, passphrase, cycling_algorithm = None, cycle = True, salt = None, **kw ) :
