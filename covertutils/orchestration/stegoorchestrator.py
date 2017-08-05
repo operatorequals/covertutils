@@ -5,12 +5,15 @@ from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 from covertutils.datamanipulation import Chunker
 from covertutils.datamanipulation import Compressor
 
+from covertutils.orchestration import StreamIdentifier
+from covertutils.orchestration import Orchestrator
+
 from covertutils.datamanipulation import StegoInjector, DataTransformer
 
 from string import ascii_letters
 
 
-class StegoOrchestrator :
+class StegoOrchestrator ( Orchestrator ) :
 	"""
 The `StegoOrchestrator` class combines compression, chunking, encryption and stream tagging, by utilizing the below `coverutils` classes:
 
@@ -25,6 +28,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption and str
 
 	def __init__( self, passphrase, stego_config, transformation_list = [], tag_length = 2, cycling_algorithm = None, reverse = False ) :
 
+
 		self.stego_injector = StegoInjector( stego_config )
 		self.data_tranformer = DataTransformer( stego_config, transformation_list )
 		self.compressor = Compressor()
@@ -34,31 +38,23 @@ The `StegoOrchestrator` class combines compression, chunking, encryption and str
 			self.cycling_algorithm = StandardCyclingAlgorithm
 
 
-		templates = self.stego_injector.getTemplates()
+		streams = self.stego_injector.getTemplates()
 
-		self.streamIdent = StreamIdentifier( passphrase, stream_list = templates, reverse = reverse, cycling_algorithm = self.cycling_algorithm )
-
-		self.tag_length = tag_length
+		super( StegoOrchestrator, self ).__init__( passphrase, tag_length, cycling_algorithm, streams, reverse )
 
 		self.__simple_orchestrators = {}
-		for index, template in enumerate( templates ) :
+		for index, template in enumerate( streams ) :
 			capacity = self.stego_injector.getCapacity( template ) - self.tag_length
-			new_pass = passphrase + str( index )
-			self.__simple_orchestrators[ template ] = SimpleOrchestrator( new_pass, 1, capacity, capacity, streams = [template], reverse = reverse, cycling_algorithm = cycling_algorithm)
+
+			self.streams_buckets[ template ]['chunker'] = Chunker( capacity, capacity, reverse = reverse )
 
 
 	def readyMessage( self, message, stream ) :
 
-		message = self.compressor.compress( message )
-		orch_obj = self.__simple_orchestrators[ stream ]
-		chunks = orch_obj.readyMessage( message, stream )
+		chunks = super( StegoOrchestrator, self ).readyMessage( message, stream )
 
 		ready_chunks = []
 		for chunk in chunks :
-			tag = self.streamIdent.getIdentifierForStream( stream,
-														byte_len = self.tag_length )
-
-			# ready = self.__addTag(encr_chunk, tag)
 
 			ready = chunk
 			transformed = self.data_tranformer.runAll( ready, stream )

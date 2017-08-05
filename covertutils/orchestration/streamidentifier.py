@@ -3,7 +3,7 @@ from string import ascii_letters
 from covertutils.crypto.keys import StandardCyclingKey
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
-
+from covertutils.exceptions import *
 
 
 class StreamIdentifier :

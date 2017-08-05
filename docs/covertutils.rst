@@ -7,17 +7,12 @@ Subpackages
 .. toctree::
 
     covertutils.crypto
+    covertutils.datamanipulation
+    covertutils.handlers
+    covertutils.orchestration
 
 Submodules
 ----------
-
-covertutils.datamanipulation module
------------------------------------
-
-.. automodule:: covertutils.datamanipulation
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 covertutils.exceptions module
 -----------------------------
@@ -27,26 +22,10 @@ covertutils.exceptions module
     :undoc-members:
     :show-inheritance:
 
-covertutils.handlers module
----------------------------
-
-.. automodule:: covertutils.handlers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 covertutils.helpers module
 --------------------------
 
 .. automodule:: covertutils.helpers
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-covertutils.orchestration module
---------------------------------
-
-.. automodule:: covertutils.orchestration
     :members:
     :undoc-members:
     :show-inheritance:

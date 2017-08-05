@@ -1,25 +1,13 @@
 covertutils.crypto package
 ==========================
 
-Submodules
-----------
+Subpackages
+-----------
 
-covertutils.crypto.algorithms module
-------------------------------------
+.. toctree::
 
-.. automodule:: covertutils.crypto.algorithms
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-covertutils.crypto.keys module
-------------------------------
-
-.. automodule:: covertutils.crypto.keys
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+    covertutils.crypto.algorithms
+    covertutils.crypto.keys
 
 Module contents
 ---------------
