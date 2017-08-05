@@ -81,7 +81,7 @@ class ShellcodeSubShell ( SimpleSubShell ) :
 
 	def confirm( self ) :
 		option = raw_input("Send the shellcode over? [y/N] ")
-	 	return option.lower() == 'y'
+		return option.lower() == 'y'
 
 
 	def do_clear( self, line ) :
