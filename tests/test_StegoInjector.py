@@ -44,13 +44,13 @@ data2 = "4444XXXXXXXX4545"
 	data1="""44444444%s41414141%s"""
 			''' % ("X"*i, "Y"*i)
 
-			inj_dict = { 'X':'a'* (i/2),
-						'Y':'b'* (i/2)
+			inj_dict = { 'X':'a'* (i//2),
+						'Y':'b'* (i//2)
 					}
 
 			psi = StegoInjector( config )
 			stego_pkt = psi.injectByTag(inj_dict, template = 'data1')
-			testable = 'DDDD%sAAAA%s' % ('a' * (i/2), 'b' * (i/2))
+			testable = 'DDDD%sAAAA%s' % ('a' * (i//2), 'b' * (i//2))
 
 			# print( stego_pkt, testable )
 			extr_dict = psi.extractByTag( stego_pkt, 'data1' )
@@ -65,8 +65,8 @@ Y:_data_:
 
 data1="""44444444%s41414141%s"""
 		''' % ("X"*n, "Y"*n)
-		inj_dict = { 'X':'a'* (n/2),
-					'Y':'b'* (n/2)
+		inj_dict = { 'X':'a'* (n//2),
+					'Y':'b'* (n//2)
 				}
 		psi = StegoInjector( config )
 		pkt = 'DDDDaaAAAAbb'
