@@ -64,6 +64,7 @@ from covertutils.helpers import sxor as _sxor_
 from covertutils.helpers import str_similar
 
 from copy import deepcopy
+import codecs
 
 
 class StegoInjector :
@@ -222,7 +223,7 @@ Example ::
 				raise StegoSchemeParseException( "Group Tag '%s' in Group: '%s' is not defined." % (tag, group_repr) )
 			if start > end :
 				raise StegoSchemeParseException( "Starting byte is greater than Ending Byte in Group %s" % group_repr)
-			for hex_index in xrange(0, len( pkt ), 2) :
+			for hex_index in range(0, len( pkt ), 2) :
 				byte_index = hex_index // 2
 				# print hex_index, byte_index
 				if byte_index >= start and byte_index < end :
@@ -407,7 +408,7 @@ Example ::
 	def __initializeDataExtraction( self, pkt, template ) :
 
 		extract_dict = {}
-		pkt_hex = pkt.encode( 'hex' )
+		pkt_hex = codecs.encode(pkt, 'hex')
 		if template not in self.__packets.keys() :
 			raise TemplateNotFoundException( "Template '%s' is not available" % template)
 		sample_hex, sample_cap = self.__packets[ template ]
