@@ -713,13 +713,25 @@ The `transformation_list` is declared below:
 	]
 
 """
-	def __init__( self, configuration, transformation_list ) :
+	def __init__( self, stego_configuration, transformation_list ) :
+		"""
+:param str stego_configuration: The Stego Configuration to initialize the internal :class:`covertutils.datamanipulation.StegoInjector` object.
+:param list transformation_list: The Tranformation List as described above.
 
-		self.injector = StegoInjector( configuration )
+		"""
+		self.injector = StegoInjector( stego_configuration )
 		self.transformation_list = transformation_list
 
 
 	def runAll( self, pkt, template ) :
+		"""
+Runs all Tranformations in the `transformation_list` that relate with the specified template.
+
+:param str pkt: The data packet to run the Tranformations on. In `Raw Bytes`.
+:param str template: The template string that describes the given data packet.
+:rtype: str
+:return: Returns the `pkt` with all the related tranformations applied.
+		"""
 
 		for trans_tuple in self.transformation_list :
 
