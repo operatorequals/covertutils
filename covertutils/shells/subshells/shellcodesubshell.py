@@ -3,6 +3,11 @@ import re
 
 from covertutils.shells.subshells import SimpleSubShell
 
+try:
+	raw_input          # Python 2
+except NameError:
+	raw_input = input  # Python 3
+
 
 def format_shellcode( unformatted ) :
 
