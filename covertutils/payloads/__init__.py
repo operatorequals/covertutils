@@ -5,9 +5,9 @@ def dinit( storage ) :
 	return 1
 
 def import_payload_from_module( module ) :
-	try :
+	try:
 		init = module.init
-	except  :
+	except:
 		init = dinit
 	work = module.work
 	return  init, work
@@ -41,7 +41,10 @@ def import_stage_from_module( module ) :
 def __form_stage_from_function( init, work ) :
 	ret = {}
 	dict_ = {'init' : init, 'work' : work}
-	code = {'init' : init.func_code, 'work' : work.func_code}
+	try:                    # Python 3
+		code = {'init' : init.__code__, 'work' : work.__code__}
+	except AttributeError:  # Python 2
+		code = {'init' : init.func_code, 'work' : work.func_code}
 	ret['object'] = dict_
 	ret['python'] = code
 	try :
