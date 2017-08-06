@@ -49,4 +49,4 @@ class TestStreamIdentifier( unittest.TestCase ) :
 			guess = ident2.checkIdentifier(tag)
 
 			print( "%s) Tagger:%d. [%s] - %s > %s" % ( i, chosen, stream, guess, tag.encode('hex') ) )
-			self.failUnless( stream == guess )
+			self.assertTrue( stream == guess )
