@@ -21,7 +21,7 @@ class Test_Compressor( unittest.TestCase ) :
 			zipped = self.compressor.compress( plain )
 
 			dezip = self.compressor.decompress( zipped )
-			self.failUnless( plain == dezip )
+			self.assertTrue( plain == dezip )
 
 
 	def test_feasibility ( self, n = 100, byte_len = 100  ):
@@ -37,4 +37,4 @@ class Test_Compressor( unittest.TestCase ) :
 
 			zipped = self.compressor.compress( plain )
 			# print '%d / %d (ratio %f)' % (len(zipped), len(plain), float(len(zipped)) / len(plain))
-			self.failUnless( len(zipped) <= len(plain) )
+			self.assertTrue( len(zipped) <= len(plain) )
