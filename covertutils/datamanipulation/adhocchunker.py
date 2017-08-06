@@ -97,7 +97,7 @@ The dechunking works by first identifying the byte length of the whole message a
 
 
 	def __prepareMessage( self, payload ) :
-		return bytes( self.__createTag( data ) ) + bytes( payload )
+		return bytes( self.__createTag( payload ) ) + bytes( payload )
 
 
 	def __createTag( self, chunk ) :
