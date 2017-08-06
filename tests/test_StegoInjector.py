@@ -31,7 +31,7 @@ data2 = "4444XXXXXXXX4545"
 		res1 = psi.inject("A"*4, 'data1')
 		res2 = psi.inject("A"*4, 'data2')
 
-		self.failUnless( res1 == res2 )
+		self.assertTrue( res1 == res2 )
 
 
 
@@ -56,7 +56,7 @@ data2 = "4444XXXXXXXX4545"
 			# print( stego_pkt, testable )
 			extr_dict = psi.extractByTag( stego_pkt, 'data1' )
 			# print( extr_dict, inj_dict )
-			self.failUnless( extr_dict == inj_dict )
+			self.assertTrue( extr_dict == inj_dict )
 
 
 	def test_extraction_from_dict( self, n = 4 ) :
@@ -73,7 +73,7 @@ data1="""44444444%s41414141%s"""
 		pkt = 'DDDDaaAAAAbb'
 		extr_dict = psi.extractByTag( pkt, template = 'data1')
 
-		self.failUnless( inj_dict == extr_dict)
+		self.assertTrue( inj_dict == extr_dict)
 
 
 	def test_injection_from_text( self, n = 4) :
@@ -86,7 +86,7 @@ data1="""44444444%s41414141%s"""
 		data = 'aabb'
 		psi = StegoInjector( config )
 		stego_pkt = psi.inject(data, template = 'data1')
-		self.failUnless( stego_pkt == 'DDDDaaAAAAbb')
+		self.assertTrue( stego_pkt == 'DDDDaaAAAAbb')
 
 
 	def test_injection_scramble( self, ) :
@@ -100,7 +100,7 @@ data1="""44X44X4141Y4141Y44X43X"""
 		psi = StegoInjector( config )
 		stego_pkt = psi.inject(data, template = 'data1')
 
-		self.failUnless( stego_pkt.encode('hex').count('6') == 6 )
+		self.assertTrue( stego_pkt.encode('hex').count('6') == 6 )
 
 
 	def test_injection_equivalence( self ) :
@@ -117,11 +117,11 @@ data1 = """XXXXYYYY"""
 		pkt1 = psi.inject(data, 'data1')
 		pkt2 = psi.injectByTag( data_dict, 'data1' )
 		# print( pkt1.encode('hex'), pkt2.encode('hex') )
-		self.failUnless( pkt1 == pkt2 )
+		self.assertTrue( pkt1 == pkt2 )
 		extr1 = psi.extract( pkt1, 'data1' )
 		extr_dict = psi.extractByTag( pkt2, 'data1' )
-		self.failUnless( data == extr1 )
-		self.failUnless( data_dict == extr_dict )
+		self.assertTrue( data == extr1 )
+		self.assertTrue( data_dict == extr_dict )
 
 
 	def test_injection_scramble2( self, ) :
@@ -136,7 +136,7 @@ data1="""44X44X4141Y4141Y44X43X"""
 		extr_pkt = psi.extract(pkt, template = 'data1')
 		data = 'fff'
 
-		self.failUnless( extr_pkt == data  )
+		self.assertTrue( extr_pkt == data  )
 
 
 
@@ -175,7 +175,7 @@ data2="""41414142XXYY"""
 		res, score = psi.guessTemplate( pkt1 )
 		# print( res )
 
-		self.failUnless( res == 'data1' )
+		self.assertTrue( res == 'data1' )
 
 
 
@@ -196,7 +196,7 @@ data1="""%s"""
 		cap = psi.getCapacity( 'data1' )
 		inj = psi.inject(cap*'~', 'data1' )
 		print( "Changed %d bytes" % cap )
-		self.failUnless( inj == pkt )
+		self.assertTrue( inj == pkt )
 
 
 
@@ -205,13 +205,13 @@ data1="""%s"""
 		try :
 			p = StegoInjector( conf1 )
 		except Exception as e :
-			self.failUnless ( type(e) == StegoSchemeParseException )
+			self.assertTrue ( type(e) == StegoSchemeParseException )
 
 		conf2 = "C:_data_:" # Hex Letter
 		try :
 			p = StegoInjector( conf2 )
 		except Exception as e :
-			self.failUnless ( type(e) == StegoSchemeParseException )
+			self.assertTrue ( type(e) == StegoSchemeParseException )
 
 
 	def test_injection_with_pkt( self ) :
@@ -232,7 +232,7 @@ data2="""44X44X4141Y4141Y44X43X"""
 		# print( inj_pkt.encode('hex') )
 		testable = "\xFF\x0F\xF0\xFF\xFF\x0F\xFF\xF0\xFF\x0F\xF0"
 		# print( testable.encode('hex') )
-		self.failUnless( inj_pkt == testable)
+		self.assertTrue( inj_pkt == testable)
 
 
 
@@ -248,5 +248,5 @@ data1="""44444444%s41414141%s"""
 		stego_pkt = psi.inject(data, template = 'data1')
 
 		extracted = psi.extract( stego_pkt, 'data1' )
-		self.failUnless( extracted == data )
-		# self.failUnless( stego_pkt == 'DDDD61AAAA61')
+		self.assertTrue( extracted == data )
+		# self.assertTrue( stego_pkt == 'DDDD61AAAA61')
