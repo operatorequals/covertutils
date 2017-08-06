@@ -367,7 +367,7 @@ Example ::
 		# print injection_dict
 		pkt_hex = bytearray(pkt_hex)
 		for tag, data in injection_dict.items() :
-			data = bytearray( data, encoding='hex' )
+			data = bytearray( data )
 			inj_function = self.__tags[ tag ]['inj_function']
 			while data :
 
