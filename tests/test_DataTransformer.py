@@ -26,4 +26,4 @@ simple='''41420000XXXX'''
 		data2 = self.trans.runAll( data, 'simple' )
 		alt_part = data2.encode('hex')[-4:]
 		print( data2.encode('hex') )
-		self.failUnless( alt_part == '4345') # added 1 to 4344
+		self.assertTrue( alt_part == '4345') # added 1 to 4344
