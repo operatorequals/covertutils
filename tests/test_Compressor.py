@@ -31,12 +31,12 @@ class Test_Compressor( unittest.TestCase ) :
 
 		for i in range( 0, n ) :
 			# plain = urandom( byte_len )
-			plain = b''
+			plain = bytearray()
 			for i in range( byte_len ) :
 				if i % 2 :
-					plain += choice(random_bytes)
+					plain.append( choice( random_bytes ) )
 				else :
-					plain += choice(letters)
+					plain.append( choice( letters ) )
 
 			zipped = self.compressor.compress( plain )
 			# print '%d / %d (ratio %f)' % (len(zipped), len(plain), float(len(zipped)) / len(plain))
