@@ -47,7 +47,7 @@ class TestOrchestrator( unittest.TestCase ) :
 
 		for chunk in chunks :
 			stream, ret = self.orch2.depositChunk( chunk )
-		self.failUnless( payload == ret )
+		self.assertTrue( payload == ret )
 
 
 	def test_length_consistency( self ) :
@@ -56,7 +56,7 @@ class TestOrchestrator( unittest.TestCase ) :
 		payload = urandom(l)
 		chunks = self.orch1.readyMessage( payload )
 		for c in chunks :
-			self.failUnless( len(c) == self.out_length )
+			self.assertTrue( len(c) == self.out_length )
 
 
 
@@ -69,9 +69,9 @@ class TestOrchestrator( unittest.TestCase ) :
 
 		for chunk in chunks :
 			stream, ret = self.orch2.depositChunk( chunk )
-		self.failUnless( payload == ret )
+		self.assertTrue( payload == ret )
 
-		self.failUnless( stream == 'main' )
+		self.assertTrue( stream == 'main' )
 
 
 
@@ -116,7 +116,7 @@ class TestOrchestrator( unittest.TestCase ) :
 			# print( '============' )
 			# pprint( d2 )
 			print( "[*] Round %d. Accumulated %d bytes" % ( repetition, byte_n ) )
-			self.failUnless( d == d2 )
+			self.assertTrue( d == d2 )
 
 			orch1, orch2 = orch2, orch1
 
@@ -137,4 +137,4 @@ class TestOrchestrator( unittest.TestCase ) :
 			# print( ctext )
 
 		print( "Generated %d keys and %d distinct ciphertexts" % (len(keys), len(ciphertexts)) )
-		self.failUnless( len(ciphertexts) == len(keys) )
+		self.assertTrue( len(ciphertexts) == len(keys) )
