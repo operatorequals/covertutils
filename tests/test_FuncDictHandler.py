@@ -76,4 +76,4 @@ class Test_FunctionDictHandler (unittest.TestCase) :
 		while not testable : sleep(0.5)
 		# sleep(1)
 		print( chunks )
-		self.failUnless( testable.strip() == echoed )
+		self.assertTrue( testable.strip() == echoed )
