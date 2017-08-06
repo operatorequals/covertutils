@@ -49,7 +49,7 @@ simple_alt='''41420000000000000000XXXX'''
 				assert stream != None
 
 			# print message.encode('hex'), data.encode('hex')
-			self.failUnless( data == message )
+			self.assertTrue( data == message )
 
 
 
@@ -63,10 +63,10 @@ simple_alt='''41420000000000000000XXXX'''
 		for chunk in chunks :
 			stream, message = self.orch2.depositChunk( chunk )
 			# print chunk
-			self.failUnless( chunk.encode('hex')[-4:] == '4345' )	# Testing the alteration
+			self.assertTrue( chunk.encode('hex')[-4:] == '4345' )	# Testing the alteration
 
 			# print stream ,message
-		self.failUnless( data == message )
+		self.assertTrue( data == message )
 
 
 
