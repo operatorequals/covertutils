@@ -75,14 +75,14 @@ class Test_ResponseOnlyHandler( unittest.TestCase ) :
 		for i in  range(n) :
 			message = urandom(l)
 			self.p_handler.queueSend( message, 'control' )
-			self.failUnless( testable == False )
+			self.assertTrue( testable == False )
 
 			self.test_handler.sendAdHoc( ResponseOnlyHandler.Defaults['request_data'] )
 
 			while testable == False :
 				sleep(0.01)
 
-			self.failUnless( testable == message )
+			self.assertTrue( testable == message )
 			testable = False
 
 
@@ -94,7 +94,7 @@ class Test_ResponseOnlyHandler( unittest.TestCase ) :
 			message2 = urandom(l)
 			self.p_handler.queueSend( message1 )
 			self.p_handler.queueSend( message2, 'control' )
-			self.failUnless( testable == False )
+			self.assertTrue( testable == False )
 
 			while testable == False :
 				# print testable
@@ -102,7 +102,7 @@ class Test_ResponseOnlyHandler( unittest.TestCase ) :
 				sleep(0.01)
 
 
-			self.failUnless( testable == message1 )
+			self.assertTrue( testable == message1 )
 			# print "Passed 1"
 			testable = False
 
@@ -112,6 +112,6 @@ class Test_ResponseOnlyHandler( unittest.TestCase ) :
 			while testable == False :
 				sleep(0.01)
 
-			self.failUnless( testable == message2 )
+			self.assertTrue( testable == message2 )
 			testable = False
 			# print "Passed 2"
