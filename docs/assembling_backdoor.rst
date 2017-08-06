@@ -1081,3 +1081,5 @@ The Network Traffic
 
 
 .. note :: **You win a free beer for scrolling down all the gibberish!**
+
+.. note :: **You win a ANOTHER free beer if you mail me my ``/etc/passwd`` file size!**
