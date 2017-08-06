@@ -47,7 +47,7 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 
 	def __hash( self, message ) :
-		return self.cycling_algorithm ( str( message + self.__salt ) ).digest()
+		return self.cycling_algorithm ( message + self.__salt ).digest()
 
 
 	def cycle( self, rounds = 1 ) :
