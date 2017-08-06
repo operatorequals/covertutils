@@ -23,7 +23,7 @@ class Test_AdHocChunker( unittest.TestCase ) :
 			chunks = self.c.chunkMessage( data, size )
 			for chunk in chunks :
 				# print chunk.encode('hex'), len(chunk)
-				self.failUnless( len(chunk) == size )
+				self.assertTrue( len(chunk) == size )
 
 
 
@@ -39,4 +39,4 @@ class Test_AdHocChunker( unittest.TestCase ) :
 				# print "Chunk: %s" % chunk.encode('hex')
 				status, ret = self.c.deChunkMessage( chunk )
 			# print  data.encode('hex'), ret.encode('hex'), len(ret)
-			self.failUnless( data == ret )
+			self.assertTrue( data == ret )
