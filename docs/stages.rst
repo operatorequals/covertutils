@@ -213,7 +213,8 @@ The `covertutils` package has a `file` stage and subshell, to provide file trans
 
 
 .. warning:: Providing file transfer `in-band` is a double-edged knife.
-If the `Communication Channel` is a TCP connection then files will flow around nicely (taking also advantage of the embedded compression, see: :ref:`compressor_component` ).
-But if the `Communication Channel` is a `covert TCP backdoor` or such `super-low-bandwidth` channel, a 1MB file will `take forever to download`, taking over the whole channel. An out-of-band approach should be considered in this case.
+
+	If the `Communication Channel` is a TCP connection then files will flow around nicely (taking also advantage of the embedded compression, see: :ref:`compressor_component` ).
+	But if the `Communication Channel` is a `covert TCP backdoor` or such `super-low-bandwidth` channel, a 1MB file will `take forever to download`, taking over the whole channel. An out-of-band approach should be considered in this case.
 
 .. warning:: Transfer of files can trigger the :class:`StreamIdentifier`'s `Birthday Problem` (TODO: document it) destroying 1 or more `streams` (the `control stream` should still work to ``!control reset`` the connection). For heavy use of file transferring, a bigger ``tag_length`` should be used on the :class:`Orchestrator` passed to the :class:`Handler` object.

@@ -1,10 +1,10 @@
 
 .. _ids_evasion:
 
-Total IDS/IPS evading payloads
+Totally IDS/IPS evading payloads
 ==============================
 
-Whatever travels from and to ``Handler`` classes is generated using ``Orchestrator`` instances. That means that, not only the communication is encrypted, but there are no `moving parts` on the what is transmitted too (`I will elaborate`).
+Whatever travels from and to ``Handler`` classes is generated using ``Orchestrator`` instances. That means that, not only the communication is encrypted, but there are no `moving parts` on what is transmitted too (`I will elaborate`).
 
 
 `No-Duplicate` Principle
@@ -14,7 +14,7 @@ For making the protocol payloads hard to identify I implemented what (I self nam
 
 This assures that every two consecutive payloads (or more in fact) have the same bytes in same position with a probability of `1/512` (i.e. completely randomly).
 
-In plain english, if I issue an ``ls -l`` `(5 bytes without new line)` command and the `3rd byte` of the payload generated happens to be ``\x67`` (due to encryption it probably won't be ``\x20`` `-space character-` anyway), this `Principle` says that if I issue again ``ls -l``, the 3rd byte has a 1/512 probability of being ``\x67`` again.
+In plain english, if I issue an ``ls -l`` `(5 bytes without new line)` command and the `3rd byte` of the payload generated happens to be ``\x67`` (due to encryption it probably won't be ``\x20`` `-space character-` anyway), this `Principle` says that if I issue again ``ls -l``, the 3rd byte has a `1/512` probability of being ``\x67`` again.
 
 
 Implementation Pitfalls
@@ -33,7 +33,7 @@ And the tricky part is that if the payload is **not tagged in any way** it is di
 
 Making the listener **identify** whether the decrypted data is gibberish (and rollback the key if it is) will need to provide a concise definition of **what gibberish is**. And doing even that (`dangerous high entropy approach`) will disable the sender from **sending gibberish intentionally**. Not bright idea at all. `Crypted shellcodes` **look like gibberish** but I can see reasons for sending such things...
 
-*Decrypting data that is not addressed to the listener is a big problem if a Stream Cipher is used. It makes one of the keys to cycle `without notifying the other side`, `ultimately scraping` the rest of the connection.
+.. note:: "Decrypting" data that is **not addressed to the listener** is a big problem if a Stream Cipher is used. It makes one of the keys to cycle `without notifying the other side`, `ultimately scraping` the rest of the connection.
 
 
 And that is as the data doesn't get transmitted through a known connection. TLS application data seem random too, but it travels through a TCP connection that **knows how to handle them because of the handshake**.
