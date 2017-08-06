@@ -8,7 +8,7 @@ from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
 try:
 	bytes        # Python 3
-except NameError
+except NameError:
 	bytes = str  # Python 2
 
 
