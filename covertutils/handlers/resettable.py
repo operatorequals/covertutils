@@ -18,7 +18,7 @@ This handler can reset the :class:`covertutils.orchestration.SimpleOrchestrator`
 
 	Defaults = { 'reset_data' : 'R' }
 
-	def __init__( recv, send, orchestrator, **kw ) :
+	def __init__( self, recv, send, orchestrator, **kw ) :
 		super( ResettableHandler, self ).__init__( recv, send, orchestrator, **kw )
 
 		self.Defaults['reset_data'] = orchestrator.getDefaultStream()
@@ -32,7 +32,7 @@ This handler can reset the :class:`covertutils.orchestration.SimpleOrchestrator`
 
 
 	def sendReset( self ) :
-		self.preferred_send( ResettableHandler.Defaults[reset_data] )
+		self.preferred_send( ResettableHandler.Defaults['reset_data'] )
 
 
 	def onMessage( self, stream, message ) :

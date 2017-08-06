@@ -32,7 +32,7 @@ def dummy_receive( ) :
 	while not chunks :
 		sleep(0.1)
 
-	print "Receiving"
+	print( "Receiving" )
 	return chunks.pop(0)
 
 
@@ -40,9 +40,9 @@ testable = None
 
 def dummy_send( raw ) :
 	global testable
-	print "sending!"
+	print( "sending!" )
 	stream, message = orch1.depositChunk( raw )
-	print "Sent '%s' in %s" % ( message, stream )
+	print( "Sent '%s' in %s" % ( message, stream ) )
 	if message :
 		testable = message
 
@@ -51,8 +51,8 @@ class AgentHandler( StageableHandler ) :
 
 	def onMessage( self, stream, message ) :
 		ret = super(AgentHandler, self).onMessage( stream, message )
-		print message
-		print "Got: "+ret
+		print( message )
+		print( "Got: "+ret )
 		if ret not in self.orchestrator.getStreams() :
 			self.preferred_send( ret, 'main' )
 
@@ -65,13 +65,13 @@ class Test_StageableHandler (unittest.TestCase) :
 			'main' : GenericStages['shellprocess']['marshal'],
 		}
 		self.p_handler = AgentHandler( dummy_receive, dummy_send, orch2, function_dict = pls )
-		print self.p_handler.getOrchestrator().getStreams()
+		print( self.p_handler.getOrchestrator().getStreams() )
 
 	def test_stage_addition( self, ) :
 
 		r_stream = urandom(4).encode('hex')
 		stage_obj = StageableHandler.createStageMessage(r_stream, GenericStages['echo']['marshal'])
-		# print self.p_handler.orchestrator.streams_buckets[self.p_handler.stage_stream]
+		# print( self.p_handler.orchestrator.streams_buckets[self.p_handler.stage_stream] )
 
 		chunk = orch1.readyMessage( stage_obj, 'stage' )
 		# chunk = orch1.readyMessage( stage_obj, self.p_handler.stage_stream )
@@ -89,9 +89,9 @@ class Test_StageableHandler (unittest.TestCase) :
 		chunks.extend( chunk )
 
 		# sleep(0.9)
-		# print '======================================================='
-		# print testable
+		# print( '=======================================================' )
+		# print( testable )
 		while not testable : sleep(0.5)
 		# sleep(1)
-		print chunks
-		self.failUnless( testable.strip() == echoed )
+		print( chunks )
+		self.assertTrue( testable.strip() == echoed )

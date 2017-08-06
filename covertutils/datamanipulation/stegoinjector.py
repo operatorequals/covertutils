@@ -64,6 +64,12 @@ from covertutils.helpers import sxor as _sxor_
 from covertutils.helpers import str_similar
 
 from copy import deepcopy
+import codecs
+
+try:
+	bytes        # Python 3
+except NameError:
+	bytes = str  # Python 2
 
 
 class StegoInjector :
@@ -195,9 +201,9 @@ Example ::
 	def __getCapacityDict( self, pkt, tag_chars ) :
 		caps = {}
 		for tag in tag_chars :
-			caps[tag] = pkt.count(tag) / 2 	# in bytes
+			caps[tag] = pkt.count(tag) // 2 	# in bytes
 			if self.hex_inject :			# if bytes injected in hex
-				caps[tag] = caps[tag] / 2	# furtherly divide by 2
+				caps[tag] = caps[tag] // 2	# furtherly divide by 2
 
 		return caps
 
@@ -222,8 +228,8 @@ Example ::
 				raise StegoSchemeParseException( "Group Tag '%s' in Group: '%s' is not defined." % (tag, group_repr) )
 			if start > end :
 				raise StegoSchemeParseException( "Starting byte is greater than Ending Byte in Group %s" % group_repr)
-			for hex_index in xrange(0, len( pkt ), 2) :
-				byte_index = hex_index / 2
+			for hex_index in range(0, len( pkt ), 2) :
+				byte_index = hex_index // 2
 				# print hex_index, byte_index
 				if byte_index >= start and byte_index < end :
 					pkt[ hex_index ] = tag
@@ -270,12 +276,11 @@ Example ::
 		injection_dict = data_dict
 
 		pkt = self.__injectFromDict( pkt, injection_dict, sample_capacity )
-		pkt = str( pkt ).decode('hex')
+		pkt = codecs.decode(pkt, 'hex')
 
 		# print pkt
 		# print injection_dict
 		return pkt
-
 
 	def inject( self, data, template, pkt = None ) :
 		"""
@@ -298,7 +303,7 @@ Example ::
 
 		# print injection_dict
 		# print inj_hex_pkt
-		pkt = str( inj_hex_pkt ).decode('hex')
+		pkt = codecs.decode(inj_hex_pkt, 'hex')
 
 		return pkt
 
@@ -313,18 +318,16 @@ Example ::
 		if pkt == None :
 			pkt = deepcopy( sample_packet )			# COPY DEEPLY
 		else :
-			pkt = pkt.encode('hex')
-
-
+			pkt = codecs.encode(pkt, 'hex')
 
 		if data_len != sample_capacity :
 			raise StegoDataInjectionException( "Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity) )
 
 		sample = bytearray( sample_packet )
 		pkt = bytearray( pkt )
-		# print sample
-		# print pkt
-		# print len(sample), len(pkt)
+		# print(sample)
+		# print(pkt)
+		# print(len(sample), len(pkt))
 
 		if len(sample) != len(pkt) :
 			raise StegoDataInjectionException( "Given packet has not the same length with the Sample." )
@@ -353,7 +356,7 @@ Example ::
 				injection_dict[ tag ] += half_byte_hex
 
 		for tag in injection_dict.keys() :
-			injection_dict[tag] = bytearray(injection_dict[tag].decode('hex') )
+			injection_dict[tag] = bytearray(codecs.decode(injection_dict[tag], 'hex'))
 
 		# print len( data_hex )
 		assert len( data_hex ) == 0
@@ -371,7 +374,7 @@ Example ::
 				data_byte = chr(data.pop(0))
 
 				hex1_index = pkt_hex.index( tag )
-				byte_index = hex1_index / 2
+				byte_index = hex1_index // 2
 
 				evaled_byte = self.__eval_environ( data_byte, inj_function, len(pkt_hex), byte_index, sample_cap )
 				hex_byte = evaled_byte.encode('hex')
@@ -407,7 +410,7 @@ Example ::
 	def __initializeDataExtraction( self, pkt, template ) :
 
 		extract_dict = {}
-		pkt_hex = pkt.encode( 'hex' )
+		pkt_hex = codecs.encode(bytes( pkt ), 'hex')
 		if template not in self.__packets.keys() :
 			raise TemplateNotFoundException( "Template '%s' is not available" % template)
 		sample_hex, sample_cap = self.__packets[ template ]
@@ -423,7 +426,7 @@ Example ::
 			extract_data_ = ''
 			while tag in sample_hex :
 				tag_index = sample_hex.index( tag )
-				byte_index = tag_index / 2
+				byte_index = tag_index // 2
 				hex1 = pkt_hex[ tag_index ]
 				sample_hex[ tag_index ] = '~'	# Remove the Tag
 
@@ -432,13 +435,13 @@ Example ::
 				sample_hex[ tag_index ] = '~'	# Remove the Tag
 				hex_str = hex1 + hex2
 
-				raw_byte_ = hex_str.decode('hex')
+				raw_byte_ = codecs.decode(hex_str, 'hex')
 				data_byte_ = self.__eval_environ\
 							( raw_byte_, extr_function, len(pkt), byte_index, sample_cap )
 				extract_data_ += data_byte_
 				# print hex_str+"->"+data_byte_.encode('hex')
 			if self.hex_inject :
-				extract_data_ = extract_data_.decode('hex')
+				extract_data_ = codecs.decode(extract_data_, 'hex')
 
 			extract_dict[tag] = bytearray( extract_data_ )
 

@@ -34,7 +34,7 @@ class StageSubShell ( SimpleSubShell ) :
 			shell_class = stage['shell']
 		except :
 			shell_class = None
-		print shell_class
+		print( shell_class )
 		if shell_class == None :
 			shell_class = SimpleSubShell
 		kwargs = {}
@@ -56,9 +56,9 @@ class StageSubShell ( SimpleSubShell ) :
 			self.__remoteLoadModule( stream_name, stage_dict )
 			self.__localLoadModule( stream_name, stage_dict )
 		except Exception as e:
-			print "File '%s' could not be loaded!" %  filename
+			print( "File '%s' could not be loaded!" %  filename )
 			traceback.print_exc()
-			print e
+			print( e )
 			return
 
 		return
@@ -77,22 +77,22 @@ class StageSubShell ( SimpleSubShell ) :
 			self.__remoteLoadModule( stream_name, stage_dict )
 			self.__localLoadModule( stream_name, stage_dict )
 		except Exception as e:
-			print "Module '%s' could not be loaded!" %  stage_mod_name
+			print( "Module '%s' could not be loaded!" %  stage_mod_name )
 			traceback.print_exc()
-			print e
+			print( e )
 			return
 		return
 
 
 	def help_fload( self ) :
-		print "fload usage:"
-		print "\tfload <filepath>"
-		print "fload example:"
-		print "\tfload /tmp/code.py"
+		print( "fload usage:" )
+		print( "\tfload <filepath>" )
+		print( "fload example:" )
+		print( "\tfload /tmp/code.py" )
 
 
 	def help_mload( self ) :
-		print "mload usage:"
-		print "\tmload <module>"
-		print "mload example:"
-		print "\tmload covertutils.payloads.windows.shellcode"
+		print( "mload usage:" )
+		print( "\tmload <module>" )
+		print( "mload example:" )
+		print( "\tmload covertutils.payloads.windows.shellcode" )

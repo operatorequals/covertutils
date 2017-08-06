@@ -30,7 +30,7 @@ def dummy_receive( ) :
 	while not chunks :
 		sleep(0.1)
 
-	print "Receiving"
+	print( "Receiving" )
 	return chunks.pop(0)
 
 
@@ -38,9 +38,9 @@ testable = None
 
 def dummy_send( raw ) :
 	global testable
-	print "sending!"
+	print( "sending!" )
 	stream, message = orch1.depositChunk( raw )
-	print "Sent"
+	print( "Sent" )
 	if message :
 		testable = message
 
@@ -50,7 +50,7 @@ class AgentHandler( FunctionDictHandler ) :
 
 	def onMessage( self, stream, message ) :
 		ret = super(AgentHandler, self).onMessage( stream, message )
-		print "Got: "+ret
+		print( "Got: " + ret )
 		self.preferred_send( ret, 'main' )
 
 
@@ -62,7 +62,7 @@ class Test_FunctionDictHandler (unittest.TestCase) :
 			'main' : GenericStages['shellprocess']['marshal'],
 		}
 		self.p_handler = AgentHandler( dummy_receive, dummy_send, orch2, function_dict = pls )
-		print self.p_handler.getOrchestrator().getStreams()
+		print( self.p_handler.getOrchestrator().getStreams() )
 
 	def test_shell_usage( self, ) :
 		echoed = '111111111111'
@@ -71,9 +71,9 @@ class Test_FunctionDictHandler (unittest.TestCase) :
 		chunks.extend( chunk )
 
 		# sleep(0.9)
-		# print '======================================================='
-		# print testable
+		# print( '=======================================================' )
+		# print( testable )
 		while not testable : sleep(0.5)
 		# sleep(1)
-		print chunks
-		self.failUnless( testable.strip() == echoed )
+		print( chunks )
+		self.assertTrue( testable.strip() == echoed )

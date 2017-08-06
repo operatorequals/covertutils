@@ -80,5 +80,5 @@ class Test_InterrogatingHandler( unittest.TestCase ) :
             self.test_handler.queueSend( message, 'control' )
 
             sleep(0.03)
-            self.failUnless( testable == message )
+            self.assertTrue( testable == message )
             testable = False

@@ -70,10 +70,10 @@ if __name__ == '__main__' :
 		content = f.read()
 		compressed = compressor.compress( content )
 		f.close()
-		print "Original size %d bytes" % len(content)
-		print "Best effort compression size %d bytes" % len(compressed)
-		print "Ratio %d %% " % ( len(compressed) / float(len(content)) * 100 )
+		print( "Original size %d bytes" % len(content) )
+		print( "Best effort compression size %d bytes" % len(compressed) )
+		print( "Ratio %d %% " % ( len(compressed) / float(len(content)) * 100 ) )
 	except Exception as e:
-		print e
-		print "Usage:"
-		print "	python -m compressor <filename>"
+		print( e )
+		print( "Usage:" )
+		print( "	python -m compressor <filename>" )

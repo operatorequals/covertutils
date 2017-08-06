@@ -40,17 +40,17 @@ class PythonAPISubShell ( SimpleSubShell ) :
 		if not buffer_ :
 			buffer_ = self.python_buffer
 		if not buffer_ :
-			print "Nothing to send"
+			print( "Nothing to send" )
 			return
 		try:
 			compile(buffer_, "<local>", "exec")
 		except Exception as e:
-			print "\t==== Local Syntax Check ===="
-			print "Problem: %s" % e
-			print "\tChecked code:"
-			print buffer_
+			print( "\t==== Local Syntax Check ====" )
+			print( "Problem: %s" % e )
+			print( "\tChecked code:" )
+			print( buffer_ )
 			buffer_ = ''
-			print "\t<Nothing Transmitted>"
+			print( "\t<Nothing Transmitted>" )
 			return
 		self.handler.preferred_send( buffer_, self.stream )
 		self.python_buffer = ''
@@ -73,7 +73,7 @@ class PythonAPISubShell ( SimpleSubShell ) :
 		line = line.rstrip()
 		self.python_buffer += line+'\n'
 		if self.indentation or line[-1] == ':'	: # indentation pending
-			# print line[-1] == ':'
+			# print( line[-1] == ':' )
 			self.indentation = True
 
 		if not self.indentation :
@@ -102,7 +102,7 @@ class PythonAPISubShell ( SimpleSubShell ) :
 #	=====================	Special Commands	=====================
 	def clearBuffer( self, line ) :
 		self.python_buffer = ''
-		print "Buffer cleared!"
+		print( "Buffer cleared!" )
 
 	def showStorage( self, line ) :
 		print
@@ -112,22 +112,22 @@ class PythonAPISubShell ( SimpleSubShell ) :
 		self.clearBuffer('')
 		filename = line.strip().split()[0]
 		if not filename :
-			print "No filename specified!"
+			print( "No filename specified!" )
 			return
 		try :
 			with open(filename, 'r') as f :
 				self.file_buffer += f.read()
-			print "File '%s' loaded!" % filename
+			print( "File '%s' loaded!" % filename )
 		except IOError :
-			print "File '%s' doesn't exist!" % filename
+			print( "File '%s' doesn't exist!" % filename )
 
 	def showBuffer( self, line ) :
 		if not self.file_buffer :
-			print "Buffer is empty"
+			print( "Buffer is empty" )
 			return
-		print self.ruler*20
-		print self.file_buffer
-		print self.ruler*20
+		print( self.ruler*20 )
+		print( self.file_buffer )
+		print( self.ruler*20 )
 
 	def appendFileBuffer( self, line ) :
 		self.file_buffer += line + '\n'
@@ -139,12 +139,12 @@ class PythonAPISubShell ( SimpleSubShell ) :
 	def specialCommand( self, line ) :
 		# line = line.strip()
 		if not line :
-			print "No special command specified!"
+			print( "No special command specified!" )
 
 		toks = line.split(None, 1)
 		if not toks :
-			print "Available special commands:"
-			print '\n'.join(['\t'+self.special_comm_char+comm for comm in self.special_commands.keys()])
+			print( "Available special commands:" )
+			print( '\n'.join(['\t'+self.special_comm_char+comm for comm in self.special_commands.keys()]) )
 			return
 		comm = toks[0]
 		arg_line = ''
@@ -154,4 +154,4 @@ class PythonAPISubShell ( SimpleSubShell ) :
 		try :
 			self.special_commands[comm](arg_line)
 		except KeyError:
-			print "Special command '%s' not found" % comm
+			print( "Special command '%s' not found" % comm )

@@ -7,20 +7,28 @@ import covertutils
 from functools import wraps
 
 from threading import Condition, Thread
-from Queue import Queue
+try:
+	from queue import Queue  # Python 3
+except ImportError:
+	from Queue import Queue  # Python 2
 
 import sys
 import cmd
 
+try:
+	raw_input          # Python 2
+except NameError:
+	raw_input = input  # Python 3
+
 
 def handlerCallbackHook( on_chunk_function, stream_dict ) :
 
-	# print "In the Hook"
+	# print( "In the Hook" )
 	@wraps(on_chunk_function)
 	def wrapper( *args, **kwargs ) :
-		# print "In the Wrapper"
+		# print( "In the Wrapper" )
 		stream, message = args
-		# print stream, message
+		# print( stream, message )
 		if stream not in stream_dict.keys()	:	# No subshell defined for the stream
 			return on_chunk_function
 
@@ -97,7 +105,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 				else :
 					stream_name, command = rest.split(None, 1)
 			except ValueError :
-				print "*** Shouldn't Happen ***"
+				print( "*** Shouldn't Happen ***" )
 				self.__print_streams()
 				return
 			if stream_name not in self.availableStreams() :
@@ -130,7 +138,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 
 
 	def __print_streams( self ) :
-		print ( "Available streams:\n	[+] " + '	\n	[+] '.join(self.availableStreams()) )
+		print( "Available streams:\n	[+] " + '	\n	[+] '.join(self.availableStreams()) )
 
 
 
@@ -154,7 +162,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		self.streamCharacterHelp( )
 
 	def streamCharacterHelp( self ) :
-		print """
+		print( """
 Jump to SubShell:
 \t<Ctrl-C>
 
@@ -166,7 +174,7 @@ streams
 
 Exit with 'exit', 'quit', 'q'
 
-		""".format(char = self.stream_preamp_char)
+		""".format(char = self.stream_preamp_char) )
 
 	def streamMenu( self ) :
 		numb_streams = dict(enumerate( self.availableStreams() ))
@@ -174,21 +182,21 @@ Exit with 'exit', 'quit', 'q'
 
 		option = None
 		while option not in numb_streams.keys() :
-			print
-			print "Available Streams:"
+			print( "" )
+			print( "Available Streams:" )
 			for n, stream in numb_streams.items():
-				print "\t[{:2}] - {stream}".format(n, stream = stream)
+				print( "\t[{:2}] - {stream}".format(n, stream = stream) )
 
 			try :
 				option = int(raw_input( "Select stream: " ))
 			except :
-				print
-				print self.ruler * 20
+				print( "" )
+				print( self.ruler * 20 )
 				pass
 
 		if option == 99 :
 			return True
-		# 	print "Aborted by user..."
+		# 	print( "Aborted by user..." )
 		# 	sys.exit(0)
 
 		selected_stream = numb_streams[option]
@@ -196,10 +204,10 @@ Exit with 'exit', 'quit', 'q'
 
 
 	def quitPrompt( self, *args ) :
-		# print args
+		# print( args )
 		exit_input = raw_input("[!]\tQuit shell? [y/N] ")
 		if exit_input.lower() == 'y' :
-			print "Aborted by the user..."
+			print( "Aborted by the user..." )
 			# sys.exit(0)
 			return True
 		return False

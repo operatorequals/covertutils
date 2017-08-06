@@ -3,6 +3,12 @@ from covertutils.exceptions import *
 from os import urandom
 from struct import pack, unpack
 
+try:
+	bytes        # Python 3
+except NameError:
+	bytes = str  # Python 2
+
+
 class AdHocChunker :
 	"""
 The AdHocChunker class is a special chunker that doesn't tag each chunk that creates.
@@ -91,11 +97,7 @@ The dechunking works by first identifying the byte length of the whole message a
 
 
 	def __prepareMessage( self, payload ) :
-		data = payload
-		data_length = len(data)
-		tag = self.__createTag( data )
-		data = tag + data
-		return data
+		return bytes( self.__createTag( payload ) ) + bytes( payload )
 
 
 	def __createTag( self, chunk ) :
@@ -126,7 +128,6 @@ Resets all partially assembled messages.
 		self.__message = ''
 		self.remaining_bytes = 0
 		self.chunk_size = 0
-
 
 
 	def chunkMessageToStr( self, payload ) :

@@ -5,7 +5,7 @@ from threading import Thread
 
 
 def _print( str_, instance ) :
-	print str_
+	print( str_ )
 
 
 class SimpleSubShell ( cmd.Cmd ) :
@@ -37,26 +37,26 @@ class SimpleSubShell ( cmd.Cmd ) :
 		while True :
 			self.queue_dict['condition'].acquire()
 			if self.queue_dict['messages'].empty() :
-				# print "Waiting for Condition"
+				# print( "Waiting for Condition" )
 				self.queue_dict['condition'].wait()
-				# print "Condition met"
+				# print( "Condition met" )
 			message = self.queue_dict['messages'].get()
-			# print "Message acquired"
+			# print( "Message acquired" )
 			if message not in self.ignore_messages :
 				self.message_function( message, self )
-				# print "Message processed"
+				# print( "Message processed" )
 				self.queue_dict['messages'].task_done()
-			# print message not in self.ignore_messages
+			# print( message not in self.ignore_messages )
 			self.queue_dict['condition'].release()
-			# print "Condition released"
+			# print( "Condition released" )
 
 
 	def precmd( self, line ) :
-		# print "%s" % line
+		# print( "%s" % line )
 		if not line : return line
 		line_ = line.strip()
-		# print line_.startswith( self.base_shell.stream_preamp_char )
-		# print line[1:]
+		# print( line_.startswith( self.base_shell.stream_preamp_char ) )
+		# print( line[1:] )
 		if line_.startswith( self.base_shell.stream_preamp_char ) :
 			try :
 				self.base_shell.default(line_)
@@ -68,7 +68,7 @@ class SimpleSubShell ( cmd.Cmd ) :
 
 
 	def default( self, line ) :
-		# print "Triggered %s for '%s'" % (self.stream, line)
+		# print( "Triggered %s for '%s'" % (self.stream, line) )
 		self.handler.preferred_send( line, self.stream )
 
 
