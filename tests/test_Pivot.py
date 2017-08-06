@@ -129,7 +129,7 @@ class Test_SimpleBridge( unittest.TestCase ) :
 			sleep(0.01)
 		# print( start, end )
 		start = False
-		self.failUnless( data == end )
+		self.assertTrue( data == end )
 
 	def test_two_way( self ) :
 		data = "A"*1000
@@ -140,7 +140,7 @@ class Test_SimpleBridge( unittest.TestCase ) :
 			sleep(0.01)
 		# print( start, end )
 		end = False
-		self.failUnless( data == start )
+		self.assertTrue( data == start )
 
 	def test_exception( self ) :
 		try :
@@ -149,4 +149,4 @@ class Test_SimpleBridge( unittest.TestCase ) :
 		except TypeError :
 			test = True
 
-		self.failUnless( test )
+		self.assertTrue( test )
