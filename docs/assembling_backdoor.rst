@@ -1,5 +1,5 @@
-Assembling a Backdoor **from Scratch** - *The Tutorial*
-=======================================================
+Assembling a Backdoor **from Scratch** - *The Tutorial Restaurant*
+==================================================================
 
 
 
@@ -46,7 +46,7 @@ Handler
 
 	$ nc -nlvp 1234
 
-The `Handler` just needs to accept the TCP connection. Sending any data through that connection will result into running them in the remote `shell` process.
+The `Handler` just needs to accept the TCP connection. Sending any data through that connection will end up running in the remote `shell` process.
 
 
 So, the ingredients of this backdoor are the following:
