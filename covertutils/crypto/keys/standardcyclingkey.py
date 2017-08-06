@@ -6,6 +6,11 @@ from covertutils.helpers import sxor
 
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
+try:
+	bytes        # Python 3
+except NameError:
+	bytes = str  # Python 2
+
 
 class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
@@ -47,7 +52,7 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 
 	def __hash( self, message ) :
-		return self.cycling_algorithm ( message + self.__salt ).digest()
+		return self.cycling_algorithm ( bytes( message + self.__salt ) ).digest()
 
 
 	def cycle( self, rounds = 1 ) :
