@@ -110,7 +110,7 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 		while  len(message) > len(final_key) :
 			if cycle :
 				self.cycle()
-			final_key += self.getKeyBytes()[:2*self.getKeyLength()/3]	# 2/3 of the current key length will be used as key
+			final_key += self.getKeyBytes()[:2*self.getKeyLength()//3]	# 2/3 of the current key length will be used as key
 		s1 = message
 		s2 = final_key
 
