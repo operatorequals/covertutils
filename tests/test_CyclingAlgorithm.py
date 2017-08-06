@@ -20,7 +20,7 @@ class TestCyclingAlgorithm(unittest.TestCase):
 		h = StandardCyclingAlgorithm( urandom(16) ).digest()
 		e = entr(h)
 		print( "Entropy Level: %f" % e )
-		self.failUnless( e > self.entropy_floor)
+		self.assertTrue( e > self.entropy_floor)
 
 
 	def test_consistency( self, n = 20 ) :
@@ -28,7 +28,7 @@ class TestCyclingAlgorithm(unittest.TestCase):
 			x = urandom(16)
 			h1 = StandardCyclingAlgorithm( x ).digest()
 			h2 = StandardCyclingAlgorithm( x ).digest()
-			self.failUnless( h1 == h2 )
+			self.assertTrue( h1 == h2 )
 
 
 	def test_sizes( self, n = 10 ) :
@@ -38,4 +38,4 @@ class TestCyclingAlgorithm(unittest.TestCase):
 			x = urandom(l)
 			h1 = StandardCyclingAlgorithm( x, length = i ).digest()
 			# print( "Length: %d, expected Output: %d. Output: %d" % (l, i, len(h1)) )
-			self.failUnless( len(h1) == i )
+			self.assertTrue( len(h1) == i )
