@@ -13,7 +13,7 @@ class CovertUtilsException( Exception ) :
 def sxor( s1, s2 ) :
 	if len(s1) != 1 and len(s2) != 1 :
 		raise CovertUtilsException( "Incompatible lengths. An Argument is more than 1 char long" )
-		
+
 	return chr(ord(s1) ^ ord(s2))
 
 def xor_str( s1, s2 ) :
