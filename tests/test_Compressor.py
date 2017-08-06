@@ -38,6 +38,7 @@ class Test_Compressor( unittest.TestCase ) :
 				else :
 					plain.append( choice( letters ) )
 
+			plain = bytes( plain )
 			zipped = self.compressor.compress( plain )
 			# print '%d / %d (ratio %f)' % (len(zipped), len(plain), float(len(zipped)) / len(plain))
 			self.assertTrue( len(zipped) <= len(plain) )
