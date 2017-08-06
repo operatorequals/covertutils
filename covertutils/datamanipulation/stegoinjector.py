@@ -354,7 +354,7 @@ Example ::
 				injection_dict[ tag ] += half_byte_hex
 
 		for tag in injection_dict.keys() :
-			injection_dict[tag] = codecs.decode(bytearray(injection_dict[tag], 'hex'))
+			injection_dict[tag] = bytearray(codecs.decode(injection_dict[tag], 'hex'))
 
 		# print len( data_hex )
 		assert len( data_hex ) == 0
