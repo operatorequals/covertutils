@@ -47,6 +47,10 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 
 	def __hash( self, message ) :
+		try:
+			message = bytes( message, encoding='utf8' )  # Python 3
+		except TypeError:
+			message = bytes( message )                   # Python 2
 		return self.cycling_algorithm ( message + self.__salt ).digest()
 
 
