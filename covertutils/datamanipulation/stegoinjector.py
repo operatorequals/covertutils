@@ -324,7 +324,7 @@ Example ::
 			raise StegoDataInjectionException( "Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity) )
 
 		sample = bytearray( sample_packet, encoding='utf8' )
-		pkt = bytearray( pkt )
+		pkt = bytearray( pkt, encoding='utf8' )
 		# print(sample)
 		# print(pkt)
 		# print(len(sample), len(pkt))
