@@ -66,6 +66,11 @@ from covertutils.helpers import str_similar
 from copy import deepcopy
 import codecs
 
+try:
+	bytes        # Python 3
+except NameError:
+	bytes = str  # Python 2
+
 
 class StegoInjector :
 
@@ -277,7 +282,6 @@ Example ::
 		# print injection_dict
 		return pkt
 
-
 	def inject( self, data, template, pkt = None ) :
 		"""
 :param str data: The data to be injected in raw bytes
@@ -315,8 +319,6 @@ Example ::
 			pkt = deepcopy( sample_packet )			# COPY DEEPLY
 		else :
 			pkt = codecs.encode(pkt, 'hex')
-
-
 
 		if data_len != sample_capacity :
 			raise StegoDataInjectionException( "Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity) )
@@ -408,7 +410,7 @@ Example ::
 	def __initializeDataExtraction( self, pkt, template ) :
 
 		extract_dict = {}
-		pkt_hex = codecs.encode(pkt, 'hex')
+		pkt_hex = codecs.encode(bytes( pkt ), 'hex')
 		if template not in self.__packets.keys() :
 			raise TemplateNotFoundException( "Template '%s' is not available" % template)
 		sample_hex, sample_cap = self.__packets[ template ]
