@@ -54,4 +54,4 @@ class Test_ShellHandler (unittest.TestCase) :
 		# print '======================================================='
 		# print testable
 		while not testable : sleep(0.5)
-		self.failUnless( testable.strip() == echoed )
+		self.assertTrue( testable.strip() == echoed )
