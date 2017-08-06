@@ -331,7 +331,7 @@ Code Reference
 
 The ``copy-paste``-able code examples of the above tutorial.
 
-The code can be under ``examples/docs/simple/`` directory of the repo.
+The code is under the ``examples/docs/simple/`` directory of the repo.
 
 The `Handler's` Code
 ^^^^^^^^^^^^^^^^^^^^
@@ -614,7 +614,7 @@ Code Reference
 
 The ``copy-paste``-able code examples of the above tutorial.
 
-The code can be under ``examples/docs/advanced/`` directory of the repo.
+The code is under the ``examples/docs/advanced/`` directory of the repo.
 
 The `Handler's` Code
 ^^^^^^^^^^^^^^^^^^^^
@@ -1082,4 +1082,4 @@ The Network Traffic
 
 .. note :: **You win a free beer for scrolling down all the gibberish!**
 
-.. note :: **You win a ANOTHER free beer if you mail me my ``/etc/passwd`` file size!**
+.. note :: **You win ANOTHER free beer if you mail me my** ``/etc/passwd`` **file size!**
