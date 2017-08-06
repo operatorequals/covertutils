@@ -68,7 +68,10 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 
 				for c1_i in range(len(s1)) :
 					c1 = s1[c1_i]
-					mod = (ord(c1) + len( __result) + c1_i) % 6
+					if isinstance(c1, int):
+						mod = (c1 + len( __result) + c1_i) % 6
+					else:
+						mod = (ord(c1) + len( __result) + c1_i) % 6
 					h1 = sxor( c1, self.__b_list[mod] )
 					if ord(h1) % 2 :
 						__result = h1 + __result
