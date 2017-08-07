@@ -5,6 +5,8 @@ from covertutils.helpers import sxor, permutate
 
 from copy import deepcopy
 
+import codecs
+
 
 class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 
