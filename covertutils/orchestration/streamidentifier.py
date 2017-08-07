@@ -40,7 +40,7 @@ class StreamIdentifier :
 		if stream_name in self.__streams.keys() :
 			raise StreamAlreadyExistsException( "Stream '%s' already exists" % stream_name )
 
-		stream_name = bytesarray( stream_name, encoding='utf8' )
+		stream_name = bytearray( stream_name, encoding='utf8' )
 		inp_passphrase = self.cycling_algorithm( self.hashphrase + stream_name ).digest()
 		out_passphrase = self.cycling_algorithm( stream_name + self.hashphrase ).digest()
 
