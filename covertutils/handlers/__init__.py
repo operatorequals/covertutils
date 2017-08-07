@@ -98,3 +98,5 @@ from covertutils.handlers.resettable import ResettableHandler
 from covertutils.handlers.stageable import StageableHandler
 
 from covertutils.handlers.buffering import BufferingHandler
+
+from covertutils.handlers.dateable import DateableHandler
