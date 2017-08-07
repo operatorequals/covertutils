@@ -181,9 +181,11 @@ data2="""41414142XXYY"""
 
 	def test_ascii_to_hex_template( self, n = 1000 ) :
 		pkt = urandom( n )
-		pkt = pkt.replace(pkt[-1], '~')
-		pkt = pkt.replace(pkt[-2], '~')
-		pkt = pkt.replace(pkt[-3], '~')
+		# if is int then convert int to char
+		c1 = chr(pkt[-1]) if isinstance(pkt[-1], int) else pkt[-1]
+		c2 = chr(pkt[-2]) if isinstance(pkt[-2], int) else pkt[-2]
+		c3 = chr(pkt[-3]) if isinstance(pkt[-3], int) else pkt[-3]
+		pkt = pkt.replace(c1, '~').replace(c2, '~').replace(c3, '~')
 
 		templ = asciiToHexTemplate( pkt )
 

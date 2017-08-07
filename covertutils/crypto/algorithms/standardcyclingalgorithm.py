@@ -5,6 +5,8 @@ from covertutils.helpers import sxor, permutate
 
 from copy import deepcopy
 
+import codecs
+
 
 class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 
@@ -68,6 +70,8 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 
 				for c1_i in range(len(s1)) :
 					c1 = s1[c1_i]
+					if isinstance(c1, int):
+						c1 = chr(c1)
 					mod = (ord(c1) + len( __result) + c1_i) % 6
 					h1 = sxor( c1, self.__b_list[mod] )
 					if ord(h1) % 2 :
@@ -77,6 +81,8 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 
 				for c2_i in range(len(s2)) :
 					c2 = s2[c2_i]
+					if isinstance(c2, int):
+						c2 = chr(c2)
 					mod = (ord(c2) + len( __result ) + c2_i) % 6
 					h2 = sxor( c2, self.__b_list[ (len(self.__b_list) - 1) - mod ] )
 					if ord(h2) % 2 :
@@ -102,7 +108,7 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 						__result = __result + new_bytes
 						# print new_bytes
 					else :
-						__result_list = bytearray(__result)
+						__result_list = codecs.decode(__result, 'hex')
 						for x in permut_list :
 
 							__result_list.pop( x % len(__result_list) )

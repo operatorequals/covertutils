@@ -295,7 +295,7 @@ Example ::
 		hex_pkt = str(hex_pkt)
 
 		if self.hex_inject :
-			data = data.encode('hex')
+			data = codecs.encode( data, 'hex' )
 
 		injection_dict = self.__createInjectionDict( hex_pkt, data, sample_capacity )
 
@@ -303,7 +303,7 @@ Example ::
 
 		# print injection_dict
 		# print inj_hex_pkt
-		pkt = codecs.decode(inj_hex_pkt, 'hex')
+		pkt = codecs.decode( inj_hex_pkt, 'hex' )
 
 		return pkt
 
@@ -323,8 +323,8 @@ Example ::
 		if data_len != sample_capacity :
 			raise StegoDataInjectionException( "Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity) )
 
-		sample = bytearray( sample_packet )
-		pkt = bytearray( pkt )
+		sample = bytearray( sample_packet, encoding='utf8' )
+		pkt = bytearray( pkt, encoding='utf8' )
 		# print(sample)
 		# print(pkt)
 		# print(len(sample), len(pkt))
@@ -340,7 +340,7 @@ Example ::
 
 	def __createInjectionDict( self, hex_pkt, data, sample_capacity ) :
 		# data = bytearray(data)
-		data_hex = data.encode('hex')
+		data_hex = codecs.encode( data, 'hex' )
 		injection_dict = {}
 		for tag in self.__tags :
 			injection_dict[tag] = ''
@@ -367,7 +367,7 @@ Example ::
 		# print injection_dict
 		pkt_hex = bytearray(pkt_hex)
 		for tag, data in injection_dict.items() :
-			data = bytearray(data)
+			data = bytearray( data )
 			inj_function = self.__tags[ tag ]['inj_function']
 			while data :
 

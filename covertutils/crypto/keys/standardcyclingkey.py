@@ -6,6 +6,11 @@ from covertutils.helpers import sxor
 
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
+try:
+	bytes        # Python 3
+except NameError:
+	bytes = str  # Python 2
+
 
 class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
@@ -47,6 +52,10 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 
 	def __hash( self, message ) :
+		try:
+			message = bytes( message, encoding='utf8' )  # Python 3
+		except TypeError:
+			message = bytes( message )                   # Python 2
 		return self.cycling_algorithm ( message + self.__salt ).digest()
 
 
@@ -101,7 +110,7 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 		while  len(message) > len(final_key) :
 			if cycle :
 				self.cycle()
-			final_key += self.getKeyBytes()[:2*self.getKeyLength()/3]	# 2/3 of the current key length will be used as key
+			final_key += self.getKeyBytes()[:2*self.getKeyLength()//3]	# 2/3 of the current key length will be used as key
 		s1 = message
 		s2 = final_key
 
