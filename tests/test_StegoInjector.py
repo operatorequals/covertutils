@@ -183,7 +183,7 @@ data2="""41414142XXYY"""
 		pkt = urandom( n )
 		pkt = pkt.replace(chr(pkt[-1]), '~')
 		pkt = pkt.replace(chr(pkt[-2]), '~')
-		pkt = pkt.replace(chr)pkt[-3]), '~')
+		pkt = pkt.replace(chr(pkt[-3]), '~')
 
 		templ = asciiToHexTemplate( pkt )
 
