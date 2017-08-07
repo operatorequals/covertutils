@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import range
 import unittest
 
 from pprint import pprint
@@ -126,9 +128,9 @@ class TestOrchestrator( unittest.TestCase ) :
 		orch = SimpleOrchestrator("passphrase1", streams = streams )
 		message = 'a'*16
 		keys = []
-		stream_instances = orch.streams_buckets.values()
+		stream_instances = list(orch.streams_buckets.values())
 		for instance in stream_instances :
-			keys.extend( instance['keys'].values() )
+			keys.extend( list(instance['keys'].values()) )
 
 		ciphertexts = set()
 		for key in keys :

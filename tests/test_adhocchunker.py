@@ -1,3 +1,4 @@
+from builtins import range
 import unittest
 
 from os import urandom

@@ -1,3 +1,7 @@
+from __future__ import division
+from __future__ import print_function
+from builtins import range
+from past.utils import old_div
 import unittest
 
 from covertutils.crypto.keys import *
@@ -24,9 +28,9 @@ class TestKeys(unittest.TestCase) :
 		self.assertTrue( n == k1.getCycles() )
 		nth_key = k1.getKeyBytes()
 		k1.reset()
-		k1.cycle( n/2 )
-		self.assertTrue( n/2 == k1.getCycles() )
-		k1.cycle( n/2 )
+		k1.cycle( old_div(n,2) )
+		self.assertTrue( old_div(n,2) == k1.getCycles() )
+		k1.cycle( old_div(n,2) )
 
 		nth_key_2 = k1.getKeyBytes()
 
@@ -72,7 +76,7 @@ class TestKeys(unittest.TestCase) :
 		encrypted = set (encrypted_list)
 		self.assertTrue( len(encrypted) > 1)
 
-		print
+		print()
 		for encr in encrypted_list :
 			# print k2.getCycles(), k2.getKeyBytes().encode('hex')
 			decr = k2.decrypt( encr )

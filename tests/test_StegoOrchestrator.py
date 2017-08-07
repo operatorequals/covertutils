@@ -1,3 +1,4 @@
+from builtins import range
 import unittest
 
 from covertutils.orchestration import StegoOrchestrator
