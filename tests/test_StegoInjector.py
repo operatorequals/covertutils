@@ -185,7 +185,7 @@ data2="""41414142XXYY"""
 		c1 = chr(pkt[-1]) if isinstance(pkt[-1], int) else pkt[-1]
 		c2 = chr(pkt[-2]) if isinstance(pkt[-2], int) else pkt[-2]
 		c3 = chr(pkt[-3]) if isinstance(pkt[-3], int) else pkt[-3]
-		pkt = pkt.replace(c, '~').replace(c2, '~').replace(c3, '~')
+		pkt = pkt.replace(c1, '~').replace(c2, '~').replace(c3, '~')
 
 		templ = asciiToHexTemplate( pkt )
 
