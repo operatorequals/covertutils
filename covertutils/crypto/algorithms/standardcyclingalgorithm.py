@@ -108,7 +108,7 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 						__result = __result + new_bytes
 						# print new_bytes
 					else :
-						__result_list = codecs.encode(__result, 'hex')
+						__result_list = codecs.decode(__result, 'hex')
 						for x in permut_list :
 
 							__result_list.pop( x % len(__result_list) )
