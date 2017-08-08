@@ -54,7 +54,7 @@ So, as using a single byte signature is a big **NO-NO** what stands out?
 
 What if we encrypt a string with a Rolling Key and append it to the message?
 
-As the key is rolling the "`No-Duplicate Principle`" applies to that encrypted string. But no the listener **know what to search for**. Decrypting a certain portion of the payload will have to result to the original string. If it does not then the received data is of no interest for the listener (the sender didn't sent this one), and the key can be rolled back.
+As the key is rolling the "`No-Duplicate Principle`" applies to the ciphertext of the string. But now the listener **knows what to search for**. Decrypting a certain portion of the payload will have to result to the original string. If it does not, then the received data is of no interest for the listener (the sender didn't sent this one), and the key can be rolled back.
 
 This is a kind of one time password (`OTP`) for each payload originally sent from the sender.
 
@@ -69,3 +69,9 @@ Still, there is a possibility for a random data packet that have been received t
 
 
 __  celebi_
+
+
+..
+	.. figure:: images/orchestrator.png
+		:alt: alternate text
+		:align: center

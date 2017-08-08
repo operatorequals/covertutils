@@ -27,6 +27,14 @@ covertutils.handlers.buffering module
     :undoc-members:
     :show-inheritance:
 
+covertutils.handlers.dateable module
+------------------------------------
+
+.. automodule:: covertutils.handlers.dateable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.handlers.functiondict module
 ----------------------------------------
 

@@ -83,3 +83,20 @@ publish :
 nui_elf :
 	nuitka --standalone --remove-output ${PY}
 	# wine /home/unused/.wine/drive_c/Python27/python.exe /home/unused/.wine/drive_c/Python27/Scripts/nuitka --standalone --remove-output ${PY}
+
+
+pack :
+	-rm -r target
+	-rm target.pyz
+	mkdir target
+	cp -r covertutils target/
+	cat ${PY} >> target/covertutils/__init__.py
+	# cat ${PY} >> target/covertutils/main.py
+	# zip -r -9 target.pyz target
+	cd target && zip -r -9 -q target.pyz covertutils
+	mv target/target.pyz .
+	# cd ..
+	# cp ${PY} main.py
+	# touch __init__.py
+	# zip -9 -u target.pyz main.py __init__.py
+	# rm -r target
