@@ -17,24 +17,19 @@ class Test_Compressor( unittest.TestCase ) :
 
 
 	def test_consistency( self, n = 1, byte_len = 100 ) :
-		for i in range( 0, n ) :
+		for i in range( n ) :
 			plain = urandom( byte_len )
 			zipped = self.compressor.compress( plain )
-
 			dezip = self.compressor.decompress( zipped )
 			self.assertTrue( plain == dezip )
 
 
-	def test_feasibility ( self, n = 100, byte_len = 100  ):
-
-		for i in range( 0, n ) :
+	def test_feasibility ( self, n = 100, byte_len = 100 ):
+		for i in range( n ) :
 			# plain = urandom( byte_len )
-			plain = b''
-			for i in range( byte_len ) :
-				letter = choice( random_bytes if i % 2 else ascii_letters )
-				# convert a letter into a byte in Python 2 & Python 3
-				plain += codecs.encode( letter, 'utf8' )
-
+			plain = ''.join( choice( random_bytes if i % 2 else ascii_letters )
+			                 for i in range( byte_len ) )
+			plain = codecs.encode( plain, 'hex' )
 			zipped = self.compressor.compress( plain )
 			# print '%d / %d (ratio %f)' % (len(zipped), len(plain), float(len(zipped)) / len(plain))
 			self.assertTrue( len(zipped) <= len(plain) )
