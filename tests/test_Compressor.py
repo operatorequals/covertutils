@@ -1,5 +1,6 @@
 from builtins import range
 import unittest
+import codecs
 
 from os import urandom
 from random import randint, choice
@@ -7,10 +8,6 @@ from covertutils.datamanipulation import Compressor
 from string import ascii_letters
 
 random_bytes = urandom( 64 )
-try:
-	letters = bytes( ascii_letters, encoding='utf8' )  # Python 3
-except TypeError:
-	letters = bytes( ascii_letters )                   # Python 2
 
 
 class Test_Compressor( unittest.TestCase ) :
@@ -36,8 +33,8 @@ class Test_Compressor( unittest.TestCase ) :
 			for i in range( byte_len ) :
 				if i % 2 :
 					plain += choice(random_bytes)
-				else :
-					plain += choice(letters)
+				else :  # convert a random ascii letter into a byte in Py2 & Py3
+					plain += codecs.encode( choice( ascii_letters ), 'utf8' )
 
 			zipped = self.compressor.compress( plain )
 			# print '%d / %d (ratio %f)' % (len(zipped), len(plain), float(len(zipped)) / len(plain))
