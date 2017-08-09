@@ -29,11 +29,11 @@ class Test_Compressor( unittest.TestCase ) :
 
 		for i in range( 0, n ) :
 			# plain = urandom( byte_len )
-			plain = ''
+			plain = b''
 			for i in range( byte_len ) :
-				plain += choice( random_bytes if i % 2 else ascii_letters )
+				letter = choice( random_bytes if i % 2 else ascii_letters )
 				# convert a letter into a byte in Python 2 & Python 3
-				# plain += codecs.encode( letters, 'utf8' )
+				plain += codecs.encode( letter, 'utf8' )
 
 			zipped = self.compressor.compress( plain )
 			# print '%d / %d (ratio %f)' % (len(zipped), len(plain), float(len(zipped)) / len(plain))
