@@ -1,4 +1,4 @@
-from builtins import range
+from builtins import bytes, range
 import unittest
 import codecs
 
@@ -26,8 +26,7 @@ class Test_Compressor( unittest.TestCase ) :
 
 	def test_feasibility ( self, n = 100, byte_len = 100 ):
 		for i in range( n ) :
-			plain = [ choice( random_bytes if i % 2 else ascii_letters ) for i in range( byte_len ) ]
-			plain = codecs.encode( b''.join(plain), 'hex' )
+			plain = bytes( choice( random_bytes if i % 2 else ascii_letters ) for i in range( byte_len ) )
 			zipped = self.compressor.compress( plain )
 			# print '%d / %d (ratio %f)' % (len(zipped), len(plain), float(len(zipped)) / len(plain))
 			self.assertTrue( len(zipped) <= len(plain) )
