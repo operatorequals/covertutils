@@ -10,22 +10,14 @@ import calendar, datetime, time
 
 def __generateDays() :
 
-	days = {}
-	for i in range(7) :
-		keys = []
-		keys.append(i)
-		keys.append(str(i))
+	def day_data(i):
 		dayname = calendar.day_name[i]
-		keys.append(dayname)
-		keys.append(dayname.lower())
-		keys.append(dayname[:3])
-		keys.append(dayname[:3].lower())
-		days[i] = keys
+		return [i, str( i ), dayname, dayname.lower(), dayname[:3], dayname[:3].lower()]
 
-	return days
+	return {i: day_data(i) for i in range(7)}
 
 days = __generateDays()
-# print days
+# print( days )
 
 def getDay( inp ) :
 
@@ -105,9 +97,8 @@ class DateableHandler (BaseHandler) :
 		current_month = obj.month
 		current_day = obj.day
 		for hol_day, hol_month in self.dates['holidays'] :	# DD/MM
-			if hol_month == current_month :
-				if hol_day == current_day :
-					return True
+			if hol_month == current_month and hol_day == current_day :
+				return True
 		return False
 
 
@@ -133,27 +124,23 @@ class DateableHandler (BaseHandler) :
 
 
 	def mustNotRespond( self, fixed_date = None ) :
-		if not fixed_date :
-			now_obj = datetime.datetime.now()
-		else :
-			now_obj = fixed_date
+		now_obj = fixed_date or datetime.datetime.now()
 
 		if self._isItEasterHoliday( now_obj ) :
-			print ("Easter Block")
+			print( "Easter Block" )
 			return True
 
 		if not self._isItWorkingHours( now_obj ) :
-			print ("Working Hours Block")
+			print( "Working Hours Block" )
 			return True
 
 		if self._isItWeekend( now_obj ) :
-			print ("Weekend Block")
+			print( "Weekend Block" )
 			return True
 
 		if self._isItHoliday( now_obj ) :
-			print ("Holiday Block")
+			print( "Holiday Block" )
 			return True
-
 
 		return False
 
