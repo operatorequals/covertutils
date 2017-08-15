@@ -1,15 +1,7 @@
 language: python
 python:
   - 2.7.13
-  # - 3.4
-  # - 3.5
   - 3.6
-  # PyPy versions
-  # - pypy   # PyPy2 5.8
-  # - pypy3  # Pypy3 5.8
-matrix:
-  allow_failures:
-    - python: 3.6
 # command to install dependencies
 before_install:
   - pip install flake8
