@@ -1,11 +1,7 @@
 import unittest
 
-from os import urandom
-from random import randint, choice
 from covertutils.handlers import DateableHandler
 from covertutils.orchestration import SimpleOrchestrator
-
-from covertutils.handlers.dateable import calc_easter
 
 import datetime
 from time import sleep
@@ -50,22 +46,20 @@ class Test_DateableHandler( unittest.TestCase ) :
 
 	def setUp(self) :
 		self.handler = MyTestHandler( dummy_receive, dummy_send, orch1, workinghours = ( (8,30), (16,30) ) )
-		pprint (self.handler.dates)
+		pprint( self.handler.dates )
 
 
 	def testHoliday(self) :
 		ny_Eve = datetime.datetime(2017, 1,1, 9, 10)
-		print ny_Eve
+		print( ny_Eve )
 		self.assertTrue( self.handler.mustNotRespond( ny_Eve ) )
 
 		christmas = datetime.datetime(2017, 12, 25, 9, 10)
-		print christmas
+		print( christmas )
 		self.assertTrue( self.handler.mustNotRespond( christmas ) )
 
 		anyday = datetime.datetime(2017, 8, 7, 9, 10)
 		self.assertTrue( not self.handler.mustNotRespond( anyday ) )
-
-
 
 
 	# def testEaster(self) :
@@ -82,13 +76,13 @@ class Test_DateableHandler( unittest.TestCase ) :
 	def testWorkingHours(self) :
 
 		anyday = datetime.datetime(2017, 5,1, 7, 10)
-		print anyday
+		print( anyday )
 		self.assertTrue( self.handler.mustNotRespond( anyday ) )
 
 		anyday = datetime.datetime(2017, 5,1, 20, 10)
-		print anyday
+		print( anyday )
 		self.assertTrue( self.handler.mustNotRespond( anyday ) )
 
 		anyday = datetime.datetime(2017, 5,1, 13, 10)	# Not a weekend
-		print anyday
+		print( anyday )
 		self.assertTrue( not self.handler.mustNotRespond( anyday ) )
