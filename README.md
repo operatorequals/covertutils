@@ -57,16 +57,43 @@ def onMessage( message, stream ) :
 ### The `Shell`
 A shell interface with prompt and `stream` control can be spawned from a `Handler` instance with:
 ``` python
-shell = PrintShell( handler )
+
+shell = StandardShell(handler, prompt = "(%s:%d)> " % client_addr )
 shell.start()
 ```
 ```bash
-(covertutils v0.2.1)[control]> 
-(covertutils v0.2.1)[control]> !main 
-(covertutils v0.2.1)[main]> 
-<Ctrl-C>
-Really Control-C [y/N]? y
+(127.0.0.5:8081)> 
+# <Ctrl-C>
+Available Streams:
+	[ 0] - control
+	[ 1] - python
+	[ 2] - os-shell
+	[99] - Back
+Select stream: 2
+[os-shell]> uname -a
+Linux hostname 4.9.0-kali4-amd64 #1 SMP Debian 4.9.25-1kali1 (2017-05-04) x86_64 GNU/Linux
+[os-shell]> !control sysinfo
+General:
+	Host: hostname
+	Machine: x86_64
+	Version: #1 SMP Debian 4.9.25-1kali1 (2017-05-04)
+	Locale: en_US-UTF-8
+	Platform: Linux-4.9.0-kali4-amd64-x86_64-with-Kali-kali-rolling-kali-rolling
+	Release: 4.9.0-kali4-amd64
+	System: Linux
+	Processor: 
+	User: unused
+
+Specifics:
+	Windows: ---
+	Linux: glibc-2.7
+
+[os-shell]> 
+# <Ctrl-C>
+(127.0.0.5:8081)> q
+[!]	Quit shell? [y/N] y
 Aborted by the user...
+
 ```
 
 ## Networking
