@@ -103,12 +103,12 @@ Aborted by the user...
 ## Networking
 Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` `Handler` instances are **2 functions wrapping the raw data sending and receiving**.
 
-
-Just pass a `send( raw )` and a `recv()` function to a `Handler` and you have a working *One-Time-Pad* encrypted, bandwidth aware, protocol independent, *password protected* channel.
+Just pass a `send( raw )` and a `recv()` function to a `Handler` and you have a working *One-Time-Pad* encrypted, bandwidth aware, protocol independent, *password protected*, *multi-usable* channel.
 
 # Further Examples:
 Sample TCP/UDP Reverse Shells and TCP Bind Shell scripts can be found in `examples/` directory.
-Tutorial and explanation of the architecture can be found in the [Tutorial Restaurant](http://covertutils.readthedocs.io/en/latest/assembling_backdoor.html)
+
+Tutorial and explanation of the architecture can be found in the [CovertUtils Tutorial Restaurant](http://covertutils.readthedocs.io/en/latest/assembling_backdoor.html)!
 
 
 # Pull Requests?
