@@ -1,5 +1,5 @@
 # covertutils
-A framework for Remote Code Execution Agent programming.
+## A framework for Backdoor programming!
 
 [![Documentation Status](https://readthedocs.org/projects/covertutils/badge/?version=latest)](http://covertutils.readthedocs.io/en/latest/?badge=latest) [![PyPI version](https://badge.fury.io/py/covertutils.svg)](https://pypi.python.org/pypi/covertutils)          [![GitHub version](https://badge.fury.io/gh/operatorequals%2Fcovertutils.svg)](https://github.com/operatorequals/covertutils) [![Build Status](https://travis-ci.org/operatorequals/covertutils.svg?branch=master)](https://travis-ci.org/operatorequals/covertutils)
 
@@ -15,7 +15,11 @@ With all those set with a few lines of code, a programmer can spend time creatin
 The security programmers can stop *re-inventing the wheel* by implementing encryption mechanisms both agent-side and handler-side to spend their time to develop more versatile *agents*, and generally feature-full shells!
 
 ### Python?
-Yes, python, and more specifically python 2.7 only, for the time being...
+Yes, python, and more specifically **Python2.7** only, for the time being...
+
+### But why Python2?
+Several reasons. Mostly because Python2 is **more popular among devices** (*IoT devices*, *old Linux servers*, etc), and backdoor code could run *as-is* on them, without `Freezing`, `Packing`, `PyInstalling`, etc. Backdoors are valuable when they are as cross-platform as possible.
+Macs, for example, do not have Python3 installed by default. If you want `covertutils` in Python3, do not complain, read [this reddit flame war dodging](https://www.reddit.com/r/netsec/comments/6rj7b0/a_python_package_for_creating_backdoors_coverutils/) and start PRing...
 
 
 ### Dependencies?
@@ -97,13 +101,14 @@ Aborted by the user...
 ```
 
 ## Networking
-Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` Handlers are **2 functions wrapping the raw data sending and receiving**.
+Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` `Handler` instances are **2 functions wrapping the raw data sending and receiving**.
 
 
 Just pass a `send( raw )` and a `recv()` function to a `Handler` and you have a working *One-Time-Pad* encrypted, bandwidth aware, protocol independent, *password protected* channel.
 
 # Further Examples:
 Sample TCP/UDP Reverse Shells and TCP Bind Shell scripts can be found in `examples/` directory.
+Tutorial and explanation of the architecture can be found in the [Tutorial Restaurant](http://covertutils.readthedocs.io/en/latest/assembling_backdoor.html)
 
 
 # Pull Requests?
