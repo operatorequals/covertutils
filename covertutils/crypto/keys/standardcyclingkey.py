@@ -105,9 +105,13 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 		while  len(message) > len(final_key) :
 			if cycle :
 				self.cycle()
-			final_key += self.getKeyBytes()[:2*self.getKeyLength()/3]	# 2/3 of the current key length will be used as key
-		s1 = bytearray(message)
-		s2 = bytearray(final_key)
+			final_key += self.getKeyBytes()[:2*self.getKeyLength()//3]	# 2/3 of the current key length will be used as key
+		try :
+			s1 = bytearray(message)
+			s2 = bytearray(final_key)
+		except TypeError:
+			s1 = bytearray(message, 'utf8')
+			s2 = final_key
 
 		if cycle :
 			self.cycle()
@@ -115,7 +119,10 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 		ret = bytearray([a ^ b for a,b in zip(s1,s2)])
 
 		# LOG.debug("XORING:\n%s\n%s\n-> %s" % (s1.encode('hex'), s2.encode('hex'), ret.encode('hex')))
-		return str(ret)
+		try :
+			return str(ret, encoding='UTF-8')
+		except :
+			return str(ret)
 
 
 	def getCycles( self ) :
