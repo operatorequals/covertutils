@@ -47,7 +47,10 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 
 	def __hash( self, message ) :
-		return self.cycling_algorithm ( message + self.__salt ).digest()
+		try :
+			return self.cycling_algorithm ( bytearray(message, 'utf8') + self.__salt ).digest()
+		except :
+			return self.cycling_algorithm ( message + self.__salt ).digest()
 
 
 	def cycle( self, rounds = 1 ) :
@@ -96,20 +99,23 @@ class StandardCyclingKey( CyclingKey, EncryptionKey ) :
 
 	def xor( self, message, cycle = True ) :
 
+		# message = bytearray( message )
 		key = self.current_key
 		final_key = key
 		while  len(message) > len(final_key) :
 			if cycle :
 				self.cycle()
 			final_key += self.getKeyBytes()[:2*self.getKeyLength()/3]	# 2/3 of the current key length will be used as key
-		s1 = message
-		s2 = final_key
+		s1 = bytearray(message)
+		s2 = bytearray(final_key)
 
 		if cycle :
 			self.cycle()
-		ret = ''.join(sxor(a,b) for a,b in zip(s1,s2))
+		# print (s1, s2)
+		ret = bytearray([a ^ b for a,b in zip(s1,s2)])
+
 		# LOG.debug("XORING:\n%s\n%s\n-> %s" % (s1.encode('hex'), s2.encode('hex'), ret.encode('hex')))
-		return ret
+		return str(ret)
 
 
 	def getCycles( self ) :

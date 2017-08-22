@@ -43,8 +43,8 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 		# print (len(self.__b_list))
 		try :
 			super( StandardCyclingAlgorithm, self ).__init__( bytearray(message, 'utf8') )
-		except TypeError :
-			super( StandardCyclingAlgorithm, self ).__init__( message )
+		except (TypeError, UnicodeDecodeError) :
+			super( StandardCyclingAlgorithm, self ).__init__( bytearray(message) )
 		self.length = length
 		self.cycles = cycles
 
