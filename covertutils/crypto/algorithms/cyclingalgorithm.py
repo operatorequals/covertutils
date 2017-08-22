@@ -23,4 +23,6 @@ class CyclingAlgorithm :
 
 	def hexdigest( self ) :
 		bin_ = self.digest()
-		return hexlify( bin_ )
+		ret = hexlify( bin_ )
+
+		return str(ret)

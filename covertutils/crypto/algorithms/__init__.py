@@ -2,3 +2,7 @@
 from covertutils.crypto.algorithms.cyclingalgorithm import CyclingAlgorithm
 
 from covertutils.crypto.algorithms.standardcyclingalgorithm import StandardCyclingAlgorithm
+
+from covertutils.crypto.algorithms.crc32cyclingalgorithm import Crc32CyclingAlgorithm
+
+from covertutils.crypto.algorithms.nullcyclingalgorithm import NullCyclingAlgorithm

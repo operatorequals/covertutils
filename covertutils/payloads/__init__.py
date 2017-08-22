@@ -72,12 +72,12 @@ def generatePayloads( ) :
 
 	LinuxStages = {}
 	# LinuxStages['shellcode'] = import_stage_from_module_str('linux.shellcode')
-	from .linux import shellcode as lshellcode
+	from covertutils.payloads.linux import shellcode as lshellcode
 	LinuxStages['shellcode'] = import_stage_from_module(lshellcode)
 
 	WindowsStages = {}
 	# WindowsStages['shellcode'] = import_stage_from_module_str('windows.shellcode')
-	from .windows import shellcode as wshellcode
+	from covertutils.payloads.windows import shellcode as wshellcode
 	WindowsStages['shellcode'] = import_stage_from_module(wshellcode)
 
 	GenericStages = {}
@@ -87,7 +87,7 @@ def generatePayloads( ) :
 	# GenericStages['pythonapi'] = import_stage_from_module_str('generic.pythonapi')
 	# GenericStages['control'] = import_stage_from_module_str('generic.control')
 
-	from .generic import control, shell, shellprocess, pythonapi, echo, file as file_
+	from covertutils.payloads.generic import control, shell, shellprocess, pythonapi, echo, file as file_
 	GenericStages['control'] = import_stage_from_module(control)
 	GenericStages['shell'] = import_stage_from_module(shell)
 	GenericStages['shellprocess'] = import_stage_from_module(shellprocess)
