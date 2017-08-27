@@ -58,7 +58,7 @@ def __system_info( message ) :
 
 def __win_shellcode( payload ) :
 
-	from types import *
+	from types import windll, c_char_p
 	shellcode = payload
 	sc = c_char_p(shellcode)
 	# Reserves or commits a region of pages in the virtual address space of the calling process.
@@ -87,7 +87,7 @@ def __win_shellcode( payload ) :
 
 def __lin_shellcode( payload ) :
 
-	from types import *
+	from types import CDLL, c_char_p, c_void_p, memmove, cast, CFUNCTYPE
 	from multiprocessing import Process
 	libc = CDLL('libc.so.6')
 	shellcode = payload

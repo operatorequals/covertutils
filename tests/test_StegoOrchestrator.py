@@ -38,7 +38,7 @@ control='''4142XXXXXXXXYYYYYYYY4344'''
 		self.orch2 = StegoOrchestrator( "a", self.stego_conf, transformation_list = self.configuration, reverse = True )
 
 
-	def test_functionality( self, n = 100, l = 100 ) :
+	def test_functionality( self, n = 100, l = 10 ) :
 
 		for i in range(n) :
 
