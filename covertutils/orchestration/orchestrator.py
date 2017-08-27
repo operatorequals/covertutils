@@ -13,10 +13,17 @@ from string import ascii_letters
 from copy import deepcopy
 
 
+# from covertutils.helpe`rs import DocABCMeta
 
 
 class Orchestrator :
+	"""
+Orchestrator objects utilize the `raw data` to **(stream, message)** tuple translation and vice-versa.
+**(stream, message)** tuples are recognised by the classes in :mod:`covertutils.handlers` but data transmission is only possible with `raw data`.
 
+
+	"""
+	# __metaclass__ = DocABCMeta
 	__metaclass__ = ABCMeta
 
 	__pass_encryptor = ascii_letters * 10

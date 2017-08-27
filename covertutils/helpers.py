@@ -1,6 +1,7 @@
 # from builtins import chr
 
 from difflib import SequenceMatcher
+import abc
 
 
 
@@ -44,3 +45,17 @@ def defaultArgMerging( defaults, kwargs ) :
 def isprintable( s ) :
 	import string
 	return all(c in string.printable for c in s)
+
+
+
+# 
+#
+# class DocABCMeta(type):
+#
+# 	# def __init__(s)
+#     def __new__(mcls, classname, bases, cls_dict):
+#         cls = type.__new__(mcls, classname, bases, cls_dict)
+#         for name, member in cls_dict.items():
+#             if not getattr(member, '__doc__'):
+#                 member.__doc__ = getattr(bases[-1], name).__doc__
+#         return cls

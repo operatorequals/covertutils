@@ -22,19 +22,26 @@ def _dummy_function( data, encode = False ) :
 
 class StegoOrchestrator ( Orchestrator ) :
 	"""
-The `StegoOrchestrator` class combines compression, chunking, encryption and stream tagging, by utilizing the below `covertutils` classes:
+The `StegoOrchestrator` class combines compression, chunking, encryption, stream tagging and steganography injection, by utilizing the below `covertutils` classes:
 
  - :class:`covertutils.datamanipulation.Chunker`
  - :class:`covertutils.datamanipulation.Compressor`
  - :class:`covertutils.crypto.keys.StandardCyclingKey`
  - :class:`covertutils.orchestration.StreamIdentifier`
+ - :class:`covertutils.datamanipulation.StegoInjector`
+ - :class:`covertutils.datamanipulation.DataTransformer`
+
 
 	"""
 
 	__pass_encryptor = ascii_letters * 10
 
 	def __init__( self, passphrase, stego_config, transformation_list = [], tag_length = 2, cycling_algorithm = None, intermediate_function = _dummy_function, reverse = False ) :
-
+		"""
+:param str stego_config: The configuration that is passed to :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`.
+:param list transformation_list: The Transformation List that is passed to the :class:`covertutils.datamanipulation.stegoinjector.DataTransformer` object.
+:param func intermediate_function: A function that *codec* function with signature `codec( data, encode = False )`. The function is called before and injection of a chunk with *encode = True* and after the extraction of a chunk with *encode = False*.
+		"""
 		self.intermediate_function = intermediate_function
 		self.stego_injector = StegoInjector( stego_config )
 		self.data_tranformer = DataTransformer( stego_config, transformation_list )
