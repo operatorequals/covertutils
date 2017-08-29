@@ -1,7 +1,7 @@
 
 from covertutils.datamanipulation.stegoinjector import StegoInjector
 
-from covertutils.datamanipulation.datatranformer import DataTransformer
+from covertutils.datamanipulation.datatransformer import DataTransformer
 
 from covertutils.datamanipulation.compressor import Compressor
 

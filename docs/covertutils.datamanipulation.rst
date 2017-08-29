@@ -20,10 +20,10 @@ covertutils.datamanipulation.compressor module
     :undoc-members:
     :show-inheritance:
 
-covertutils.datamanipulation.datatranformer module
+covertutils.datamanipulation.datatransformer module
 --------------------------------------------------
 
-.. automodule:: covertutils.datamanipulation.datatranformer
+.. automodule:: covertutils.datamanipulation.datatransformer
     :members:
     :undoc-members:
     :show-inheritance:
