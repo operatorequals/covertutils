@@ -40,7 +40,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 		"""
 :param str stego_config: The configuration that is passed to :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`.
 :param list transformation_list: The Transformation List that is passed to the :class:`covertutils.datamanipulation.datatransformer.DataTransformer` object.
-:param func intermediate_function: A function that *codec* function with signature `codec( data, encode = False )`. The function is called before and injection of a chunk with *encode = True* and after the extraction of a chunk with *encode = False*.
+:param func intermediate_function: A *codec* function with signature `codec( data, encode = False )`. The function is called before and injection of a chunk with *encode = True* and after the extraction of a chunk with *encode = False*.
 		"""
 		self.intermediate_function = intermediate_function
 		self.stego_injector = StegoInjector( stego_config )
