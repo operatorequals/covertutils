@@ -5,6 +5,8 @@ A framework for Remote Code Execution Agent programming.
 
 [Documentation Page](https://covertutils.readthedocs.io)
 
+[Blog Post in Securosophy describing some internals](https://securosophy.com/2017/04/22/reinventing-the-wheel-for-the-last-time-the-covertutils-package/)
+
 ### What is it?
 This python package automatically handles all communication channel options, like **encryption**, **chunking**, **steganography**, etc.
 
