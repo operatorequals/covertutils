@@ -20,10 +20,10 @@ covertutils.crypto.keys.encryptionkey module
     :undoc-members:
     :show-inheritance:
 
-covertutils.crypto.keys.standardkey module
-------------------------------------------
+covertutils.crypto.keys.standardcyclingkey module
+-------------------------------------------------
 
-.. automodule:: covertutils.crypto.keys.standardkey
+.. automodule:: covertutils.crypto.keys.standardcyclingkey
     :members:
     :undoc-members:
     :show-inheritance:

@@ -14,6 +14,7 @@ from string import ascii_letters
 
 from os import urandom
 
+from covertutils.helpers import copydoc
 
 def _dummy_function( data, encode = False ) :
 	return data
@@ -66,7 +67,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 			self.streams_buckets[ template ]['chunker'] = Chunker( intermediate_cap, intermediate_cap, reverse = reverse )
 
 
-
+	@copydoc(Orchestrator.readyMessage)
 	def readyMessage( self, message, stream ) :
 
 		chunks = super( StegoOrchestrator, self ).readyMessage( message, stream )
@@ -85,7 +86,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 		return ready_chunks
 
 
-
+	@copydoc(Orchestrator.depositChunk)
 	def depositChunk( self, chunk ) :
 
 		templ = self.stego_injector.guessTemplate( chunk )[0]

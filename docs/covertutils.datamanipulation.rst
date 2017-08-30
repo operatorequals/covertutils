@@ -21,7 +21,7 @@ covertutils.datamanipulation.compressor module
     :show-inheritance:
 
 covertutils.datamanipulation.datatransformer module
---------------------------------------------------
+---------------------------------------------------
 
 .. automodule:: covertutils.datamanipulation.datatransformer
     :members:

@@ -1,0 +1,21 @@
+Installation
+=============
+
+
+You can always download/clone it from Github:
+
+.. code::
+
+	git clone https://github.com/operatorequals/covertutils
+
+
+It is also available in PyPI, but I cannot guarantee that it will be the last version.
+https://pypi.python.org/pypi/covertutils/
+
+.. code::
+
+	pip install covertutils
+
+
+Finally, the *makefile* in the git repo may contain useful commands, like *"compile"*. It may be wise to give it a look.
+Try compiling the *example* code locate at *examples/* directory in github repo.

@@ -13,8 +13,6 @@ from string import ascii_letters
 from copy import deepcopy
 
 
-# from covertutils.helpe`rs import DocABCMeta
-
 
 class Orchestrator :
 	"""
@@ -100,14 +98,6 @@ This method returns the stream that is used if no stream is specified in `readyM
 :rtype: str
 		"""
 		return self.default_stream
-
-
-	# @abstractmethod
-	# def readyMessage( self, message, stream ) : pass
-
-
-	@abstractmethod
-	def depositChunk( self, message, stream ) : pass
 
 
 	def reset( self ) :

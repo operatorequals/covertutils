@@ -27,7 +27,7 @@ def permutate( list_, number_set ) :
 # taken from:
 #	http://stackoverflow.com/questions/17388213/find-the-similarity-percent-between-two-strings
 def str_similar(a, b):
-    return SequenceMatcher(None, a, b).ratio()
+	return SequenceMatcher(None, a, b).ratio()
 
 
 
@@ -47,15 +47,34 @@ def isprintable( s ) :
 	return all(c in string.printable for c in s)
 
 
+#	http://stackoverflow.com/questions/3589311/get-defining-class-of-unbound-method-object-in-python-3/25959545#25959545
+def get_class_that_defined_method(meth):
+	if inspect.ismethod(meth):
+		for cls in inspect.getmro(meth.__self__.__class__):
+		   if cls.__dict__.get(meth.__name__) is meth:
+				return cls
+		meth = meth.__func__ # fallback to __qualname__ parsing
+	if inspect.isfunction(meth):
+		cls = getattr(inspect.getmodule(meth),
+					  meth.__qualname__.split('.<locals>', 1)[0].rsplit('.', 1)[0])
+		if isinstance(cls, type):
+			return cls
+	return None
 
-# 
-#
-# class DocABCMeta(type):
-#
-# 	# def __init__(s)
-#     def __new__(mcls, classname, bases, cls_dict):
-#         cls = type.__new__(mcls, classname, bases, cls_dict)
-#         for name, member in cls_dict.items():
-#             if not getattr(member, '__doc__'):
-#                 member.__doc__ = getattr(bases[-1], name).__doc__
-#         return cls
+
+#	http://stackoverflow.com/questions/13741998/is-there-a-way-to-let-classes-inherit-the-documentation-of-their-superclass-with
+def copydoc(fromfunc, sep="\n"):
+	"""
+	Decorator: Copy the docstring of `fromfunc`
+	"""
+	def _decorator(func):
+		sourcedoc = fromfunc.__doc__
+		if sourcedoc == None :
+			sourcedoc = ''
+		if func.__doc__ == None:
+			func.__doc__ = sourcedoc
+		else:
+			func.__doc__ = sep.join([sourcedoc, func.__doc__])
+		return func
+
+	return _decorator

@@ -6,7 +6,7 @@ from struct import pack, unpack
 class DataTransformer :
 	"""
 This class provides automated data transformations.
-It uses the :class:`coverutils.datamanipulation.StegoInjector` class to create alterations to existing data chunks.
+It uses the :class:`covertutils.datamanipulation.StegoInjector` class to create alterations to existing data chunks.
 
 **Transformation List**
 
