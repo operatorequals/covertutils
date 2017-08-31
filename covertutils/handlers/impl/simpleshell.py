@@ -29,7 +29,8 @@ class SimpleShellHandler ( FunctionDictHandler ) :
 :param function send_function: A function that takes raw data as argument and sends it across.
 :param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
 		"""
-		super( SimpleShellHandler, self ).__init__( recv, send, orchestrator, function_dict =  pls )
+ 		kw['function_dict'] = pls
+		super( SimpleShellHandler, self ).__init__( recv, send, orchestrator, **kw )
 
 
 	def onMessage( self, stream, message ) :

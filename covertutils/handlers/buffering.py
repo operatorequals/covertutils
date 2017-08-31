@@ -37,3 +37,10 @@ Subclassing this class and overriding its methods automatically creates a thread
 
 	def getCondition( self ) :
 		return self.__condition
+
+ 	@staticmethod
+ 	def bufferize_handler( handler_class ) :
+ 		class BufferizedHandler(BufferingHandler, handler_class) :
+ 			def __init__(self, recv, send, orch, **kw) :
+ 				super(BufferizedHandler, self).__init__(recv, send, orch, **kw)
+ 		return BufferizedHandler

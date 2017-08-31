@@ -12,7 +12,10 @@ Subclassing this class and overriding its methods automatically creates a thread
 """
 
 	__metaclass__ = ABCMeta
-
+ 	Defaults = {
+		'start' : True
+	}
+ # 	Defaults['start'] = True
 
 	def __init__( self, recv, send, orchestrator, **kw ) :
 		"""
@@ -20,19 +23,28 @@ Subclassing this class and overriding its methods automatically creates a thread
 :param `function` send: A function that takes raw data as argument and sends it across the channel.
 :param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw data to `(stream, message)` tuples.
 		"""
+		print (kw)
+ 		arguments = defaultArgMerging( BaseHandler.Defaults, kw )
+		print (arguments)
 		self.receive_function = recv
 		self.send_function = send
 		self.orchestrator = orchestrator
-
-		self.__protocolThread = Thread( target = self.__protocolThreadFunction )
-		self.__protocolThread.daemon = True
-		self.__protocolThread.start()
 
 		self.preferred_send = self.sendAdHoc
 
 		self.to_send_list = []
 		self.to_send_raw = []
 
+		self.__protocolThread = Thread( target = self.__protocolThreadFunction )
+		self.__protocolThread.daemon = True
+		# self.__protocolThread.start()
+
+ 		if arguments['start'] :
+ 			self.start()
+
+
+ 	def start( self ) :
+ 		self.__protocolThread.start()
 
 	def queueSend( self, message, stream = None ) :
 		"""

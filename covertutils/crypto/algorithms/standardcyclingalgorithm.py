@@ -16,16 +16,7 @@ class StandardCyclingAlgorithm ( CyclingAlgorithm ) :
 	__b6 = b'\xc3' # 1 1 0 0  0 0 1 1
 	__b7 = b'\x1e' # 0 0 0 1  1 1 1 0
 	__b8 = b'\xc3' # 0 1 1 1  1 0 0 0
-	# __b_list = bytes([
-	# b'\x55', # 0 1 0 1  0 1 0 1
-	# b'\xAA', # 1 0 1 0  1 0 1 0
-	# b'\xf0', # 1 1 1 1  0 0 0 0
-	# b'\x0f', # 0 0 0 0  1 1 1 1
-	# b'\x3c', # 0 0 1 1  1 1 0 0
-	# b'\xc3', # 1 1 0 0  0 0 1 1
-	# b'\x1e', # 0 0 0 1  1 1 1 0
-	# b'\xc3', # 0 1 1 1  1 0 0 0
-	# ])
+
 	__b_list = bytearray(
 		__b1 +
 		__b2 +
