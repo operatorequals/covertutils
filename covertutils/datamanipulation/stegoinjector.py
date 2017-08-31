@@ -267,7 +267,7 @@ Example ::
 
 		injection_dict = data_dict
 
-		pkt = self.__injectFromDict( pkt, injection_dict )
+		pkt = self.__injectFromDict( pkt, injection_dict, sample_capacity )
 		pkt = str( pkt ).decode('hex')
 
 		# print pkt
@@ -284,15 +284,15 @@ Example ::
 :return: Template or packet with the given data injected.
 		"""
 		data_len = len( data )
-		pkt, sample_capacity = self.__initializeInjection( data_len, template, pkt )
+		hex_pkt, sample_capacity = self.__initializeInjection( data_len, template, pkt )
+		hex_pkt = str(hex_pkt)
+		injection_dict = self.__createInjectionDict( hex_pkt, data, sample_capacity )
 
-		injection_dict = self.__createInjectionDict( pkt, data, sample_capacity )
-
-		pkt = self.__injectFromDict( pkt, injection_dict )
+		inj_hex_pkt = self.__injectFromDict( hex_pkt, injection_dict, sample_capacity )
 
 		# print injection_dict
-		# print pkt
-		pkt = str( pkt ).decode('hex')
+		# print inj_hex_pkt
+		pkt = str( inj_hex_pkt ).decode('hex')
 
 		return pkt
 
@@ -325,53 +325,53 @@ Example ::
 		return pkt, sample_capacity
 
 
-	def __createInjectionDict( self, pkt, data, sample_capacity ) :
-		data = bytearray(data)
+	def __createInjectionDict( self, hex_pkt, data, sample_capacity ) :
+		# data = bytearray(data)
+		data_hex = data.encode('hex')
 		injection_dict = {}
-		for hex_index in xrange( 0, len(pkt), 2 ) :
-			if not data :
-				continue
-			data_to_inj = chr( data[0] )
-			tag, data_byte_ = self.__injectInOffset( hex_index, pkt, sample_capacity, data_to_inj )
+		for tag in self.__tags :
+			injection_dict[tag] = ''
 
-			if tag == None :
-				continue
+		for hex_index, hex_char in enumerate( hex_pkt ) :
 
-			if tag not in injection_dict.keys() :
-				injection_dict[ tag ] = bytearray()
-			data.pop(0)
-			injection_dict[ tag ] += data_byte_
-			data_byte_ = ''
+			# print hex_index, hex_char
+			if hex_char in self.__tags.keys() :
+				tag = hex_char
+				# print "++++++++++++++++++++++++="
+				half_byte_hex = data_hex[0]		# pop(0) for strings
+				data_hex = data_hex [1:]
+				injection_dict[ tag ] += half_byte_hex
+
+		for tag in injection_dict.keys() :
+			injection_dict[tag] = bytearray(injection_dict[tag].decode('hex') )
+
+		assert len( data_hex ) == 0
 		return injection_dict
 
 
-	def __injectFromDict( self, pkt_hex, injection_dict ) :
+	def __injectFromDict( self, pkt_hex, injection_dict, sample_cap ) :
 		# print injection_dict
+		pkt_hex = bytearray(pkt_hex)
 		for tag, data in injection_dict.items() :
 			data = bytearray(data)
+			inj_function = self.__tags[ tag ]['inj_function']
 			while data :
-				data_byte = data.pop(0)
-				hex_byte = chr(data_byte).encode('hex')
+
+				data_byte = chr(data.pop(0))
 
 				hex1_index = pkt_hex.index( tag )
-				pkt_hex[ hex1_index ] = hex_byte[0]
+				byte_index = hex1_index / 2
+
+				evaled_byte = self.__eval_environ( data_byte, inj_function, len(pkt_hex), byte_index, sample_cap )
+				hex_byte = evaled_byte.encode('hex')
+
+				pkt_hex[hex1_index] = hex_byte[0]
 
 				hex2_index = pkt_hex.index( tag )
-				pkt_hex[ hex2_index ] = hex_byte[1]
+
+				pkt_hex[hex2_index] = hex_byte[1]
+
 		return pkt_hex
-
-
-	def __injectInOffset( self, hex_index, pkt_hex, sample_cap, data_to_inj ) :
-			byte_index = hex_index / 2
-			tag = chr( pkt_hex[hex_index] )
-			if tag not in self.__tags.keys() :
-				return None, None
-			else :
-				inj_function = self.__tags[ tag ]['inj_function']
-
-			evaled = self.__eval_environ( data_to_inj, inj_function, len(pkt_hex), byte_index, sample_cap )
-			# print hex_index, evaled
-			return tag, evaled
 
 
 	def extract( self, pkt, template ) :
@@ -410,6 +410,7 @@ Example ::
 			extract_data_ = ''
 			while tag in sample_hex :
 				tag_index = sample_hex.index( tag )
+				byte_index = tag_index / 2
 				hex1 = pkt_hex[ tag_index ]
 				sample_hex[ tag_index ] = '~'	# Remove the Tag
 
@@ -420,7 +421,7 @@ Example ::
 
 				raw_byte_ = hex_str.decode('hex')
 				data_byte_ = self.__eval_environ\
-							( raw_byte_, extr_function, len(pkt), tag_index, sample_cap )
+							( raw_byte_, extr_function, len(pkt), byte_index, sample_cap )
 				extract_data_ += data_byte_
 				# print hex_str+"->"+data_byte_.encode('hex')
 			extract_dict[tag] = bytearray( extract_data_ )
@@ -430,7 +431,7 @@ Example ::
 		return extract_dict
 
 
-	def __eval_environ( self, _data_, function, _len_, _index_,_capacity_ ) :
+	def __eval_environ( self, _data_, function, _len_, _index_ ,_capacity_ ) :
 #	============== Eval Environment ======
 		return eval( function )
 #	======================================

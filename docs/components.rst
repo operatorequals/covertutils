@@ -151,3 +151,42 @@ Docs @ :class:`covertutils.datamanipulation.chunker.Chunker`
 	(None, None)
 	(True, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
 	>>>
+
+
+StegoInjector
+--------------
+
+Docs @ :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`
+
+The most engineered class in the whole project.
+
+.. code:: python
+
+	>>> from covertutils.datamanipulation import StegoInjector
+	>>>
+	>>> stego_config = '''
+	... X:_data_:
+	... Y:_sxor_( chr(_index_), _data_ ):
+	...
+	... sample1="""4142XXYYXXYY4344"""
+	... '''
+	>>>
+	>>> sinj = StegoInjector(stego_config)
+	>>>
+	>>> payload = sinj.inject("\x00" * 4, 'sample1')
+	>>> print payload.encode('hex')
+	4142000300054344
+	>>>
+	>>> payload2 = sinj.injectByTag( {'X' : '\xff' * 2, 'Y' : '\x00' * 2}, 'sample1')
+	>>> print payload2.encode('hex')
+	4142ff03ff054344
+	>>>
+	>>> sinj.extract(payload, 'sample1')
+	'\x00\x00\x00\x00'
+	>>>
+	>>> sinj.extractByTag(payload2, 'sample1')
+	{'Y': bytearray(b'\x00\x00'), 'X': bytearray(b'\xff\xff')}
+	>>>
+	>>> sinj.guessTemplate(payload)
+	('sample1', 1.0)		# 	(template_name, possibility)
+	>>>
