@@ -78,7 +78,6 @@ class StegoInjector :
 	__comment_regex = '%s.*' % __comment_sign
 
 	__not_permitted_chars = '1234567890ABCDEFabcdef'
-	__tag_chars = ''
 
 
 	def __init__( self, stego_template ) :

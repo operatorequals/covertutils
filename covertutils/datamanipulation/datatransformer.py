@@ -6,7 +6,7 @@ from struct import pack, unpack
 class DataTransformer :
 	"""
 This class provides automated data transformations.
-It uses the :class:`covertutils.datamanipulation.StegoInjector` class to create alterations to existing data chunks.
+It uses the :class:`covertutils.datamanipulation.stegoinjector.StegoInjector` class to create alterations to existing data chunks.
 
 **Transformation List**
 
@@ -45,7 +45,7 @@ The `transformation_list` is declared below:
 """
 	def __init__( self, stego_configuration, transformation_list ) :
 		"""
-:param str stego_configuration: The Stego Configuration to initialize the internal :class:`covertutils.datamanipulation.StegoInjector` object.
+:param str stego_configuration: The Stego Configuration to initialize the internal :class:`covertutils.datamanipulation.stegoinjector.StegoInjector` object.
 :param list transformation_list: The Tranformation List as described above.
 
 		"""
@@ -53,15 +53,17 @@ The `transformation_list` is declared below:
 		self.transformation_list = transformation_list
 
 
-	def runAll( self, pkt, template ) :
+	def runAll( self, pkt, template = None ) :
 		"""
-Runs all Tranformations in the `transformation_list` that relate with the specified template.
+Runs all Tranformations in the `transformation_list` that relate to the specified template.
 
 :param str pkt: The data packet to run the Tranformations on. In `Raw Bytes`.
-:param str template: The template string that describes the given data packet.
+:param str template: The template string that describes the given data packet. If `None` the :func:`covertutils.datamanipulation.stegoinjector.StegoInjector.guessTemplate` function will try to guess the correct template.
 :rtype: str
 :return: Returns the `pkt` with all the related tranformations applied.
 		"""
+		if not template :
+			template = self.injector.guessTemplate( pkt )
 
 		for trans_tuple in self.transformation_list :
 
@@ -83,6 +85,5 @@ Runs all Tranformations in the `transformation_list` that relate with the specif
 			# print injectable_data.encode('hex')
 			# print self.injector.getCapacity( template ), len( injectable_data)
 			pkt = self.injector.injectByTag( injectable_dict, template, pkt  )
-
 
 		return pkt

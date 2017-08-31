@@ -52,7 +52,7 @@ data2 = "4444XXXXXXXX4545"
 			stego_pkt = psi.injectByTag(inj_dict, template = 'data1')
 			testable = 'DDDD%sAAAA%s' % ('a' * (i/2), 'b' * (i/2))
 
-			print stego_pkt, testable
+			# print stego_pkt, testable
 			extr_dict = psi.extractByTag( stego_pkt, 'data1' )
 			# print extr_dict, inj_dict
 			self.failUnless( extr_dict == inj_dict )
@@ -102,19 +102,6 @@ data1="""44X44X4141Y4141Y44X43X"""
 		self.failUnless( stego_pkt.encode('hex').count('6') == 6 )
 
 
-# 	def test_index_environ( self ) :
-#
-# 		config = '''
-# X:_sxor_(_data_, _index_):
-#
-# data1="""44XX"""
-# '''
-# 		psi = StegoInjector( config )
-# 		pkt = psi.inject( '\x00', data1 )
-# 		# fail.unless()
-# 		extr_pkt = psi.extract(pkt, template = 'data1')
-
-
 	def test_injection_equivalence( self ) :
 		config = '''
 X:_data_:
@@ -128,7 +115,7 @@ data1 = """XXXXYYYY"""
 
 		pkt1 = psi.inject(data, 'data1')
 		pkt2 = psi.injectByTag( data_dict, 'data1' )
-		print pkt1.encode('hex'), pkt2.encode('hex')
+		# print pkt1.encode('hex'), pkt2.encode('hex')
 		self.failUnless( pkt1 == pkt2 )
 		extr1 = psi.extract( pkt1, 'data1' )
 		extr_dict = psi.extractByTag( pkt2, 'data1' )

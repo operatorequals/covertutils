@@ -153,8 +153,8 @@ Docs @ :class:`covertutils.datamanipulation.chunker.Chunker`
 	>>>
 
 
-StegoInjector
---------------
+Steganography Injector
+----------------------
 
 Docs @ :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`
 
