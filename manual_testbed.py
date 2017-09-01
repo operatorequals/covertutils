@@ -1,12 +1,10 @@
-from covertutils.handlers.impl import SimpleShellHandler
+from covertutils.handlers.impl import SimpleShellHandler, ExtendableShellHandler
 from covertutils.handlers import FunctionDictHandler, BaseHandler, StageableHandler
 
 from covertutils.orchestration import SimpleOrchestrator
 
-from covertutils.shells.baseshell2 import BaseShell
-from covertutils.shells.subshells.simplesubshell import SimpleSubShell
-
-from covertutils.payloads import GenericStages, LinuxStages
+from covertutils.shells import BaseShell
+from covertutils.shells.impl import ExtendableShell
 
 from os import urandom
 from time import sleep
@@ -18,14 +16,14 @@ in_length = 20
 
 orch1 = SimpleOrchestrator( "passphrase",
 	2, out_length, in_length,
-	streams = ['main', 'shellcode', 'python']
+	# streams = ['main', 'shellcode', 'python']
 	)
 
 
 orch2 = SimpleOrchestrator( "passphrase",
 	2, out_length, in_length,
 	reverse = True,
-	streams = ['main', 'shellcode', 'python'],
+	# streams = ['main', 'shellcode', 'python'],
 	)
 
 toAgent = []
@@ -55,40 +53,7 @@ def dummy_send2( raw ) :
 chunks_sent = 0
 chunks_received = 0
 
-class AgentHandler( StageableHandler ) :
-
-	def onMessage(self, stream, message) :
-		global chunks_sent
-		ret = super( AgentHandler, self).onMessage( stream, message )
-		self.preferred_send(ret)
-		print( "Agent: Chunks Received: %d" % chunks_sent )
-		chunks_sent = 0
-
-	def onChunk(self, stream, message) :
-		global chunks_sent
-		chunks_sent += 1
-		pass
-
-	def onNotRecognised(self) :
-		pass
-
-
-
-
-
-f_dict = {
-	# 'control' : GenericStages['shell']['function'],
-	# 'main' : GenericStages['sysinfo']['function'],
-	# 'shellcode' : LinuxStages['shellcode']['function'] ,
-	'control':GenericStages['shellprocess']['marshal'],
-	'python':GenericStages['python']['marshal'],
-
-	'main':GenericStages['shellprocess']['marshal']
-}
-
-# agent = SimpleShellHandler( dummy_receive1, dummy_send1, orch1)
-
-agent = AgentHandler( dummy_receive1, dummy_send1, orch1, function_dict = f_dict )
+agent = ExtendableShellHandler( dummy_receive1, dummy_send1, orch1 )
 
 
 
@@ -104,7 +69,7 @@ class MyHandler (BaseHandler) :
 		global chunks_sent
 		if chunks_sent == 0 :
 			print
-		chunks_sent += 1
+		chunks_sent += 1logname
 		# print( "Handler: <Chunk>" )
 		pass
 	def onNotRecognised(self, stream, message) :
@@ -114,12 +79,10 @@ class MyHandler (BaseHandler) :
 
 
 
-# class CustomShell( BaseShell ) :
-
-
 
 
 handler = MyHandler( dummy_receive2, dummy_send2, orch2 )
 
-shell = BaseShell(handler, subshells = {'control' : SimpleSubShell, 'main' : SimpleSubShell})
+# shell = ExtendableShell(handler, output = '/tmp/covertutils_out')
+shell = ExtendableShell(handler, )
 shell.start()
