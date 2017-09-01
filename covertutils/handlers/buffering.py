@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 # from time import sleep
-
+from covertutils.handlers import BaseHandler
 from covertutils.helpers import defaultArgMerging
 
 
