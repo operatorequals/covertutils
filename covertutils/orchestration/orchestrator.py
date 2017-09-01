@@ -26,7 +26,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 	__pass_encryptor = ascii_letters * 10
 
-	def __init__( self, passphrase, tag_length, cycling_algorithm = None, streams = ['control'], reverse = False ) :
+	def __init__( self, passphrase, tag_length, cycling_algorithm = None, streams = [], reverse = False ) :
 		self.compressor = Compressor()
 
 		self.cycling_algorithm = cycling_algorithm

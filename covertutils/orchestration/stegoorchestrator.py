@@ -39,9 +39,10 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 
 	__pass_encryptor = ascii_letters * 10
 
-	def __init__( self, passphrase, stego_config, transformation_list = [], tag_length = 2, cycling_algorithm = None, intermediate_function = _dummy_function, reverse = False ) :
+	def __init__( self, passphrase, stego_config, main_template, transformation_list = [], tag_length = 2, cycling_algorithm = None, intermediate_function = _dummy_function, reverse = False ) :
 		"""
 :param str stego_config: The configuration that is passed to :class:`covertutils.datamanipulation.stegoinjector.StegoInjector`.
+:param str main_template: The default template that will be used in :func:`readyMessage()` `template` argument.
 :param list transformation_list: The Transformation List that is passed to the :class:`covertutils.datamanipulation.datatransformer.DataTransformer` object.
 :param func intermediate_function: A *codec* function with signature `codec( data, encode = False )`. The function is called before and injection of a chunk with *encode = True* and after the extraction of a chunk with *encode = False*.
 		"""
@@ -54,13 +55,12 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 		if self.cycling_algorithm == None:
 			self.cycling_algorithm = StandardCyclingAlgorithm
 
-
-		streams = self.stego_injector.getTemplates()
+		self.main_template = main_template
+		# streams = self.stego_injector.getTemplates()
 
 		super( StegoOrchestrator, self ).__init__( passphrase, tag_length, cycling_algorithm, streams, reverse )
 
-		self.__simple_orchestrators = {}
-		for index, template in enumerate( streams ) :
+		for index, template in enumerate( self.stego_injector.getTemplates() ) :
 			stego_capacity = self.stego_injector.getCapacity( template )
 			# print stego_capacity
 			inter_product = self.intermediate_function( "0" * stego_capacity, False )	# Need a valid decodable data string "0000..." is valid hex
@@ -70,7 +70,15 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 
 
 	@copydoc(Orchestrator.readyMessage)
-	def readyMessage( self, message, stream ) :
+	def readyMessage( self, message, stream = None, template = None ) :
+		"""
+:param str template: The template to inject the chunks into. If `None` the default template will be used.
+		"""
+		if template == None :
+			template = self.main_template
+
+		if stream == None :
+			stream = self.default_stream
 
 		chunks = super( StegoOrchestrator, self ).readyMessage( message, stream )
 
@@ -80,8 +88,8 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 			# print chunk.encode('hex')
 			modified_chunk = self.intermediate_function( chunk, True )
 
-			injected = self.stego_injector.inject( modified_chunk, stream )
-			transformed = self.data_tranformer.runAll( injected, stream+"_alt" )
+			injected = self.stego_injector.inject( modified_chunk, template )
+			transformed = self.data_tranformer.runAll( injected, template + "_alt" )	# needs to be documented
 
 			ready_chunks.append( transformed )
 
