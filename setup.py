@@ -1,5 +1,5 @@
 # from distutils.core import setup
-from setuptools import setup
+from setuptools import setup, find_packages
 
 import covertutils
 
@@ -18,7 +18,7 @@ setup(name=covertutils.__name__,
       author=covertutils.__author__,
       author_email=covertutils.__email__,
       license='MIT',
-      packages=[ covertutils.__name__ ],
+      packages=find_packages(),
 	  keywords = ['crypto', 'covert', 'backdoor', 'shell']
     #   zip_safe=False,
 	#   tests_require=['entropy',
