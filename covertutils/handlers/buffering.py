@@ -22,17 +22,17 @@ Subclassing this class and overriding its methods automatically creates a thread
 
 	def onMessage( self, stream, message ) :
 		self.__condition.acquire()
-		self.buffer.append( (stream, message) )
+		self.__buffer.put( (stream, message) )
 		self.__condition.notify()
 		self.__condition.release()
 
 
-	def pop( self ) :
-		return self.__buffer.pop(0)
+	def get( self ) :
+		return self.__buffer.get()
 
 
-	def count( self ) :
-		return len( self.__buffer )
+	def empty( self ) :
+		return self.__buffer.empty()
 
 
 	def getCondition( self ) :

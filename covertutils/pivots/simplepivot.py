@@ -9,14 +9,13 @@ class SimplePivot :
 The Pivot class is used to pass messages between 2 Handler objects. It can be used to bridge an Agent and a Handler using a third host.
 	"""
 
-	def __init__( lhandler, rhandler ) :
+	def __init__( self, lhandler, rhandler ) :
 
-		if type(lhandler) != BufferingHandler or type(rhandler) != BufferingHandler :
+		if not( isinstance(lhandler, BufferingHandler) and isinstance(rhandler, BufferingHandler) ) :
 			raise TypeError( "Argument is not of type 'BufferingHandler'" )
 
 		self.lcondition = lhandler.getCondition()
 		self.rcondition = rhandler.getCondition()
-
 
 		self.l2r_thread = Thread( target = self.__intercommunication, args = ( lhandler, rhandler, self.lcondition ) )
 		self.r2l_thread = Thread( target = self.__intercommunication, args = ( rhandler, lhandler, self.rcondition ) )
@@ -31,12 +30,15 @@ The Pivot class is used to pass messages between 2 Handler objects. It can be us
 	def __intercommunication( self, lhandler, rhandler, lcondition ) :
 
 		while True :
-
+			# print "Started loop"
 			lcondition.acquire()
-			if lhandler.count() == 0 :
+			if lhandler.empty() :
 				lcondition.wait()
 
-			stream, message = lhandler.pop()
+			# print "Acquired condition"
+			stream, message = lhandler.get()
+			# print "Sending"
 			rhandler.preferred_send( message, stream )
 			lcondition.release()
-			sleep(0.1)
+			# print "Leaving loop"
+			sleep(0.01)
