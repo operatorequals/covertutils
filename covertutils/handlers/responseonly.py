@@ -27,6 +27,8 @@ Can be nicely paired with :class:`covertutils.handlers.InterrogatingHandler` for
 		self.to_send_list = []
 		self.to_send_raw = []
 
+		self.preferred_send = self.queueSend
+
 
 	def onMessage( self, stream, message ) :
 		if message == self.request_data :

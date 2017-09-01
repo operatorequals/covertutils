@@ -28,6 +28,7 @@ Subclassing this class and overriding its methods automatically creates a thread
 		self.__protocolThread.daemon = True
 		self.__protocolThread.start()
 
+		self.preferred_send = self.sendAdHoc
 
 	def __consume( self, stream, message ) :
 		"""
