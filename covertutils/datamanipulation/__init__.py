@@ -7,4 +7,6 @@ from covertutils.datamanipulation.compressor import Compressor
 
 from covertutils.datamanipulation.chunker import Chunker
 
+from covertutils.datamanipulation.adhocchunker import AdHocChunker
+
 from covertutils.datamanipulation.stegoinjector import asciiToHexTemplate

@@ -2,6 +2,8 @@
 from covertutils.crypto.keys import StandardCyclingKey
 from covertutils.crypto.algorithms import StandardCyclingAlgorithm
 
+from covertutils.datamanipulation import AdHocChunker
+
 from covertutils.datamanipulation import Chunker
 from covertutils.datamanipulation import Compressor
 
@@ -64,7 +66,7 @@ The `StegoOrchestrator` class combines compression, chunking, encryption, stream
 			inter_product = self.intermediate_function( "0" * stego_capacity, False )	# Need a valid decodable data string "0000..." is valid hex
 			intermediate_cap = len( inter_product )	 - self.tag_length # check the capacity of the data length after the intermediate function
 
-			self.streams_buckets[ template ]['chunker'] = Chunker( intermediate_cap, intermediate_cap, reverse = reverse )
+			self.streams_buckets[ template ]['chunker'] = AdHocChunker( intermediate_cap, intermediate_cap, reverse = reverse )
 
 
 	@copydoc(Orchestrator.readyMessage)
