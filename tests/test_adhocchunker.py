@@ -18,11 +18,11 @@ class Test_AdHocChunker( unittest.TestCase ) :
 	def test_chunkConsistency( self, n = 519, size = 514 ) :
 
 		for i in range( 5, n ) :
-			print i
+			# print i
 			data = urandom(i)
 			chunks = self.c.chunkMessage( data, size )
 			for chunk in chunks :
-				print chunk.encode('hex'), len(chunk)
+				# print chunk.encode('hex'), len(chunk)
 				self.failUnless( len(chunk) == size )
 
 
@@ -30,7 +30,7 @@ class Test_AdHocChunker( unittest.TestCase ) :
 	def test_deChunkConsistency( self, n = 514, size = 10 ) :
 
 		for i in range( 2, n ) :
-			print i
+			# print i
 			# data = urandom(i)
 			data = "A"*i
 			# print "Data: %s" % data.encode('hex')

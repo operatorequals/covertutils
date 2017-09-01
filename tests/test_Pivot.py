@@ -85,7 +85,7 @@ class EndHandler( BaseHandler ) :
     def onMessage( self, stream, message ) :
 		global end
 		end = message
-		print "%s : (%s: %s)" % ( "End", stream, message )
+		# print "%s : (%s: %s)" % ( "End", stream, message )
 		self.sendAdHoc( message, stream )			# echo the input back
 
 
@@ -96,7 +96,7 @@ class StartHandler( BaseHandler ) :
     def onMessage( self, stream, message ) :
 		global start
 		start = message
-		print "%s : (%s: %s)" % ( "Start", stream, message )
+		# print "%s : (%s: %s)" % ( "Start", stream, message )
 
 
 class IntermediateHandler( BufferingHandler ) :
@@ -104,7 +104,7 @@ class IntermediateHandler( BufferingHandler ) :
     def onChunk( self, stream, message ) :	pass
     def onNotRecognised( self ) :	pass
     def onMessage( self, stream, message ) :
-		print "BufferingHandler : (%s: %s)" % ( stream, message )
+		# print "BufferingHandler : (%s: %s)" % ( stream, message )
 		super( IntermediateHandler, self ).onMessage( stream, message )
 
 
@@ -125,7 +125,7 @@ class Test_SimplePivot( unittest.TestCase ) :
 		global start
 		self.startHandler.sendAdHoc( data )
 
-		sleep(0.05)
+		sleep(0.01)
 		# print start, end
 		start = False
 		self.failUnless( data == end )
@@ -135,7 +135,16 @@ class Test_SimplePivot( unittest.TestCase ) :
 		global end
 		self.startHandler.sendAdHoc( data )
 
-		sleep(0.002)
+		sleep(0.01)
 		# print start, end
 		end = False
 		self.failUnless( data == start )
+
+	def test_exception( self ) :
+		try :
+			pivot = SimplePivot( None, self.startHandler  )
+			test = False
+		except TypeError :
+			test = True
+
+		self.failUnless( test )
