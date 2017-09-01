@@ -1,12 +1,15 @@
 from covertutils.exceptions import *
 
 from os import urandom
-
 from struct import pack, unpack
 
 class AdHocChunker :
 	"""
-The Chunker class is used to initialize chunk and de-chunk messages.
+The AdHocChunker class is a special chunker that doesn't tag each chunk that creates.
+It works by concatenating the actual byte size of the message that is to be chunked with the message itself.
+It splits the message into even chunks of size that is passed in the :func:`chunkMessage` method.
+
+The dechunking works by first identifying the byte length of the whole message and waiting until all bytes are received, discarding any padding bytes.
 
 	"""
 
@@ -16,6 +19,7 @@ The Chunker class is used to initialize chunk and de-chunk messages.
 		self.__message = ''
 		self.tag_length = tag_length
 		self.reset()
+
 
 	def chunkMessage( self, payload, chunk_size = 10 ) :
 		"""
@@ -46,16 +50,14 @@ The Chunker class is used to initialize chunk and de-chunk messages.
 		"""
 :param str chunk: A part of a chunked message to be assembled.
 :rtype: tuple
-:return: The method return a tuple of (status, message). If status is `False` the provided chunk isn't the last part of the message and the message contains an empty string. Else, the assembled message can be found in `message`.
+:return: The method return a tuple of (status, message). If status is `False` or `None` the provided chunk isn't the last part of the message and the message contains an empty string. Else, the assembled message can be found in `message`.
 
 		"""
 		if self.remaining_bytes == 0 :
 			tag, data = self.__dissectTag( chunk )
 			self.remaining_bytes = self.__decodeTag( tag )
-
 		else :
 			data = chunk
-
 		data_length = len(data)
 
 		if data_length <= self.remaining_bytes :
@@ -70,6 +72,7 @@ The Chunker class is used to initialize chunk and de-chunk messages.
 			self.reset()
 			return True, ret
 		return None, None
+
 
 	def __decodeTag( self, tag ) :
 		while len(tag) < 8 :
