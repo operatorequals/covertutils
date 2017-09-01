@@ -18,7 +18,7 @@ setup(name=covertutils.__name__,
       author=covertutils.__author__,
       author_email=covertutils.__email__,
       license='MIT',
-      packages=find_packages(),
+      packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
 	  keywords = ['crypto', 'covert', 'backdoor', 'shell']
     #   zip_safe=False,
 	#   tests_require=['entropy',
