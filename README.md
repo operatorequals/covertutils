@@ -7,6 +7,9 @@
 
 [Blog Post in Securosophy describing some internals](https://securosophy.com/2017/04/22/reinventing-the-wheel-for-the-last-time-the-covertutils-package/)
 
+[Arranged Con Presentation about the Package 
+(DefCamp #8 | November 9-10)](https://def.camp/speaker/john-torakis/)
+
 ### What is it?
 This python package automatically handles all communication channel options, like **encryption**, **chunking**, **steganography**, etc.
 
