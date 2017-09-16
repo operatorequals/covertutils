@@ -23,9 +23,9 @@ Subclassing this class and overriding its methods automatically creates a thread
 :param `function` send: A function that takes raw data as argument and sends it across the channel.
 :param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw data to `(stream, message)` tuples.
 		"""
-		print (kw)
+		# print (kw)
  		arguments = defaultArgMerging( BaseHandler.Defaults, kw )
-		print (arguments)
+		# print (arguments)
 		self.receive_function = recv
 		self.send_function = send
 		self.orchestrator = orchestrator

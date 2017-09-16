@@ -95,7 +95,7 @@ And all that with the abstraction of **Object Oriented Programming**, as this pa
 	:caption: Techniques:
 
 	ids_evasion
-
+	staging_exec
 
 .. toctree::
 	:maxdepth: 2

@@ -10,6 +10,7 @@ Subpackages
     covertutils.crypto
     covertutils.datamanipulation
     covertutils.handlers
+    covertutils.multi
     covertutils.orchestration
     covertutils.payloads
     covertutils.shells
