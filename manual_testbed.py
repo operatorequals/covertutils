@@ -69,7 +69,7 @@ class MyHandler (BaseHandler) :
 		global chunks_sent
 		if chunks_sent == 0 :
 			print
-		chunks_sent += 1logname
+		# chunks_sent += 1logname
 		# print( "Handler: <Chunk>" )
 		pass
 	def onNotRecognised(self, stream, message) :
