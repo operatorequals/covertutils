@@ -1,12 +1,13 @@
 
 from covertutils.crypto.keys import *
+from covertutils.crypto.algorithms import *
 
 import binascii, base64
 
 algo_dict = {
-		# 'null' : NullCyclingAlgorithm,
-		'std' : StandardCyclingKey,
-		# 'crc' : Crc32CyclingAlgorithm,
+		'null' : NullCyclingAlgorithm,
+		'std' : StandardCyclingAlgorithm,
+		'crc' : Crc32CyclingAlgorithm,
 	}
 
 import sys
@@ -14,7 +15,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("key_type", help = 'The algorithm name for use', choices = algo_dict.keys(), type = str, default = 'std' )
+parser.add_argument("key_type", help = 'The algorithm name to use', choices = algo_dict.keys(), type = str, default = 'std' )
 parser.add_argument("passphrase", help = "The passphrase for key generation", type = str)
 parser.add_argument("message", help = "The message to be encrypted", type = str)
 
@@ -26,7 +27,7 @@ args = parser.parse_args()
 # print args
 algo = algo_dict[args.key_type]
 
-key = algo(args.passphrase)
+key = StandardCyclingKey(args.passphrase, cycling_algorithm = algo)
 
 func = key.encrypt
 if args.decrypt :
