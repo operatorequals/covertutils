@@ -32,13 +32,16 @@ The Bridge class is used to pass messages between 2 Handler objects. It can be u
 		while True :
 			# print "Started loop"
 			lcondition.acquire()
+			# print "Started acquired!"
 			if lhandler.empty() :
 				lcondition.wait()
 
 			# print "Acquired condition"
 			stream, message = lhandler.get()
+			# print stream, message
 			# print "Sending"
 			rhandler.preferred_send( message, stream )
 			lcondition.release()
+			# lcondition.notify()
 			# print "Leaving loop"
 			sleep(0.01)

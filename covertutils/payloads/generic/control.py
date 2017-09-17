@@ -8,7 +8,7 @@ def init( storage ) :
 	return True
 
 def work( storage, message ) :
-	print( "Control message: %s" % message )
+	# print( "Control message: %s" % message )
 	# command =
 	if message == storage['commands']['reset'] :
 		storage['COMMON']['handler'].reset()

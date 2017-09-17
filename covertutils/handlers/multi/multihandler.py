@@ -1,0 +1,119 @@
+from covertutils.handlers import BufferingHandler
+from covertutils.orchestration import Orchestrator
+from covertutils.bridges import SimpleBridge
+
+from time import sleep
+from queue import Queue
+from functools import wraps
+
+
+
+def handlerCallbackHook( instance, on_chunk_function, orch_id ) :
+
+	# print( "In the Hook" )
+	@wraps(on_chunk_function)
+	def wrapper( *args, **kwargs ) :
+		# print( "In the Wrapper" )
+		stream, message = args
+		if message :
+			pseudo_stream = "%s:%s" % (orch_id, stream)
+			# print( stream, message )
+			# print args
+			instance.onMessage( pseudo_stream, message )
+
+		on_chunk_function( *args, **kwargs )		# Not honoring return values
+		return on_chunk_function
+	return wrapper
+
+
+class MultiHandler( BufferingHandler ) :
+
+	class __NullOrchestrator(Orchestrator) :
+
+		def readyMessage( self, message, stream ) :
+			# print "ready"
+			assert False == True		# This is dummy, dead code
+			return "%s:%s" % (stream, message)
+
+		def depositChunk( self, chunk ) :
+			# print "deposit"
+			assert False == True		# This is dummy, dead code
+			stream, message = chunk.split(':',1)
+			return stream, message
+
+
+	def start(self) : pass
+	def nullSend( self, message, stream ) : pass
+	# def onChunk( self, stream, message ) : pass
+	# def onNotRecognised( self ) : pass
+
+	def __init__( self, handlers, **kw ) :
+		assert type(handlers == list)
+
+
+		def send_internal(raw) :
+			print "++++++++Send internal run+++++"
+			assert False == True		# This is dummy, dead code
+
+		def recv_internal() :
+			print "=========recv internal run======="
+			assert False == True		# This is dummy, dead code
+			return None
+
+		orch = MultiHandler.__NullOrchestrator("", 0)
+
+		super(MultiHandler, self).__init__(recv_internal, send_internal, orch, **kw)
+
+		self.preferred_send = self.nullSend
+
+		self.handlers = {}
+		for handler in handlers :
+			orch_id = handler.getOrchestrator().getIdentity()
+			self.handlers[orch_id] = {}
+			self.handlers[orch_id]['streams'] = []
+
+			buffered_handler = BufferingHandler.bufferize_handler_obj(handler)
+			self.handlers[orch_id]['bridge'] = SimpleBridge( self, buffered_handler )
+			self.handlers[orch_id]['handler'] = buffered_handler
+
+			buffered_handler.onChunk = handlerCallbackHook( self, buffered_handler.onChunk, orch_id )
+
+			for stream in handler.getOrchestrator().getStreams() :
+				# print pseudo_stream
+				self.handlers[orch_id]['streams'].append(stream)
+
+				pseudo_stream = "%s:%s" % (orch_id, stream)	# not used
+				orch.addStream(pseudo_stream)
+
+
+	def resolveStream( self, stream_alias ) :
+		orch_id, stream = stream_alias.split(':',1)
+		handler = self.handlers[orch_id]['handler']
+		return handler, stream
+
+
+	def dispatch( self, stream_alias, message ) :
+		handler, stream = self.resolveStream(stream_alias)
+		handler.preferred_send( message, stream )
+
+
+	def sendAll( self, message, stream = 'control' ) :	# Make it look for hard_streams when stream = None
+		for orch_id in self.handlers.keys() :
+			if stream in self.handlers[orch_id]['streams'] :
+				handler = self.handlers[orch_id]['handler']
+				handler.preferred_send( message, stream )
+	#
+	# def sendTo( self, orch_id, message, stream = 'control', local = True ) :	# Make it look for hard_streams when stream = None
+	# 	for orch_id_ in self.handlers.keys() :
+	# 		handler = self.handlers[orch_id]['handler']
+	# 		if local :
+	# 			orch = handler.getOrchestrator()
+	# 			orch_to_check = orch.getIdentity()
+	# 		else :
+	# 		for x,y in zip(orch_id, orch_id_) :
+	# 			if z
+	# 		# if orch.checkIdentity(orch_id) ==
+	#
+	# 		if stream in self.handlers[orch_id]['streams'] :
+	# 			handler = self.handlers[orch_id]['handler']
+	# 			handler.preferred_send( message, stream )
