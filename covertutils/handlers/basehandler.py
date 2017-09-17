@@ -13,9 +13,8 @@ Subclassing this class and overriding its methods automatically creates a thread
 
 	__metaclass__ = ABCMeta
  	Defaults = {
-		'start' : True
+		'start' : True,
 	}
- # 	Defaults['start'] = True
 
 	def __init__( self, recv, send, orchestrator, **kw ) :
 		"""
@@ -37,13 +36,15 @@ Subclassing this class and overriding its methods automatically creates a thread
 
 		self.__protocolThread = Thread( target = self.__protocolThreadFunction )
 		self.__protocolThread.daemon = True
-		# self.__protocolThread.start()
 
  		if arguments['start'] :
  			self.start()
 
 
  	def start( self ) :
+		'''
+Starts the thread that consumes data and enables the `on*` callback methods.
+		'''
  		self.__protocolThread.start()
 
 	def queueSend( self, message, stream = None ) :

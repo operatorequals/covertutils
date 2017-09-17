@@ -80,7 +80,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 			self.addSubShell( stream_name, subshell_class, subshell_kwargs )
 		handler.onChunk = handlerCallbackHook( handler.onChunk, self.subshells_dict )
 		self.updatePrompt()
-
+		self.sysinfo = None
 
 	def addSubShell( self, stream, subshell_class, subshell_kwargs ) :
 		self.subshells_dict[stream] = {}
@@ -141,8 +141,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		print( "Available streams:\n	[+] " + '	\n	[+] '.join(self.availableStreams()) )
 
 
-
-	def start( self ) :
+	def start( self, warn = True ) :
 
 		# try :
 		while True :
@@ -152,7 +151,8 @@ The base class of the package. It implements basics, like hooking the :class:`co
 				# if ret :
 				break
 			except KeyboardInterrupt :
-				self.streamMenu()
+				if warn :
+					self.streamMenu()
 
 	def emptyline( self ) :
 		return
@@ -160,6 +160,7 @@ The base class of the package. It implements basics, like hooking the :class:`co
 
 	def do_help( self, line ) :
 		self.streamCharacterHelp( )
+
 
 	def streamCharacterHelp( self ) :
 		print( """
