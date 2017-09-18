@@ -136,6 +136,8 @@ $ python -m covertutils.crypto.keys crc keyphrase2 SkonjSa1pat95PVhAG9U3DHO --in
 ����R��M8�A�q�/�
 ```
 
+**The `std` algorithm is used by default in all communications.**
+
 ## Networking
 Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` `Handler` instances are **2 functions wrapping the raw data sending and receiving**.
 
