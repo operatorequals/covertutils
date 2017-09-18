@@ -103,6 +103,39 @@ Aborted by the user...
 
 ```
 
+### The `Encryption Schemes`
+Custom _Stream Ciphers_ are used, designed and implemented from scratch in the `covertutils.crypto` subpackage. Currently a custom _scrambling_ function (`std`) and the standard `CRC32` (`crc`) functions are used to generate the _stream keys_.
+
+The crypto and scrambling algorithms can be tried in the below CLI implementations:
+
+#### Scrambling
+``` bash
+$ python -m covertutils.crypto.algorithms --length 16 std message_to_digest
+f3c7de5e591d2eb7fba938847430e2c0
+$ python -m covertutils.crypto.algorithms --length 20 std message_to_digest
+413928828205d7af0a5f415f6c0a5014e49c7250
+$ python -m covertutils.crypto.algorithms std message_to_digest --length 31
+6d9dd92f9eada2611c04a29da18b8b845638aec85d0783617f51dfc72e62ae
+$ python -m covertutils.crypto.algorithms std message_to_digest --length 32 --cycles 10
+252f9b7175399bae1cb2b02c36f4dbefd5ae6d4971b10f16b25631e45a4efc6c
+$ python -m covertutils.crypto.algorithms std message_to_digest --length 32 --cycles 20
+4fd94b21d6ee742e7426de512d1565bf1dd1031a1aa9ddd9de263773cfc8888c
+$ python -m covertutils.crypto.algorithms std message_to_digest
+4fd94b21d6ee742e7426de512d1565bf1dd1031a1aa9ddd9de263773cfc8888c
+```
+
+#### Encryption/Decryption
+``` bash
+$ python -m covertutils.crypto.keys crc keyphrase message_to_encrypt --output b64
+SkonjSa1pat95PVhAG9U3DHO
+$
+$ python -m covertutils.crypto.keys crc keyphrase SkonjSa1pat95PVhAG9U3DHO --input b64 --decrypt
+message_to_encrypt
+$ #	Change the keyphrase and try to decrypt:
+$ python -m covertutils.crypto.keys crc keyphrase2 SkonjSa1pat95PVhAG9U3DHO --input b64 --decrypt
+����R��M8�A�q�/�
+```
+
 ## Networking
 Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` `Handler` instances are **2 functions wrapping the raw data sending and receiving**.
 
