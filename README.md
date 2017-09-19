@@ -152,3 +152,9 @@ Tutorial and explanation of the architecture can be found in the [CovertUtils Tu
 # Pull Requests?
 Certainly! All pull requests that are tested and do not break the existing tests will be accepted!
 Especially Pull Requests towards Python2/Python3 compatibility will be greatly appreciated!
+
+
+
+
+# Disclaimer
+Usage of `covertutils` for attacking infrastructures without prior mutual consistency can be considered as an illegal activity. It is the final user's responsibility to obey all applicable local, state and federal laws. Authors assume no liability and are not responsible for any misuse or damage caused by this package.
