@@ -162,6 +162,7 @@ hostname - Linux-4.12.0-kali1-amd64-x86_64-with-Kali-kali-rolling-kali-rolling -
 
 covertpreter>
 ```
+Full documentation at [`covertpreter` Session Shell aggregator](http://covertutils.readthedocs.io/en/latest/shells.html#the-covertpreter-session-shell-aggregator)
 
 ### The `Encryption Schemes`
 Custom _Stream Ciphers_ are used, designed and implemented from scratch in the `covertutils.crypto` subpackage. Currently a custom _scrambling_ function (`std`) and the standard `CRC32` (`crc`) functions are used to generate the _stream keys_.
