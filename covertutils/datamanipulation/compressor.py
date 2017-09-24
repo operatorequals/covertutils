@@ -91,6 +91,7 @@ if __name__ == '__main__' :
 
 	raw_res = func(message)
 
+	res = raw_res
 	if args.output_type == 'hex' :
 		res = binascii.hexlify(raw_res)
 	if args.output_type == 'b64' :
