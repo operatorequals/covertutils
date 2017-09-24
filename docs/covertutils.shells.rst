@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     covertutils.shells.impl
+    covertutils.shells.multi
     covertutils.shells.subshells
 
 Submodules

@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     covertutils.handlers.impl
+    covertutils.handlers.multi
 
 Submodules
 ----------
