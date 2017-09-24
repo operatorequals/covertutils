@@ -109,8 +109,8 @@ Aborted by the user...
 
 ```
 
-### The `MultiShell`, handling multiple `Sessions`
-Care about *multiple session management*, with full abstraction of the transfer method?
+### Multiple `Sessions`? Meet `covertpreter`...
+Any similarities with existing backdoors is purely coincidental...
 ``` bash
 covertpreter> session -l
 	Current Sessions:
