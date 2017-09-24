@@ -10,7 +10,6 @@ algo_dict = {
 		'crc' : Crc32CyclingAlgorithm,
 	}
 
-import sys
 import argparse
 
 parser = argparse.ArgumentParser()

@@ -14,8 +14,7 @@ It detects the used compression on a **trial and error** base, eliminating the n
 		self.decomps = [bz2.decompress, zlib.decompress, self.__dummy_func]
 
 
-	def __dummy_func( self, data ) :
-		return data
+	def __dummy_func( self, data ) : return data
 
 
 	def compress( self, message ) :
@@ -48,7 +47,6 @@ Based on the assumption that any decompression algorithm raises an Exception if 
 :return: Data compressed by most efficient available algorithm.
 
 """
-
 		plain = zipped
 		for decomp in self.decomps :
 			try :
@@ -63,17 +61,42 @@ Based on the assumption that any decompression algorithm raises an Exception if 
 
 if __name__ == '__main__' :
 
+	import argparse, sys, base64, binascii
+
 	compressor = Compressor()
-	import sys
-	try :
-		f = open(sys.argv[1], 'rb')
-		content = f.read()
-		compressed = compressor.compress( content )
-		f.close()
-		print( "Original size %d bytes" % len(content) )
-		print( "Best effort compression size %d bytes" % len(compressed) )
-		print( "Ratio %d %% " % ( len(compressed) / float(len(content)) * 100 ) )
-	except Exception as e:
-		print( e )
-		print( "Usage:" )
-		print( "	python -m compressor <filename>" )
+	parser = argparse.ArgumentParser()
+
+	parser.add_argument("message", help = "The message to be compressed [use '-' for stdin]", type = str, default = '-' )
+	parser.add_argument('--input-type', '-i', help = 'Specify the form of the input', choices = ['b64', 'hex', 'plain'], default = 'plain')
+	parser.add_argument('--output-type', '-o', help = 'Specify the form of the ouput', choices = ['b64', 'hex', 'plain'], default = 'plain')
+	parser.add_argument('--decompress', '-d', help = 'Add if the message is in compressed form', action = 'store_true', default = False, )
+	parser.add_argument('-v', help = 'Display compression stats', action = 'store_true', default = False, )
+
+
+	args = parser.parse_args()
+
+	if args.message == '-' :
+		args.message = sys.stdin.read()
+
+	if args.input_type == 'hex' :
+		message = str(binascii.unhexlify(args.message))
+	elif args.input_type == 'b64' :
+		message = base64.b64decode(args.message)
+	else :
+		message = args.message
+
+	func = compressor.compress
+	if args.decompress :
+		func = compressor.decompress
+
+	raw_res = func(message)
+
+	if args.output_type == 'hex' :
+		res = binascii.hexlify(raw_res)
+	if args.output_type == 'b64' :
+		res = base64.b64encode(raw_res)
+
+	print (res)
+
+	if args.v :
+		print( "Ratio %d %% " % ( len(raw_res) / float(len(message)) * 100 ) )
