@@ -9,6 +9,7 @@ Commands = {
 	'kill' : 'KI',
 	'mute' : 'MU',
 	'unmute' : 'UM',
+	'nuke' : 'NK',
 	}
 
 

