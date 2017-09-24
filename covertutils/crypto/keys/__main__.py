@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser()
 
 parser.add_argument("key_type", help = 'The algorithm name to use', choices = algo_dict.keys(), type = str, default = 'std' )
 parser.add_argument("passphrase", help = "The passphrase for key generation", type = str)
-parser.add_argument("message", help = "The message to be encrypted", type = str, default = '-')
+parser.add_argument("message", help = "The message to be encrypted [use '-' for stdin]", type = str, default = '-')
 
 parser.add_argument('--decrypt', '-d', help = 'Add if the message is in encrypted form', action = 'store_true', default = False, )
 parser.add_argument('--input-type', '-i', help = 'Specify the form of the input', choices = ['b64', 'hex', 'plain'], default = 'plain')
