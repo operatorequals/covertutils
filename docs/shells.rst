@@ -109,8 +109,8 @@ Controlling a single host is **rarely the case though**! Backdoor tools are freq
 Session Management
 ++++++++++++++++++
 
-Basically, ``covertpreter`` is a class maintaining several implementations of ``covertutils.shells.BaseShell`` implementation, under an internal data structure,
-dispatching commands to each of them, and letting the user to '*jump*' into a currently running session.
+Basically, ``covertpreter`` is a class maintaining several implementations of the ``covertutils.shells.BaseShell`` class, under an internal data structure,
+dispatching commands to each of them, and letting the user '*jump*' into a currently running session.
 
 .. code :: bash
 
