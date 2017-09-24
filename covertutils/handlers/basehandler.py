@@ -37,6 +37,7 @@ Subclassing this class and overriding its methods automatically creates a thread
 		self.__protocolThread = Thread( target = self.__protocolThreadFunction )
 		self.__protocolThread.daemon = True
 
+		self.on = True
  		if arguments['start'] :
  			self.start()
 
@@ -46,6 +47,14 @@ Subclassing this class and overriding its methods automatically creates a thread
 Starts the thread that consumes data and enables the `on*` callback methods.
 		'''
  		self.__protocolThread.start()
+
+
+ 	def stop( self ) :
+		'''
+Stops the handler thread making the data consumer to return (if not blocked).
+		'''
+ 		self.on = False
+
 
 	def queueSend( self, message, stream = None ) :
 		"""
@@ -154,7 +163,7 @@ If `stream` is `None`, the default Orchestrator's stream will be used.
 
 	def __protocolThreadFunction( self ) :
 
-		while True :
+		while self.on :
 			raw_data = self.receive_function()
 			stream, message = self.orchestrator.depositChunk( raw_data )
 			message_consumer = Thread( target = self.__consume, args = ( stream, message ) )

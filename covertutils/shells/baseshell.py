@@ -195,8 +195,6 @@ Exit with 'exit', 'quit', 'q'
 
 		if option == 99 :
 			return True
-		# 	print( "Aborted by user..." )
-		# 	sys.exit(0)
 
 		selected_stream = numb_streams[option]
 		self.subshells_dict[selected_stream]['shell'].start()

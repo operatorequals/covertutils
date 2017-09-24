@@ -5,8 +5,11 @@ from covertutils.shells.subshells import SimpleSubShell
 Commands = {
 	'reset' : 'RST',
 	'identity' : 'ID',
-	'sysinfo' : 'SI'
-}
+	'sysinfo' : 'SI',
+	'kill' : 'KI',
+	'mute' : 'MU',
+	'unmute' : 'UM',
+	}
 
 
 def message_handle(message, instance) :
@@ -47,6 +50,7 @@ class ControlSubShell ( SimpleSubShell ) :
 		self.updatePrompt( )
 		self.message_function = message_handle
 		self.sysinfo = False
+		self.killed = False
 
 
 	def default( self, line ) :
@@ -65,6 +69,8 @@ class ControlSubShell ( SimpleSubShell ) :
 		if command == Commands['sysinfo'] :
 			self.sysinfo = True
 
+		if command == Commands['kill'] :
+			self.killed = True
 
 		print( "Sending '%s' control command!" % command )
 		self.handler.preferred_send( command, self.stream )

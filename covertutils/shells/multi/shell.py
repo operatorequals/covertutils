@@ -26,13 +26,13 @@ class CLIArgumentParser( argparse.ArgumentParser ) :
 
 class MultiShell( cmd.Cmd ) :
 
-	def __init__( self, shells = [], output = sys.stdout ) :
+	def __init__( self, shells = [], output = None ) :
 		cmd.Cmd.__init__(self)
 		self.shells = {}
 		for shell in shells :
 			self.__add_handler_shell( shell )
-		# self.shells = dict([(shell.handler.getOrchestrator().getIdentity(), shell) for shell in shells])
-		self.prompt = 'MultiShell> '
+
+		self.prompt = 'covertpreter> '
 
 
 	def __add_handler_shell( self, shell ) :
@@ -175,6 +175,10 @@ class MultiShell( cmd.Cmd ) :
 
 	def unmount_handler( self, orch_id, kill = False ) :
 		if orch_id in self.shells.keys() :
+			if kill :
+				self.shells[orch_id].onecmd("!control kill")
+			self.shells[orch_id].handler.stop()
+			# self.shells[orch_id].handler.receive_function = None
 			del self.shells[orch_id]
 
 
