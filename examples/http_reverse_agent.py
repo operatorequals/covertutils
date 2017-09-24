@@ -147,7 +147,7 @@ def recv( ) :
 passphrase = "App1e5&0raNg3s"	# This is used to generate encryption keys
 orch = StegoOrchestrator( passphrase,
 							stego_config = stego_config,
-							main_template = "resp",		# The template to be used
+							main_template = "req",		# The template to be used
 							hex_inject = True,			# Inject data in template in hex mode
 							reverse = True, 			# For 2 Orchestrator objects to be compatible one must have 'reverse = True'
 							streams = ['heartbeat'],

@@ -163,7 +163,7 @@ class MultiShell( cmd.Cmd ) :
 			filename = args.SCRIPT
 			arguments = args.ARGUMENTS
 			shell_var = args.shell
-			mount_thread = threading.Thread( target = self.mount_new_handler, args = ( filename, arguments, shell_var))
+			mount_thread = threading.Thread( target = self.mount_new_handler, args = ( filename, arguments, shell_var ) )
 			mount_thread.daemon = True
 			mount_thread.start()
 		elif args.command == 'del' :
