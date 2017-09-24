@@ -19,10 +19,11 @@ It automatically handles all communication channel options, like **encryption**,
 
 With all those set with a few lines of code, a programmer can spend time creating the *actual payloads*, *persistense mechanisms*, *shellcodes* and generally **more creative stuff!**!
 
-The security programmers can stop *re-inventing the wheel* by implementing encryption mechanisms both Agent-side and Handler-side to spend their time developing more versatile *Agents*, and generally feature-rich shells!
+The security programmers can stop *re-inventing the wheel* by implementing encryption mechanisms both *Agent-side* and *Handler-side* to spend their time developing more versatile *Agents*, and generally feature-rich shells!
 
 ### Python?
-Yes, python, and more specifically **Python2.7** only, for the time being...
+Yes, *Python*! Developer friendly, popular among security folks, consistent, preinstalled in vast majority of \*nix machines and easily packed into Windows PE files.
+So it is Python, and more specifically **Python2.7** only, for the time being...
 
 ### But why Python2?
 Several reasons. Mostly because Python2 is **more popular among devices** (*IoT devices*, *old Linux servers*, etc), and backdoor code could run *as-is* on them, without `Freezing`, `Packing`, `PyInstalling`, etc. Backdoors are valuable when they are as cross-platform as possible.
