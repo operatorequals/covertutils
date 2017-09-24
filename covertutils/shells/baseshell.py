@@ -142,8 +142,6 @@ The base class of the package. It implements basics, like hooking the :class:`co
 
 
 	def start( self, warn = True ) :
-
-		# try :
 		while True :
 			ret = None
 			try :
@@ -153,9 +151,9 @@ The base class of the package. It implements basics, like hooking the :class:`co
 			except KeyboardInterrupt :
 				if warn :
 					self.streamMenu()
-
-	def emptyline( self ) :
-		return
+				else :
+					print ('')
+					return False
 
 
 	def do_help( self, line ) :
@@ -212,3 +210,8 @@ Exit with 'exit', 'quit', 'q'
 			# sys.exit(0)
 			return True
 		return False
+
+
+	def emptyline( self, *args ) : return
+
+	def do_EOF( self, *args ) : return

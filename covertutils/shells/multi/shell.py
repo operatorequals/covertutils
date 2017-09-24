@@ -79,9 +79,9 @@ class MultiShell( cmd.Cmd ) :
 			return
 
 		arg_parser = CLIArgumentParser(prog = "\n%s" % self.prompt)
-		arg_parser.add_argument("SESSIONS", nargs = '*', help = 'The Session IDs that this Message should be sent to. If not given defaults to ALL SESSIONS', default = None)
-		arg_parser.add_argument("STREAM", type = str)
-		arg_parser.add_argument("MESSAGE", type = str, default = None)
+		arg_parser.add_argument("SESSIONS", nargs = '*', help = 'The SESSIONS IDs that the MESSAGE must be sent to. If not provided, it defaults to ALL SESSIONS', default = None)
+		arg_parser.add_argument("STREAM", type = str, help = 'The STREAM to send the MESSAGE. If a SESSION does not support the provided STREAM, it will be omitted')
+		arg_parser.add_argument("MESSAGE", type = str, default = None, help = "The MESSAGE to send to the selected SESSIONS")
 
 		try :
 			args = arg_parser.parse_args( line.split() )
@@ -131,14 +131,14 @@ class MultiShell( cmd.Cmd ) :
 			i = args.session_num
 			# print list(self.shells)[i]
 			shell = self.shells.values()[i]
-			return shell.start()
+			return shell.start(False)
 		except Exception as e:
 			# print e
 			pass
 
 		if args.session_id in self.shells.keys() :
 			shell = self.shells[args.session_id]
-			return shell.start()
+			return shell.start(False)
 
 
 	def do_handler( self, line ) :
@@ -152,12 +152,11 @@ class MultiShell( cmd.Cmd ) :
 									type = str, default = 'shell')
 		parser_del = subparsers.add_parser('del', help='Delete a Handler')
 		parser_del.add_argument("SESSION_ID", help = "The ID of the SESSION to purge", type = str)
-		parser_del.add_argument("--kill", '-k', help = "Send 'KILL' command to the corresponding Agent [TODO]", action = 'store_true', type = bool, default = False)
+		parser_del.add_argument("--kill", '-k', help = "Send 'KILL' command to the corresponding Agent [TODO]", action = 'store_true', default = False)
 
 		args = arg_parser.parse_args(line.split())
-		print args
+		# print args
 		if args.command == 'add' :
-			print args
 			if args.SCRIPT == None :
 				print arg_parser.print_help()
 				return
@@ -185,8 +184,10 @@ class MultiShell( cmd.Cmd ) :
 		print variables
 		with open(filename, 'r') as handler_codefile :
 			handler_code = handler_codefile.read()
+			# namespace_dict = locals()
 			namespace_dict = {}
 			handler_code = handler_code.replace("%s.start()" % shell_var, 'pass')	# Replace the blocking command of the shell
+			# exec( handler_code )
 			exec( handler_code, namespace_dict )
 			print namespace_dict[shell_var]
 			self.__add_handler_shell( namespace_dict[shell_var] )
@@ -194,5 +195,28 @@ class MultiShell( cmd.Cmd ) :
 
 
 	def emptyline( self ) :	return
+	def do_EOF( self, *args ) : return
 
-	def do_EOF(self) : return
+	def do_exit( self, *args ) : return self.do_q( *args )
+	def do_quit( self, *args ) : return self.do_q( *args )
+	def do_q( self, *args ) : return self.quitPrompt()
+
+	def quitPrompt( self, *args ) :
+		# print( args )
+		exit_input = raw_input("[!]\tQuit shell? [y/N] ")
+		if exit_input.lower() == 'y' :
+			print( "Aborted by the user..." )
+			# sys.exit(0)
+			return True
+		return False
+
+	def start( self, warn = True ) :
+		# try :
+		while True :
+			ret = None
+			try :
+				ret = self.cmdloop()
+				# if ret :
+				break
+			except KeyboardInterrupt :
+				print ("\n[!] For exiting use [q|quit|exit]")
