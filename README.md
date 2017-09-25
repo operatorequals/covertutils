@@ -199,6 +199,25 @@ $ python -m covertutils.crypto.keys crc keyphrase2 SkonjSa1pat95PVhAG9U3DHO --in
 
 **The `std` algorithm is used by default in all communications.**
 
+### The `Compression`
+All communications are passed through a layer of compression using the `bz2` or `zip` algorithm. The compression is using a *best effort* approach, meaning that the returned data will be the least lengthy compressed version of the input (even if that means that *no compression will take place*).
+``` bash
+$ cat examples/tcp_bind_agent.py | python -m covertutils.datamanipulation.compressor -  -v -o b64
+eJydU01v2zAMPVu/gksuNhA4aQdfBuzQdR02DG2HJbdhSFWbiYTIkkExCfLvR9lu0qE7DQIkUeTjxyM1fTffR5o/Wz9Hf4DuxCZ4taHQQh0OSLxn62JptG8cUixt2zmQLRDDkuVVU7M06NzXweItNFBtMDJptsGfockPPp5VgZQaVfEUz9dQ75AHl2xbfEFHh9ip4d3oaJx9PquMrq6ulep0jJ0hHRE+wuSHrqokVe+vJko3DaXHRdmvyQys51zClpq2h19XvwulohgM0cvhyEfp5sv628PdavaiXT7efl8vVz/vbu6LbKpiKUw2OfQxiiybQs+L9Vt4QD4G2slVrJyNjD6vehNBYIeyeXYnCJvX9Cl1NNYhrGiP8CFZ3+udEMEwuIAnIx14UlntrOBnMJzrsUipqa6x47wP9MlJ0ikXNgittl4uhLpRKmtwA4T1AfJiCHMrCkY4ku46aTxsAoG/lJBlhLwnP8YrEzaHagHF6Cxi4oH0Ef7P4Su8eExDJOW8HZscLp2eAevt2qHfcjK+nkHY80WuFqnTf8uEwnQ/I4lgYe9Up2attdsGsmzaxGE/UpJGNv6ClMg/Rj/vCZz1lUvolHFxqTtRPhrCZ42t/IXVQP4fHvEtgg==
+Ratio 52 %
+```
+```bash
+$ echo -n eJydU01v2zAMPVu/gksuNhA4aQdfBuzQdR02DG2HJbdhSFWbiYTIkkExCfLvR9lu0qE7DQIkUeTjxyM1fTffR5o/Wz9Hf4DuxCZ4taHQQh0OSLxn62JptG8cUixt2zmQLRDDkuVVU7M06NzXweItNFBtMDJptsGfockPPp5VgZQaVfEUz9dQ75AHl2xbfEFHh9ip4d3oaJx9PquMrq6ulep0jJ0hHRE+wuSHrqokVe+vJko3DaXHRdmvyQys51zClpq2h19XvwulohgM0cvhyEfp5sv628PdavaiXT7efl8vVz/vbu6LbKpiKUw2OfQxiiybQs+L9Vt4QD4G2slVrJyNjD6vehNBYIeyeXYnCJvX9Cl1NNYhrGiP8CFZ3+udEMEwuIAnIx14UlntrOBnMJzrsUipqa6x47wP9MlJ0ikXNgittl4uhLpRKmtwA4T1AfJiCHMrCkY4ku46aTxsAoG/lJBlhLwnP8YrEzaHagHF6Cxi4oH0Ef7P4Su8eExDJOW8HZscLp2eAevt2qHfcjK+nkHY80WuFqnTf8uEwnQ/I4lgYe9Up2attdsGsmzaxGE/UpJGNv6ClMg/Rj/vCZz1lUvolHFxqTtRPhrCZ42t/IXVQP4fHvEtgg==\
+| python -m covertutils.datamanipulation.compressor - -i b64 -d
+#!/usr/bin/env python
+from covertutils.handlers.impl import StandardShellHandler
+from covertutils.orchestration import SimpleOrchestrator
+
+import sys
+import socket
+[...]
+```
+
 ## Networking
 Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` `Handler` instances are **2 functions wrapping the raw data sending and receiving**.
 
