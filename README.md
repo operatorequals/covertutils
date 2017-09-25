@@ -196,8 +196,28 @@ $ #	Change the keyphrase and try to decrypt:
 $ python -m covertutils.crypto.keys crc keyphrase2 SkonjSa1pat95PVhAG9U3DHO --input b64 --decrypt
 ����R��M8�A�q�/�
 ```
-
 **The `std` algorithm is used by default in all communications.**
+
+#### A primitive `signing` implementation
+*Scrambling* the `examples/http_reverse_agent.py` file and later encrypting the scramble with a *key* creates something like a *signature*. The encrypted scramble can be used for integrity checking.
+#### `Signing`
+```bash
+$ cat examples/http_reverse_agent.py | python -m covertutils.crypto.algorithms std - --length 16 | python -m covertutils.crypto.keys std "shared_secret" - -o b64
+FiPXldUde7G4PGX3TnG+uBuviBVKSw+IS0D/i7S+REht
+```
+#### `Verifying`
+``` bash 
+signature="$(cat examples/http_reverse_agent.py | python -m covertutils.crypto.algorithms std - --length 16 | python -m covertutils.crypto.keys std "shared_secret" - -o b64)"
+if [ "$signature" = "FiPXldUde7G4PGX3TnG+uBuviBVKSw+IS0D/i7S+REht" ]; then
+	echo "Verified!";
+else
+	echo "Invalid.";
+fi
+```
+(Try changing the `examples/http_reverse_agent.py` file or the `signature` variable to test the example)
+
+*Signing is **not an overly secure feature**. It is little technique ensuring **basic** integrity checking without the hassle of importing official algorithms like `HMAC`* (which are definetely better, but *not built-in*). 
+It is meant for *staging payload* verification, yet there is no such mechanism implemented by default.
 
 ### The `Compression`
 All communications are passed through a layer of compression using the `bz2` or `zip` algorithm. The compression is using a *best effort* approach, meaning that the returned data will be the least lengthy compressed version of the input (even if that means that *no compression will take place*).
