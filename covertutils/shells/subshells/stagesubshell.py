@@ -34,7 +34,7 @@ class StageSubShell ( SimpleSubShell ) :
 			shell_class = stage['shell']
 		except :
 			shell_class = None
-		print( shell_class )
+		# print( shell_class )
 		if shell_class == None :
 			shell_class = SimpleSubShell
 		kwargs = {}

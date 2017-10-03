@@ -60,15 +60,15 @@ agent = ExtendableShellHandler( dummy_receive1, dummy_send1, orch1 )
 class MyHandler (BaseHandler) :
 
 	def onMessage(self, stream, message) :
-		global chunks_sent
-		print( "Handler: Chunks Received: %d" % chunks_sent )
+		# global chunks_sent
+		# print( "Handler: Chunks Received: %d" % chunks_sent )
 		chunks_sent = 0
 		# print( message )
 		pass
 	def onChunk(self, stream, message) :
-		global chunks_sent
-		if chunks_sent == 0 :
-			print
+		# global chunks_sent
+		# if chunks_sent == 0 :
+		# 	print
 		# chunks_sent += 1logname
 		# print( "Handler: <Chunk>" )
 		pass
@@ -84,5 +84,7 @@ class MyHandler (BaseHandler) :
 handler = MyHandler( dummy_receive2, dummy_send2, orch2 )
 
 # shell = ExtendableShell(handler, output = '/tmp/covertutils_out')
-shell = ExtendableShell(handler, )
-shell.start()
+# shell = ExtendableShell(handler, output='/tmp/covertutils_session1')
+shell = ExtendableShell(handler, output=True)
+
+shell.start( False )

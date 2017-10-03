@@ -13,8 +13,7 @@ class SimpleShell (BaseShell) :
 	Defaults['prompt'] = "({package} v{version})> "
 
 	def __init__( self, handler,
-		log_unrecognised = False,
 		**kw
 		) :
 		args = defaultArgMerging(StandardShell.Defaults, kw)
-		BaseShell.__init__( self, handler, log_unrecognised, **args )
+		BaseShell.__init__( self, handler, **args )

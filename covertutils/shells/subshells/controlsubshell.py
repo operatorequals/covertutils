@@ -19,7 +19,7 @@ def message_handle(message, instance) :
 		# sysinfo_var = message
 		# sysinfo = json.loads(message)
 		sysinfo = message.split('+')
-		print( """
+		instance.message_logger.warn( """
 General:
 	Host: {}
 	Machine: {}
@@ -40,7 +40,7 @@ Specifics:
 		instance.base_shell.sysinfo = sysinfo
 		instance.sysinfo = False
 	else :
-		print( message )
+		instance.message_logger.warn( message )
 
 
 
@@ -60,11 +60,11 @@ class ControlSubShell ( SimpleSubShell ) :
 		try :
 			command = Commands[comm]
 		except :
-			print( "No such control command!" )
+			self.debug_logger.warn( "No such control command [%s]!" % comm)
 			return
 		# print( "Sending '%s' command" % command )
 		if command == Commands['reset'] :
-			print( "Reseting handler" )
+			self.debug_logger.warn( "Reseting handler" )
 			self.resetHandler()
 
 		if command == Commands['sysinfo'] :
@@ -73,13 +73,9 @@ class ControlSubShell ( SimpleSubShell ) :
 		if command == Commands['kill'] :
 			self.killed = True
 
-		print( "Sending '%s' control command!" % command )
+		self.debug_logger.warn( "Sending '%s' control command!" % command )
 		self.handler.preferred_send( command, self.stream )
-
-
-
-
-
+		
 
 	def resetHandler( self ) :
 		self.handler.reset()

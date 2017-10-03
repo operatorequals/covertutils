@@ -110,6 +110,7 @@ addr = ( sys.argv[1], int( sys.argv[2]) )	# called as 'python Client.py 127.0.0.
 
 #	Create a simple socket
 client_socket = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+# client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
 #	As every HTTP request/response needs a new Socket,
 # this variable is used to inform network wrappers if the last HTTP transaction is finished

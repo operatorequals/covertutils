@@ -13,7 +13,12 @@ except ImportError:
 	from Queue import Queue  # Python 2
 
 import sys
+import os
 import cmd
+import logging
+log_format = "%(name)s:\n%(message)s"
+# debug_format = "%(name)s:%(message)s".format(debug_preamp)
+logging.basicConfig( format = log_format )
 
 try:
 	raw_input          # Python 2
@@ -37,7 +42,7 @@ def handlerCallbackHook( on_chunk_function, stream_dict ) :
 			stream_dict[stream]['queues']['messages'].put( message )
 			stream_dict[stream]['queues']['condition'].notify()
 			stream_dict[stream]['queues']['condition'].release()
-			stream_dict[stream]['queues']['chunks'] = 0
+			# stream_dict[stream]['queues']['chunks'] = 0
 		else :
 			stream_dict[stream]['queues']['chunks'] += 1
 
@@ -57,32 +62,41 @@ The base class of the package. It implements basics, like hooking the :class:`co
 	Defaults = {
 		'prompt' : "({package} v{version})> " ,
 		# 'ignore_messages' : set([ResponseOnlyHandler.Defaults['request_data']])
-		'ignore_messages' : set()
+		'ignore_messages' : set(),
+		'output' : None,		# can be a filename
+		'debug' : None,			#
 		}
 
-	def __init__( self, handler, log_unrecognised = False, **kw ) :
+	def __init__( self, handler, **kw ) :
 
 		cmd.Cmd.__init__(self)
 		arguments = defaultArgMerging(BaseShell.Defaults, kw)
 		self.prompt_templ = arguments['prompt']
 		self.ignore_messages = arguments['ignore_messages']
+		self.output = arguments['output']
+		self.debug = arguments['debug']
 		subshells = arguments['subshells']
 
 		self.subshells_dict = {}
 		self.handler = handler
 		for stream_name, subshell_attrs in subshells.items() :
-			# if
 			if type(subshell_attrs) is tuple :
 				subshell_class, subshell_kwargs = subshell_attrs
 			else :
 				subshell_class, subshell_kwargs = (subshell_attrs, dict())
 
 			self.addSubShell( stream_name, subshell_class, subshell_kwargs )
+
 		handler.onChunk = handlerCallbackHook( handler.onChunk, self.subshells_dict )
 		self.updatePrompt()
 		self.sysinfo = None
 
+
 	def addSubShell( self, stream, subshell_class, subshell_kwargs ) :
+
+		orch_id = self.handler.getOrchestrator().getIdentity()
+		self.addSubShellLogging( orch_id, stream )
+
 		self.subshells_dict[stream] = {}
 		self.subshells_dict[stream]['queues'] = {}
 		self.subshells_dict[stream]['queues']['messages'] = Queue()
@@ -91,6 +105,45 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		self.subshells_dict[stream]['shell'] = subshell_class(stream, self.handler, self.subshells_dict[stream]['queues'], self, self.ignore_messages, **subshell_kwargs )
 
 		self.handler.orchestrator.addStream( stream )
+
+
+	def addSubShellLogging( self, orch_id, stream ) :
+		log_preamp = "{id}.{stream}".format(id = orch_id, stream = stream)
+		debug_preamp = "{}.debug".format(log_preamp)
+		# print debug_preamp
+
+		message_logger = logging.getLogger(log_preamp)
+		debug_logger = logging.getLogger(debug_preamp)
+
+		message_logger.setLevel(0)
+		debug_logger.setLevel(0)
+
+		if self.output == None :
+			pass
+		elif type(self.output) == str :
+			message_hdlr = logging.FileHandler(self.output)
+			message_logger.propagate = False
+			message_logger.addHandler(message_hdlr)
+		else :
+			try : os.mkdir(orch_id)
+			except : pass
+			message_hdlr = logging.FileHandler('%s/%s.log' % (orch_id, stream))
+			message_logger.addHandler(message_hdlr)
+			message_logger.propagate = False
+
+		if self.debug == None :
+			debug_logger.disabled = True
+			# print "TO DEVNULL"
+		elif type(self.debug) == str :
+			debug_hdlr = logging.FileHandler(self.debug)
+			debug_logger.addHandler(debug_hdlr)
+			# print debug_preamp, debug_logger
+		else :
+			try : os.mkdir(orch_id)
+			except : pass
+			debug_hdlr = logging.FileHandler('%s/%s.debug' % (orch_id, stream))
+			debug_logger.addHandler(debug_hdlr)
+		return message_logger, debug_logger
 
 
 	def default( self, line ) :
@@ -117,7 +170,6 @@ The base class of the package. It implements basics, like hooking the :class:`co
 				return
 			else :
 				self.subshells_dict[stream_name]['shell'].onecmd( command )
-
 
 
 	def do_streams( self, line ) :

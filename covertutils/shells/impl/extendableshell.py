@@ -23,4 +23,4 @@ class ExtendableShell (BaseShell) :
 		**kw
 		) :
 		args = defaultArgMerging(ExtendableShell.Defaults, kw)
-		BaseShell.__init__( self, handler, log_unrecognised, **args )
+		BaseShell.__init__( self, handler, **args )
