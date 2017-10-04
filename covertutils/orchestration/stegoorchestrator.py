@@ -22,7 +22,7 @@ def _dummy_function( data, encode = False ) :
 
 class StegoOrchestrator ( Orchestrator ) :
 	"""
-The `StegoOrchestrator` class combines compression, chunking, encryption, stream tagging and steganography injection, by utilizing the below `covertutils` classes:
+The `StegoOrchestrator` class combines compression, chunking, encryption, stream tagging and steganography injection, by utilizing the below ``covertutils`` classes:
 
  - :class:`covertutils.datamanipulation.AdHocChunker`
  - :class:`covertutils.datamanipulation.Compressor`

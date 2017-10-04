@@ -28,7 +28,7 @@ So it is Python, and more specifically **Python2.7** only, for the time being...
 
 ### But why Python2?
 Several reasons. Mostly because Python2 is **more popular among devices** (*IoT devices*, *old Linux servers*, etc), and backdoor code could run *as-is* on them, without `Freezing`, `Packing`, `PyInstalling`, etc. Backdoors are valuable when they are as cross-platform as possible.
-Macs, for example, do not have Python3 installed by default. If you want `covertutils` in Python3, do not complain, read [this reddit flame war dodging](https://www.reddit.com/r/netsec/comments/6rj7b0/a_python_package_for_creating_backdoors_coverutils/) and start PRing...
+Macs, for example, do not have Python3 installed by default. If you want ``covertutils`` in Python3, do not complain, read [this reddit flame war dodging](https://www.reddit.com/r/netsec/comments/6rj7b0/a_python_package_for_creating_backdoors_coverutils/) and start PRing...
 
 #### So far the `covertutils.crypto` subpackage has been ported to Python3. That means that all encryption and signing can work from Python3. Slow and steady...
 
@@ -240,7 +240,7 @@ import socket
 ```
 
 ## Networking
-Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for `covertutils` `Handler` instances are **2 functions wrapping the raw data sending and receiving**.
+Networking is not handled by `covertutils`, as python provides great built-in networking API (directly inherited from C). The only requirements for ``covertutils`` `Handler` instances are **2 functions wrapping the raw data sending and receiving**.
 
 Just pass a `send( raw )` and a `recv()` function to a `Handler` and you have a working *One-Time-Pad* encrypted, bandwidth aware, protocol independent, *password protected*, *multi-usable* channel.
 
@@ -258,4 +258,4 @@ Especially Pull Requests towards Python2/Python3 compatibility will be greatly a
 
 
 # Disclaimer
-Usage of `covertutils` for attacking infrastructures without prior mutual consistency can be considered as an illegal activity. It is the final user's responsibility to obey all applicable local, state and federal laws. Authors assume no liability and are not responsible for any misuse or damage caused by this package.
+Usage of ``covertutils`` for attacking infrastructures without prior mutual consistency can be considered as an illegal activity. It is the final user's responsibility to obey all applicable local, state and federal laws. Authors assume no liability and are not responsible for any misuse or damage caused by this package.

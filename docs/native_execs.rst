@@ -25,7 +25,7 @@ The repo's makefile has options for one-line *exe* generation. Get the latest re
 Linux
 *****
 
-For a **script** name of '`backdoor_script.py`' and **executable** name of '`.sshd`' type the following:
+For a **script** name of ``backdoor_script.py`` and **executable** name of ``.sshd`` type the following:
 
 .. code:: bash
 
@@ -38,7 +38,7 @@ Windows
 
 You will need the whole *wine - Python2.7 - PyInstaller* toolchain assuming that you are running *Linux*.
 
-For a **script** name of '`backdoor_script.py`' and **executable** name of '`crazy_taxi_crack_2.34.exe`' type the following:
+For a **script** name of ``backdoor_script.py`` and **executable** name of ``crazy_taxi_crack_2.34.exe`` type the following:
 
 .. code:: bash
 

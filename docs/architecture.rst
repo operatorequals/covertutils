@@ -1,9 +1,9 @@
 Ingredients for Cooking a `Backdoor`
 ====================================
 
-Every program that uses the `covertutils` way of implementing communication has the following ingredients. No matter if it is the backdoors **Agent** (the one running on the compromised host), or the **Handler** (the one that is used by the `pentester`/`attacker`/`hoodie wearing guy`).
+Every program that uses the ``covertutils`` way of implementing communication has the following ingredients. No matter if it is the backdoors **Agent** (the one running on the compromised host), or the **Handler** (the one that is used by the `pentester`/`attacker`/`hoodie wearing guy`).
 
-All backdoors designed with `covertutils` are made with the below parts:
+All backdoors designed with ``covertutils`` are made using the parts below:
 
 
 `500gr` - ``Orchestrator``
@@ -14,15 +14,15 @@ Docs @ :class:`covertutils.orchestration.orchestrator.Orchestrator`
 This `class` manipulates data from and to the `Communication Channel` (see below).
 When several data transformations are in place, the ``Orchestrator`` objects are the ones that pass them from their `minified` / `encrypted` / `chunked` form to their original, lossless form.
 
-This is done without any interaction from the developer in `packet level` as in `covertutils` there are **no packets**.
-All networking is abstracted, and what is finally traveling in network packets is no concern for `covertutils` classes.
+This is done without any interaction from the developer in `packet level` as in ``covertutils`` there are **no packets**.
+All networking is abstracted, and what is finally traveling in network packets is no concern for ``covertutils`` classes.
 
 Message Packing
 ***************
 
 Packing and unpacking is done by the :meth:`covertutils.orchestration.orchestrator.Orchestrator.readyMessage` `(packing)` and :meth:`covertutils.orchestration.orchestrator.Orchestrator.depositChunk` `(unpacking)` methods.
 
-The ``Orchestrator`` instances are designed to create pairs of 2, in a way that data the first ``Orchestrator`` instance `packs` to `sendable forms` are able to be unpacked and read **only** by the second ``Orchestrator`` instance and `vice-versa`. This is done with the use of a `passphrase` to initialize all `encryption keys` and `stream OTPs`
+The ``Orchestrator`` instances are designed to create pairs of 2, in a way that data the first ``Orchestrator`` instance `packs` to `sendable forms` are able to be unpacked and read **only** by the second ``Orchestrator`` instance and `vice-versa`. This is done with the use of a *passphrase* to initialize all `encryption keys` and *stream OTPs*
 
 .. _streams_arch:
 
@@ -144,4 +144,4 @@ All Communication is wrapped by ``send()`` and ``recv`` functions where the ``se
 This is perfectly working example of wrapping functions. It is actually really useful for testing stuff.
 
 
-So those functions can use ``requests`` to post to `pastebin` or do whatever. The `covertutils` package doesn't care about **how** you get your bytes to the other side. It just guarantees that the bytes will be fully unrecognizable (see: :ref:`ids_evasion`) to anyone else than the other side.
+So those functions can use ``requests`` to post to `pastebin` or do whatever. The ``covertutils`` package doesn't care about **how** you get your bytes to the other side. It just guarantees that the bytes will be fully unrecognizable (see: :ref:`ids_evasion`) to anyone else than the other side.

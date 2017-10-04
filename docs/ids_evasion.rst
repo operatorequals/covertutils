@@ -41,7 +41,7 @@ And that is as the data doesn't get transmitted through a known connection. TLS 
 *In a backdoor a handshake will generate `signatures`, as any hardcoded `byte-position pair`.
 
 
-And using a legit protocol like TLS would hardcode the `Network Agnostic` design all together. Yet TLS can be used, if wrapped with `covertutils` functions, but making the only option is far from useful.
+And using a legit protocol like TLS would hardcode the `Network Agnostic` design all together. Yet TLS can be used, if wrapped with ``covertutils`` functions, but making the only option is far from useful.
 
 So you see. It is indeed tricky...
 

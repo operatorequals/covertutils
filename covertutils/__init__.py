@@ -1,5 +1,5 @@
 """
-The `covertutils` module provides ready plug-n-play tools for `Remote Code Execution Agent` programming.
+The ``covertutils`` module provides ready plug-n-play tools for `Remote Code Execution Agent` programming.
 Features like `chunking`, `encryption`, `data identification` are all handled transparently by its classes.
 The :class:`SimpleOrchestrator` handles all data manipulation, and the :class:`Handlers.BaseHandler` derivative classes handle the agent's and handler's actions and responses.
 

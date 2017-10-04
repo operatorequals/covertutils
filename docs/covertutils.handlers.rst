@@ -52,14 +52,6 @@ covertutils.handlers.interrogating module
     :undoc-members:
     :show-inheritance:
 
-covertutils.handlers.resettable module
---------------------------------------
-
-.. automodule:: covertutils.handlers.resettable
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 covertutils.handlers.responseonly module
 ----------------------------------------
 

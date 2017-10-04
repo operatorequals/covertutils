@@ -4,7 +4,7 @@
 Beyond the OS Shell
 ===================
 
-The `covertutils` package has an API for creating custom stages that can be dynamically loaded to compromised machines.
+The ``covertutils`` package has an API for creating custom stages that can be dynamically loaded to compromised machines.
 If a :class:`covertutils.handlers.stageable.StageableHandler` is running in a pwned machine stages can be pushed to it.
 
 The API is fully documented in the :ref:`stage_api_page` page.
@@ -92,7 +92,7 @@ Runnning `shellcode` requires the following things:
  - Making that location executable at runtime
  - ``jmp`` ing to that location
 
-So `covertutils` has 2 `stages` that utilize ``ctypes`` built-in package to do the right things and finally run `shellcode`!
+So ``covertutils`` has 2 `stages` that utilize ``ctypes`` built-in package to do the right things and finally run `shellcode`!
 They are located under :mod:`covertutils.payloads.linux.shellcode` and :mod:`covertutils.payloads.windows.shellcode`.
 
 A `SubShell` is also available that translates copy-pasted `shellcodes` from various sources to raw data, before sending them over to a poor `Agent`.
@@ -177,7 +177,7 @@ And the next step is trying to ``wget`` stuff with the non-tty shell, or copy-pa
 
 Miserable things happen when there aren't specific commands for file upload/download to the compromised system. And out-of-band methods (`pastebin`, `wget`, etc) can easily be identified as abnormal...
 
-The `covertutils` package has a `file` stage and subshell, to provide file transfers from the `Agent` to the `Handler` and vice-versa in an in-band manner (using the same `Communication Channel`).
+The ``covertutils`` package has a `file` stage and subshell, to provide file transfers from the `Agent` to the `Handler` and vice-versa in an in-band manner (using the same `Communication Channel`).
 
 .. code:: bash
 

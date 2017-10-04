@@ -21,7 +21,7 @@ and
 
 as all modules happen to contain only **one class each**.
 
-To also borrow some more `Jav'ish` taste, all class names are `camelCased` and have their first letter `Capitalized`, while the modules containing them share the same name but all `lowercase`.
+To also borrow some more *Jav'ish* taste, all class names are `camelCased` and have their first letter `Capitalized`, while the modules containing them share the same name but all `lowercase`.
 
 For example, the :class:`covertutils.handlers.basehandler.BaseHandler` class can be imported like:
 

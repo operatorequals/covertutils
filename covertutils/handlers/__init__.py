@@ -93,8 +93,6 @@ from covertutils.handlers.interrogating import InterrogatingHandler
 
 from covertutils.handlers.responseonly import ResponseOnlyHandler
 
-from covertutils.handlers.resettable import ResettableHandler
-
 from covertutils.handlers.stageable import StageableHandler
 
 from covertutils.handlers.buffering import BufferingHandler

@@ -47,7 +47,7 @@ Given that the ``unstaged_agent.py`` is the file that contains the awesome 500 l
 Now the ``staged_agent.py`` consists both of a copy of the ``httpimport`` module and the awesome super cool 500 loc ``covertutils`` *Agent*
 
 .. note ::
-	The ``sed`` and ``grep`` magic ensures that all log lines of ``httpimport`` (containing strings). This way the script can be further minified.
+	The ``sed`` and ``grep`` magic ensures that all log lines of ``httpimport`` (containing strings) are replaced with ``pass``. This way the script can be further minified.
 
 Step Two - Create a *Python HTTP/S Repo*
 ++++++++++++++++++++++++++++++++++++++++

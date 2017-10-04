@@ -7,7 +7,7 @@
 	 .. moduleauthor:: John Torakis <john.torakis@gmail.com>
 
 
-Welcome to `CovertUtils`'s documentation!
+Welcome to ``covertutils`` documentation!
 =========================================
 
 This Project is free and open-source, available @ Github_
@@ -15,7 +15,7 @@ This Project is free and open-source, available @ Github_
 .. _Github : https://github.com/operatorequals/covertutils
 
 
-A Blog post about it, explaining *motivation* and *implementation internals* is located in my personal blog: Securosophy_
+A Blog post about it, explaining *motivation* and *implementation internals* can be found in my personal blog: Securosophy_
 
 .. _Securosophy : https://securosophy.com/2017/04/22/reinventing-the-wheel-for-the-last-time-the-covertutils-package/
 
@@ -23,8 +23,8 @@ A Blog post about it, explaining *motivation* and *implementation internals* is 
 Not a Backdoor!
 ---------------
 
-Well, `almost` not a backdoor. This project is a `Python2 package` containing enough modules for implementing custom backdoors.
-Everything, from file transferring to customized shells are included.
+Well, *almost* not a backdoor. This project is a *Python2 package* containing enough modules for implementing custom backdoors.
+Everything, from *file transfer* to *customized shells* is included.
 
 
 It is not a backdoor ready to be planted (well, most of the :ref:`programming_examples` are). If you are looking for backdoors, RATs and such stuff in `Python` there are some awesome projects already:
@@ -32,7 +32,7 @@ It is not a backdoor ready to be planted (well, most of the :ref:`programming_ex
  - Weevely_
  - Pupy_
  - Stitch_
- - Empire_ (most of it in `PowerShell`)
+ - Empire_ (agent also in `PowerShell`)
 
 .. _Weevely : https://github.com/epinna/weevely3
 .. _Pupy : https://github.com/n1nj4sec/pupy
@@ -40,7 +40,7 @@ It is not a backdoor ready to be planted (well, most of the :ref:`programming_ex
 .. _Empire : https://www.powershellempire.com/
 
 
-This package contains most **Building Blocks** of a backdoor. it covers the most common coding tasks when creating anything from a simple `reverse TCP shell` to a full-blown feature-rich `Agent`.
+This package contains most **Building Blocks** of a backdoor. It covers the common coding tasks when creating anything from a simple `reverse TCP shell` to a full-blown, feature-rich, extend-able, `Agent`.
 
 It also uses a simplistic approach of what a backdoor is, breaking it down to its basic components:
 
@@ -50,7 +50,7 @@ It also uses a simplistic approach of what a backdoor is, breaking it down to it
  - Protocol
 
 
-Currently, `covertutils` package provides API for:
+Currently, ``covertutils`` package provides API for:
 
  - Encryption
  - Chunking
@@ -59,6 +59,7 @@ Currently, `covertutils` package provides API for:
  - Packet Steganography
  - Customized Shell
  - Message Handling
+ - Custom Shell creation
 
 And most of those features are used under the hood, without writing any additional line of code (e.g. `encryption`, `compression`, `streams`).
 
@@ -70,7 +71,7 @@ The package provides a generic wrapper for networking, without implementing inte
 
 This design decision broadens the possibilities for `Communication Channels` that differ a lot from just layer 4/5 solutions. This way, there is space for `Packet Steganography` or even time-based `Covert Channels`.
 
-And all that with the abstraction of **Object Oriented Programming**, as this package depends on it heavily (`makes multiple-inheritance an everyday thing!`).
+And all that with the abstraction of **Object Oriented Programming**, as this package depends on it heavily.
 
 
 .. toctree::
@@ -107,14 +108,13 @@ And all that with the abstraction of **Object Oriented Programming**, as this pa
 
 
 
-All modules `[citation needed]` are documented automatically from comments with `Sphinx apidoc`. The output is below...
+All modules *[citation needed]* are documented automatically from comments with *Sphinx* ``apidoc``. The output is below...
 
 .. toctree::
  :maxdepth: 3
  :caption: The whole "apidoc" pages ahead:
 
  modules
- covertutils
 
 
 

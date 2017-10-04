@@ -18,7 +18,7 @@ from copy import deepcopy
 #
 class SimpleOrchestrator ( Orchestrator ) :
 	"""
-The `SimpleOrchestrator` class combines compression, chunking, encryption and stream tagging, by utilizing the below `covertutils` classes:
+The `SimpleOrchestrator` class combines compression, chunking, encryption and stream tagging, by utilizing the below ``covertutils`` classes:
 
  - :class:`covertutils.datamanipulation.Chunker`
  - :class:`covertutils.datamanipulation.Compressor`

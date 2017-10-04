@@ -1,5 +1,5 @@
 """
-This code isn't really useful and it is meant to be a guide for making custom `stages` using the `covertutils` API
+This code isn't really useful and it is meant to be a guide for making custom `stages` using the ``covertutils`` API
 """
 def init(storage) :
 	'''

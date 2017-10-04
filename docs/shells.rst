@@ -8,7 +8,7 @@ When a class from the :mod:`covertutils.shells` family is used to hook and inter
 
 The shells provided by the package are `(thank god)` **<Ctrl-C> resistant**, and modular, in a sense that no single shell interface accepts `every command`.
 
-As the architecture of a `covertutils` backdoor implies, all data flows through a virtual `stream` that is identified by an OTP mechanism (see :ref:`streamidentifier_component`). The other side `(Agent)` can handle data from **different streams in different ways**.
+As the architecture of a ``covertutils`` backdoor implies, all data flows through a virtual `stream` that is identified by an OTP mechanism (see :ref:`streamidentifier_component`). The other side `(Agent)` can handle data from **different streams in different ways**.
 
 
 
