@@ -97,14 +97,15 @@ The base class of the package. It implements basics, like hooking the :class:`co
 		orch_id = self.handler.getOrchestrator().getIdentity()
 		self.addSubShellLogging( orch_id, stream )
 
-		self.subshells_dict[stream] = {}
-		self.subshells_dict[stream]['queues'] = {}
-		self.subshells_dict[stream]['queues']['messages'] = Queue()
-		self.subshells_dict[stream]['queues']['chunks'] = 0
-		self.subshells_dict[stream]['queues']['condition'] = Condition()
-		self.subshells_dict[stream]['shell'] = subshell_class(stream, self.handler, self.subshells_dict[stream]['queues'], self, self.ignore_messages, **subshell_kwargs )
+		stream_name = self.handler.addStream( stream )
 
-		self.handler.orchestrator.addStream( stream )
+		self.subshells_dict[stream_name] = {}
+		self.subshells_dict[stream_name]['queues'] = {}
+		self.subshells_dict[stream_name]['queues']['messages'] = Queue()
+		self.subshells_dict[stream_name]['queues']['chunks'] = 0
+		self.subshells_dict[stream_name]['queues']['condition'] = Condition()
+		self.subshells_dict[stream_name]['shell'] = subshell_class(stream, self.handler, self.subshells_dict[stream_name]['queues'], self, self.ignore_messages, **subshell_kwargs )
+
 
 
 	def addSubShellLogging( self, orch_id, stream ) :
@@ -186,7 +187,8 @@ The base class of the package. It implements basics, like hooking the :class:`co
 
 
 	def availableStreams(self) :
-		return self.subshells_dict.keys()
+		# return self.subshells_dict.keys()
+		return self.handler.getOrchestrator().getStreams()
 
 
 	def __print_streams( self ) :

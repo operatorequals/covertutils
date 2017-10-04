@@ -51,6 +51,7 @@ It supports the standard :meth:`onMessage` API of the original :class:`BaseHandl
 			return stream, message
 
 
+
 	def start(self) : pass
 	def nullSend( self, message, stream ) : print "nullSend" ; pass
 	# def onChunk( self, stream, message ) : pass
@@ -70,7 +71,7 @@ It supports the standard :meth:`onMessage` API of the original :class:`BaseHandl
 
 		orch = MultiHandler.__NullOrchestrator("", 0)
 		super(MultiHandler, self).__init__(recv_internal, send_internal, orch, **kw)
-		self.preferred_send = self.nullSend
+		# self.preferred_send = self.nullSend
 
 		self.handlers = {}
 		for handler in handlers :
@@ -83,10 +84,10 @@ It supports the standard :meth:`onMessage` API of the original :class:`BaseHandl
 		return handler, stream
 
 
-	def sendAdHoc( self, message, stream ) :
+	def preferred_send( self, message, stream ) :
 		handler, stream = self.resolveStream( stream )
 		handler.preferred_send( message, stream )
-
+		print "RUNI"
 
 	def queueSend( self, message, stream ) :
 		pass
@@ -127,6 +128,19 @@ It supports the standard :meth:`onMessage` API of the original :class:`BaseHandl
 	def getAllHandlers(self) :
 		return [self.handlers[o_id]['handler'] for o_id in self.handlers.keys()]
 
+
+	def addStream( self, stream ) :
+		for orch_id in self.getOrchestratorIDs() :
+			self.__add_stream(orch_id, stream)
+
+
+	def __add_stream(self, orch_id, stream) :
+		self.handlers[orch_id]['streams'].append(stream)
+
+		pseudo_stream = "%s:%s" % (orch_id, stream)	# not used
+		self.getOrchestrator().addStream(pseudo_stream)
+
+
 	def addHandler(self, handler) :
 		orch_id = handler.getOrchestrator().getIdentity()
 		self.handlers[orch_id] = {}
@@ -140,10 +154,8 @@ It supports the standard :meth:`onMessage` API of the original :class:`BaseHandl
 
 		for stream in handler.getOrchestrator().getStreams() :
 			# print pseudo_stream
-			self.handlers[orch_id]['streams'].append(stream)
+			self.__add_stream(orch_id, stream)
 
-			pseudo_stream = "%s:%s" % (orch_id, stream)	# not used
-			self.getOrchestrator().addStream(pseudo_stream)
 
 	def getOrchestratorIDs(self) :
 		return self.handlers.keys()
