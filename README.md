@@ -10,6 +10,7 @@
 [Arranged Con Presentation about the Package 
 (DefCamp #8 | November 9-10)](https://def.camp/speaker/john-torakis/)
 
+[ - Defcamp #8 Presentation PDF available - ](https://github.com/operatorequals/presentations/blob/master/defcamp08_10112017_covertutils_presentation.pdf)
 ### What is it?
 
 
