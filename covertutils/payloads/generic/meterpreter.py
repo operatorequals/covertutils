@@ -52,8 +52,6 @@ def init( storage ) :
 			del self.queue
 
 		# def connect( self ) : return True
-		# def getsockname( self ) :	return ("covertutils_transport", 4444)
-		# def getpeername( self ) :	return ("covertutils_server", 4444)
 		def getsockname( self ) :	return ("::", 4444)
 		def getpeername( self ) :	return ("::", 4444)
 		# def settimeout( self, timeout ) : return True
