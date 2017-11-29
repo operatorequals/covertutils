@@ -12,3 +12,5 @@ from covertutils.shells.subshells.filesubshell import FileSubShell
 from covertutils.shells.subshells.stagesubshell import StageSubShell		# Causing circular dependencies
 
 from covertutils.shells.subshells.examplesubshell import ExampleSubShell
+
+from covertutils.shells.subshells.meterpretersubshell import MeterpreterShell
