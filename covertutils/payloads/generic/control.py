@@ -7,6 +7,7 @@ def init( storage ) :
 		'mute' : 'MU',
 		'unmute' : 'UM',
 		'nuke' : 'NK',
+		'check_sync' : 'CS',
 	}
 	storage['commands'] = Commands
 	def wait_exit() :
@@ -54,6 +55,15 @@ def work( storage, message ) :
 	elif message == storage['commands']['nuke'] :
 		storage['nuke_func']()
 		return "OK" #
+
+	elif message == storage['commands']['check_sync'] :
+		import json
+		orch = storage['COMMON']['handler'].getOrchestrator()
+		ret_dict = {}
+		for stream in orch.getStreams() :
+			ret_dict[stream] = orch.getKeyCycles(stream)
+		ret = json.dumps(ret_dict).replace( " ","" )
+		return ret
 
 	elif message == storage['commands']['sysinfo'] :
 		import platform, json, getpass, locale

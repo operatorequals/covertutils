@@ -141,6 +141,10 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 	def getStreams( self ) :
 		return self.streams_buckets.keys()
 
+	def getKeyCycles( self, stream ) :
+		e_cycles = self.streams_buckets[stream]['keys']['encryption'].getCycles()
+		d_cycles = self.streams_buckets[stream]['keys']['decryption'].getCycles()
+		return e_cycles, d_cycles
 
 	def getDefaultStream( self ) :
 		"""

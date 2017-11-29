@@ -10,6 +10,7 @@ Commands = {
 	'mute' : 'MU',
 	'unmute' : 'UM',
 	'nuke' : 'NK',
+	'check_sync' : 'CS',
 	}
 
 
@@ -39,9 +40,19 @@ Specifics:
 # 	MacOS: {}
 		instance.base_shell.sysinfo = sysinfo
 		instance.sysinfo = False
+
+	elif instance.check_sync :
+		my_dict = {}
+		orch = instance.handler.getOrchestrator()
+		for stream in orch.getStreams() :
+			my_dict[stream] = orch.getKeyCycles(stream)
+		remote_dict = json.loads(message)
+		print "local: " + json.dumps(my_dict)
+		print "remote: " + message
+		instance.check_sync = False
+
 	else :
 		instance.message_logger.warn( message )
-
 
 
 class ControlSubShell ( SimpleSubShell ) :
@@ -51,6 +62,7 @@ class ControlSubShell ( SimpleSubShell ) :
 		self.updatePrompt( )
 		self.message_function = message_handle
 		self.sysinfo = False
+		self.check_sync = False
 		self.killed = False
 
 
@@ -75,7 +87,11 @@ class ControlSubShell ( SimpleSubShell ) :
 
 		self.debug_logger.warn( "Sending '%s' control command!" % command )
 		self.handler.preferred_send( command, self.stream )
-		
+
+
+		if command == Commands['check_sync'] :
+			self.check_sync = True
+
 
 	def resetHandler( self ) :
 		self.handler.reset()

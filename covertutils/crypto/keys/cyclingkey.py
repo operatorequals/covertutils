@@ -39,3 +39,7 @@ class CyclingKey :
 
 	@abstractmethod
 	def setCycle( self, cycle ) :	pass
+
+
+	@abstractmethod
+	def getCycles( self ) : pass
