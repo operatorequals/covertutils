@@ -42,7 +42,8 @@ select.select = dummy
 		# sleep(0.01)
 		b = 16655
 
-class MeterpreterShell ( SimpleSubShell ) :
+
+class MeterpreterSubShell ( SimpleSubShell ) :
 
 # 	intro = """
 # This is an Example Shell. It has a custom prompt, and reverses all input before sending to the stage.

