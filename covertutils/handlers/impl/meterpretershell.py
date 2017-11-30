@@ -12,6 +12,7 @@ from covertutils.payloads import LinuxStages, GenericStages
 
 
 pls = {
+	'control' : GenericStages['control']['marshal'],
 	'meterpreter' : GenericStages['meterpreter']['marshal'],
 }
 
@@ -32,9 +33,9 @@ class MeterpreterShellHandler ( FunctionDictHandler ) :
 :param `orchestration.SimpleOrchestrator` orchestrator: An Object that is used to translate raw_data to `(stream, message)` tuples.
 		"""
 
-		orchestrator.addStream('meterpreter')
-		orchestrator.streamIdent.setHardStreamName('meterpreter')
-		orchestrator.deleteStream('control')
+		# orchestrator.addStream('meterpreter')
+		# orchestrator.streamIdent.setHardStreamName('meterpreter')
+		# orchestrator.deleteStream('control')
  		kw['function_dict'] = pls
 		super( MeterpreterShellHandler, self ).__init__( recv, send, orchestrator, **kw )
 

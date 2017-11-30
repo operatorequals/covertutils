@@ -19,7 +19,7 @@ try:
 	stager_stage['work'] = stager_worker.__code__   # Python 3
 except AttributeError:
 	stager_stage['work'] = stager_worker.func_code  # Ptyhon 2
-	
+
 stager_stage['init'] = None
 
 stage_obj = marshal.dumps(stager_stage)
@@ -47,6 +47,7 @@ To running `StageableHandler`s, additional functions can be packed with the :fun
 		super(StageableHandler, self).__init__( recv, send, orchestrator, **kw )
 
 		arguments = defaultArgMerging( self.Defaults, kw )
+		# print arguments
 		self.stage_stream = arguments['stage_stream']
 		self.addStage( self.stage_stream, stage_obj )
 		# print orchestrator.streams_buckets[self.stage_stream]

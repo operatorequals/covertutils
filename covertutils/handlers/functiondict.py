@@ -119,6 +119,7 @@ Well defined functions for that purpose can be found in :mod:`covertutils.payloa
 		self.stage_storage[stream] = {}
 		self.stage_storage[stream]['queue'] = Queue()
 		self.stage_storage[stream]['on'] = True
+		self.stage_storage[stream]['stream'] = stream
 		self.stage_storage[stream]['COMMON'] = self.stage_storage['COMMON']
 		# print stream
 		stage_init, stage_worker = self.getStage( stage_obj )

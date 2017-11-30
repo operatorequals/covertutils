@@ -27,6 +27,8 @@ It does so by comparing the output lengths.
 :return: Data compressed by most efficient available algorithm.
 
 """
+		if message == None :
+			message = ''
 		zips = []
 		for comp in self.comps :
 			zfile = comp( message )
