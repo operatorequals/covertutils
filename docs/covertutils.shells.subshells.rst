@@ -28,6 +28,14 @@ covertutils.shells.subshells.filesubshell module
     :undoc-members:
     :show-inheritance:
 
+covertutils.shells.subshells.meterpretersubshell module
+-------------------------------------------------------
+
+.. automodule:: covertutils.shells.subshells.meterpretersubshell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.shells.subshells.pythonapisubshell module
 -----------------------------------------------------
 

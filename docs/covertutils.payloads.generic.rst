@@ -44,6 +44,14 @@ covertutils.payloads.generic.info module
     :undoc-members:
     :show-inheritance:
 
+covertutils.payloads.generic.meterpreter module
+-----------------------------------------------
+
+.. automodule:: covertutils.payloads.generic.meterpreter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.payloads.generic.pythonapi module
 ---------------------------------------------
 

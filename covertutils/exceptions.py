@@ -26,6 +26,9 @@ class StreamDeletionException( Exception ) :
 	"""	This Exception is thrown if the deletion of a stream is not possible. """
 	pass
 
+class HardStreamException( Exception ) :
+	"""	This Exception is thrown if a Hard Stream can't be created"""
+	pass
 
 
 
