@@ -295,3 +295,61 @@ Traffic Sample
 **It is no copy-paste**
 
 *You can say from the IP identification fields...*
+
+
+.. _dns_reverse_example:
+
+Agnostic DNS Reverse Shell
+---------------------------
+
+The *DNS Reverse Shell* uses a kind of *Communication Channel* that can bypass most *Firewalls/Traffic Inpectors/I[DP]S*.
+
+It uses the main feature of the DNS protocol, delegation, to route its traffic from the *Agent* to the *Handler* - **without a hardcoded IP or Domain Name in the Agent**.
+
+For this Shell to work, there are the following Handler requirements:
+ * A Domain name
+ * Public IP
+ OR
+
+ * A PortForwarded ``53 UDP port`` to a Public IP.
+
+ The Agent has no requirements to work.
+
+The Concept
+***********
+When a host issues a DNS request for a domain name (e.g ``test.www.securosophy.com``), the DNS request packet is send (typically using *UDP*) to the first *Nameserver* registered to the host.
+This *Nameserver* tries to resolve the domain name to an IP address, by querying or asking the initial host to query other *Nameservers*.
+Every *Nameserver* queried after the initial one will point towards another Nameserver that knows about the specific subdomain asked.
+
+The trick lies on using a subdomain name as *Data*, and make a request that will eventually end up on a *Nameserver* that the user controls (that's the **Handler**)!
+
+
+The Setup
+*********
+
+Server - Handler
+++++++++++++++++
+Given a purchased domain name (e.g ``example.com``), a subdomain can be created (e.g ``sub.example.com``).
+Then, modifying the NS records for ``sub.example.com`` to point to a subdomain like ``ns1.example.com`` will return the *Authoritative Nameserver* for all requests in ``sub.example.com`` (e.g ``test1.sub.example.com``, ``random-whatever.sub.example.com``) to be ``ns1.example.com``.
+So, setting the ``A`` (or ``AAAA``) of ``ns1.example.com`` to the *Handler*'s `Public IP` (or *NAT*'d Public IP with PortForward), will route every (non-cached) request to ``sub.example.com`` subdomain to the `Handler`'s IP address.
+
+
+
+
+Client - Agent
+++++++++++++++
+The *Agent*  uses ``getaddrinfo()`` OS API call to query for subdomains.
+Using an OS API call has the advantage that the process does not send a UDP packet itself, hence it uses no socket programming.
+The data exfiltration is happening (traditionally) by subdomain names (e.g ``cmFuZG9tIGRhdGEK.sub.example.com``). The queries for those subdomains are always routed to the `Authoritative Nameserver` (as they contain random parts and *cannot be cached*), so the data always reaches the *Handler*.
+The *Handler* packs data in IPv6 addresses (16 byte chunks), and responds with a legitimate DNS reply.
+
+
+Server - Agent
+***************
+
+.. literalinclude:: ../examples/dns_reverse_agent.py
+
+
+Client - Handler
+***************
+.. literalinclude:: ../examples/dns_reverse_handler.py

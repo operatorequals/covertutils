@@ -20,7 +20,7 @@ except :
 
 addr = '0.0.0.0', int(port)
 
-orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50 )
+orch = SimpleOrchestrator( passphrase, tag_length = 3, out_length = 50, in_length = 50 )
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)	#
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

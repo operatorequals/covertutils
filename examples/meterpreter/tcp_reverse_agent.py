@@ -44,7 +44,7 @@ while True :
 	def send( raw ) :
 		return s.send( raw )
 
-	orch = SimpleOrchestrator( passphrase, tag_length = 2, out_length = 50, in_length = 50, reverse = True )
+	orch = SimpleOrchestrator( passphrase, tag_length = 3, out_length = 50, in_length = 50, reverse = True )
 	handler = MeterpreterShellHandler( recv, send, orch )	# Create the Handler Daemon Thread
 
 	while not closed : sleep(1)

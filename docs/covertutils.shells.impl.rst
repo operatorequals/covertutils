@@ -12,6 +12,14 @@ covertutils.shells.impl.extendableshell module
     :undoc-members:
     :show-inheritance:
 
+covertutils.shells.impl.meterpretershell module
+-----------------------------------------------
+
+.. automodule:: covertutils.shells.impl.meterpretershell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.shells.impl.simpleshell module
 ------------------------------------------
 

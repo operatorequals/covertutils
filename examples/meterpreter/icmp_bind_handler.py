@@ -104,7 +104,7 @@ class Handler( ResponseOnlyHandler ) :
 #=============================Handler Creation=============================
 
 orchestrator = SimpleOrchestrator( passphrase,	# Encryption keys generated from the passphrase
-				tag_length = 2,		# The tag length in bytes
+				tag_length = 3,		# The tag length in bytes
 				out_length = 52,	# The absolute output byte length (with tags)
 				in_length = 52,		# The absolute input byte length (with tags)
 				streams = ['heartbeat'],	# Stream 'control' will be automatically added as failsafe mechanism
