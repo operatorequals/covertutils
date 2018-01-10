@@ -359,7 +359,7 @@ Client - Handler
 Traffic Sample
 **************
 
-An ``ls -l`` command generate the below traffic sample:
+An ``ls -l`` command generated the below traffic sample:
 
 .. code::
 
