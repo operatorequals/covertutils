@@ -3,7 +3,7 @@ import json
 from covertutils.shells.subshells import SimpleSubShell
 
 Commands = {
-	'reset' : 'RST',
+	'reset' : 'R',
 	'identity' : 'ID',
 	'sysinfo' : 'SI',
 	'kill' : 'KI',
@@ -11,10 +11,15 @@ Commands = {
 	'unmute' : 'UM',
 	'nuke' : 'NK',
 	'check_sync' : 'CS',
+	'sync' : 'Y'
 	}
 
 
 def message_handle(message, instance) :
+
+	if instance.sync_stream :
+		if message == 'OK' :
+			instance.handler.getOrchestrator().reset([instance.sync_stream])
 
 	if instance.sysinfo :
 		# sysinfo_var = message
@@ -42,13 +47,29 @@ Specifics:
 		instance.sysinfo = False
 
 	elif instance.check_sync :
-		my_dict = {}
+		local_dict = {}
 		orch = instance.handler.getOrchestrator()
 		for stream in orch.getStreams() :
-			my_dict[stream] = orch.getKeyCycles(stream)
+			local_dict[stream] = orch.getKeyCycles(stream)
 		remote_dict = json.loads(message)
-		print "local: " + json.dumps(my_dict)
-		print "remote: " + message
+
+		output = ''
+		for stream in remote_dict :
+			if stream not in local_dict :
+				self.debug_logger.warn("Stream '%s' exists only in the Agent")
+				# if local decryption key matches the remote encryption and vise-versa
+			encryption_sync = local_dict[stream][0] == remote_dict[stream][1]
+			decryption_sync = local_dict[stream][1] == remote_dict[stream][0]
+			synced = encryption_sync and decryption_sync
+			if synced :
+				output += "[+] Stream '%s' is synchronized at %d - %d cycles\n" % ( stream, local_dict[stream][0], local_dict[stream][1] )
+			else :
+				output += "[-] Stream '%s' is out-of-sync at '%s' channel\n" % ( stream, "Encryption" if encryption_sync else "Decryption" )
+				# if instance.sync :
+
+		instance.message_logger.warn(output)
+		# print "local: " + json.dumps(local_dict)
+		# print "remote: " + message
 		instance.check_sync = False
 
 	else :
@@ -64,7 +85,7 @@ class ControlSubShell ( SimpleSubShell ) :
 		self.sysinfo = False
 		self.check_sync = False
 		self.killed = False
-
+		self.sync_stream = False
 
 	def default( self, line ) :
 
@@ -74,7 +95,19 @@ class ControlSubShell ( SimpleSubShell ) :
 		except :
 			self.debug_logger.warn( "No such control command [%s]!" % comm)
 			return
-		# print( "Sending '%s' command" % command )
+
+		if command == Commands['sync'] :
+
+			if len(args) == 0 :
+				self.debug_logger.warn( "No Stream selected!")
+				return
+			stream = args
+			if stream not in self.handler.getOrchestrator().getStreams() :
+				self.debug_logger.warn( "Stream '%s' does not exist!" % stream)
+				return
+			self.sync_stream = stream
+			command = "%s %s" % (command, stream)
+
 		if command == Commands['reset'] :
 			self.debug_logger.warn( "Reseting handler" )
 			self.resetHandler()
