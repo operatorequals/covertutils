@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-# from covertutils.handlers.impl import MeterpreterShellHandler
-# from covertutils.handlers.impl import MeterpreterShellHandler
 from covertutils.handlers.impl import ExtendableShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 

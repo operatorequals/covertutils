@@ -17,14 +17,29 @@ Notice that examples have to be tested in pairs (agents - handlers).
 Simple TCP Bind Shell
 ---------------------
 
-Server - Agent
-****************
+The Concept
+***********
+
+Dead simple shell, just to demonstrate the basic Backdoor structure. Using pure TCP, the data packets are not hidden in any way, they look like an encrypted Layer 7 protocol.
+
+
+The Setup
+**********
+
+*Handler* binds to a TCP port and *Agent* connects to it. Both parties use the TCP connection to push data back and forth.
+The data is chunked in 50 byte chunks.
+
+The Code
+********
+
+Agent - Server
+++++++++++++++
 
 .. literalinclude:: ../examples/tcp_bind_agent.py
 
 
-Client - Handler
-****************
+Handler - Client
+++++++++++++++++
 
 .. literalinclude:: ../examples/tcp_bind_handler.py
 
@@ -34,14 +49,28 @@ Client - Handler
 Simple TCP Reverse Shell
 ------------------------
 
-Client - Agent
-****************
+The Concept
+***********
+
+Same as above, but the *Agent* initializes the connection. Far more useful approach, as it can ignore Firewall/NAT pairs. *Agents* can have NAT'd IP addresses and still be accessible.
+Still, looks like a Layer 7 protocol.
+
+The Setup
+**********
+
+The TCP Server runs on the *Handler* and awaits the connection in a local or public IP. The *Agent*, knowing the *Handler's* IP (or domain name) connects to it and starts the communication.
+
+The Code
+*********
+
+Agent - Client
++++++++++++++++
 
 .. literalinclude:: ../examples/tcp_reverse_agent.py
 
 
-Server - Handler
-****************
+Handler - Server
+++++++++++++++++
 
 .. literalinclude:: ../examples/tcp_reverse_handler.py
 
@@ -50,13 +79,27 @@ Server - Handler
 Simple UDP Reverse Shell
 -------------------------
 
-Client - Agent
+The Concept
+***********
+
+The same as above, but now in UDP. Many administrators ignore UDP protocol and don't include it in the Firewall configuration. But UDP is as usable as TCP...
+The ``covertutils`` traffic still looks like an Application Layer protocol, but based on UDP.
+
+The Setup
+***********
+
+The *Agent* uses UDP packets to communicate. As a Reverse connection, it is still able to bypass NATs. A UDP server is run on the *Handler*, listening for packets and responding.
+
+The Code
+***********
+
+Agent - Client
 ***************
 
 .. literalinclude:: ../examples/udp_reverse_agent.py
 
 
-Server - Handler
+Handler - Server
 ****************
 
 .. literalinclude:: ../examples/udp_reverse_handler.py
@@ -66,20 +109,47 @@ Server - Handler
 Advanced HTTP Reverse Shell
 ---------------------------
 
-Client - Agent
-***************
+The Concept
+***********
+
+Things start to get hairy with this one. All above shells use the ``covertutils`` generated data as an Application Layer protocol. While this won't raise any IDS alerts (as of :ref:`ids_evasion`), it is possible that the packets will be flagged/blocked because of the bogusness of the protocol. That's because some Net admins are smart...
+
+Smart network administrator:
+
+| if it **ain't HTTP/S**,
+| and it **ain't DNS**,
+| and not **Skype protocol either**,
+| then *I don't want it off my network*
+|
+
+So, to bypass this kind of Firewall *Whitelisting*, the ``covertutils`` data is designed to resemble random/encrypted data. Also, ``covertutils`` has several tools to embed this kind of data into existing -well known- protocols, effectively creating *Covert Channels*.
+
+Here this technique will be used with HTTP. The URL, Cookie and eTag, in an HTTP request, and an HTML comment in HTTP Response, can be populated with ``covertutils`` data without raising too much suspicion.
+
+The *Agent* polls the *Handler* every few seconds (a random number in the ``delay_between`` space) - feature of the :mod:`covertutils.handlers.interrogating.InterrogatingHandler`, and executes any commands that are returned.
+
+The Setup
+*********
+
+For demonstrating purposes, this one is implemented quite badly! Just to provide an example with the (*now deprecated*) :mod:`covertutils.orchestration.stegoorchestrator.StegoOrchestrator`.
+The HTTP packets to be send are hardcoded in the *Agent* and *Handler*, with placeholders where data will be injected.
+
+The *Handler* runs a custom TCP server, just to demonstrate the whole ``covertutils`` over HTTP over TCP chain.
+
+The Code
+*********
+
+Agent - Client
+++++++++++++++
 
 .. literalinclude:: ../examples/http_reverse_agent.py
 
 
-Server - Handler
-****************
+Handler -Server
++++++++++++++++
 
 .. literalinclude:: ../examples/http_reverse_handler.py
 
-
-Please notice that this example will work for only 1 reverse connection. Other connections will jam as of the Cycling Encryption Key.
-A real project would use HTTP Cookies along with :func:`Orchestrator.getIdentity()` and :func:`Orchestrator.checkIdentity()` to achieve session management.
 
 
 Traffic Sample
@@ -118,30 +188,62 @@ Traffic Sample
 	</html>
 
 
+.. note ::
+	Please notice that this example will work for only 1 reverse connection. Other connections will jam as of the Cycling Encryption Key.
+	A real project would use HTTP Cookies along with :func:`Orchestrator.getIdentity()` and :func:`Orchestrator.checkIdentity()` to achieve session management.
+
+
+
 
 .. _icmp_bind_example:
 
+
+
+
 Advanced ICMP Bind Shell
 ---------------------------
+
+The Concept
+***********
+
+In case you need a Shell from an Internet exposed Web server, or Firewall, or VPS this is for you. Anything with a Public IP will do!
+This one monitors ICMP ``echo-request`` packets arriving to the host, and if it identifies ``covertutils`` Layer 7 (after the ICMP header), decodes-executes
+and responds with ``echo-reply`` packet containing the reply of the sent command.
+
+It is specifically created to resemble ``ping`` implementation and this can be seen in the :ref:`icmp_traffic_sample` below. Yet, the actual Layer 7 payload contains ``coverutils`` data.
+
+
+The Setup
+***********
+
+The *Agent* monitors all NICs for ICMPs and responds. As it doesn't attempt to connect anywhere, instead waits for data, this is a *Bind* shell (as it *binds* to the NICs).
+
+The *Handler* sends a ping with a command, and a Ping-Pong is initialized until all command output is delivered to the *Handler*. Then silence...
+
 This example uses the Legendary Scapy_ package to parse and create Raw Packets. It can be also implemented using :class:`StegoOrchestrator` class, if Scapy dependency is a bummer.
 Windows users will need Npcap_ to use Scapy. Python Raw Sockets do not seem to have this dependency.
 
-As this backdoor uses Raw Sockets, **root** permissions are needed.
+As this backdoor uses Raw Sockets, **root** permissions are needed for both *Handler* and **Agent** .
 
 .. _Scapy: http://www.secdev.org/projects/scapy/
 .. _Npcap: https://nmap.org/npcap/
 
-Server - Agent
-***************
+The Code
+***********
+
+Agent - Server
+++++++++++++++
 
 .. literalinclude:: ../examples/icmp_bind_agent.py
 
 
-Client - Handler
-****************
+Handler - Client
+++++++++++++++++
 
 .. literalinclude:: ../examples/icmp_bind_handler.py
 
+
+.. _icmp_traffic_sample:
 
 Traffic Sample
 **************
@@ -306,14 +408,15 @@ The *DNS Reverse Shell* uses a kind of *Communication Channel* that can bypass m
 
 It uses the main feature of the DNS protocol, delegation, to route its traffic from the *Agent* to the *Handler* - **without a hardcoded IP or Domain Name in the Agent**.
 
-For this Shell to work, there are the following Handler requirements:
+For this Shell to work, there are the following *Handler* (only) requirements:
+ * **root** permissions to bind to UDP port 53 (DNS)
  * A Domain name
  * Public IP
  OR
 
  * A PortForwarded ``53 UDP port`` to a Public IP.
 
- The Agent has no requirements to work.
+The Agent has no requirements to work.
 
 The Concept
 ***********
@@ -327,7 +430,7 @@ The trick lies on using a subdomain name as *Data*, and make a request that will
 The Setup
 *********
 
-Server - Handler
+Handler - Server
 ++++++++++++++++
 Given a purchased domain name (e.g ``example.com``), a subdomain can be created (e.g ``sub.example.com``).
 Then, modifying the NS records for ``sub.example.com`` to point to a subdomain like ``ns1.example.com`` will return the *Authoritative Nameserver* for all requests in ``sub.example.com`` (e.g ``test1.sub.example.com``, ``random-whatever.sub.example.com``) to be ``ns1.example.com``.
@@ -335,8 +438,7 @@ So, setting the ``A`` (or ``AAAA``) of ``ns1.example.com`` to the *Handler*'s `P
 
 
 
-
-Client - Agent
+Agent - Client
 ++++++++++++++
 The *Agent*  uses ``getaddrinfo()`` OS API call to query for subdomains.
 Using an OS API call has the advantage that the process does not send a UDP packet itself, hence it uses no socket programming.
@@ -344,13 +446,13 @@ The data exfiltration is happening (traditionally) by subdomain names (e.g ``cmF
 The *Handler* packs data in IPv6 addresses (16 byte chunks), and responds with a legitimate DNS reply.
 
 
-Server - Agent
+Agent - Client
 ***************
 
 .. literalinclude:: ../examples/dns_reverse_agent.py
 
 
-Client - Handler
+Handler - Server
 ****************
 .. literalinclude:: ../examples/dns_reverse_handler.py
 
