@@ -11,7 +11,8 @@ Commands = {
 	'unmute' : 'UM',
 	'nuke' : 'NK',
 	'check_sync' : 'CS',
-	'sync' : 'Y'
+	'sync' : 'Y',
+	'chpasswd' : 'PWD',
 	}
 
 
@@ -20,6 +21,11 @@ def message_handle(message, instance) :
 	if instance.sync_stream :
 		if message == 'OK' :
 			instance.handler.getOrchestrator().reset([instance.sync_stream])
+
+	if instance.chpasswd :
+		if message == 'OK' :
+			instance.handler.getOrchestrator().initCrypto(instance.chpasswd)
+			instance.chpasswd = None
 
 	if instance.sysinfo :
 		# sysinfo_var = message
@@ -86,6 +92,7 @@ class ControlSubShell ( SimpleSubShell ) :
 		self.check_sync = False
 		self.killed = False
 		self.sync_stream = False
+		self.chpasswd = False
 
 	def default( self, line ) :
 
@@ -97,7 +104,6 @@ class ControlSubShell ( SimpleSubShell ) :
 			return
 
 		if command == Commands['sync'] :
-
 			if len(args) == 0 :
 				self.debug_logger.warn( "No Stream selected!")
 				return
@@ -107,6 +113,16 @@ class ControlSubShell ( SimpleSubShell ) :
 				return
 			self.sync_stream = stream
 			command = "%s %s" % (command, stream)
+
+		if command == Commands['chpasswd'] :
+			if len(args) == 0 :
+				self.debug_logger.warn( "No Password selected!")
+				return
+			new_passwd = args
+			self.chpasswd = new_passwd
+			# new_passwd = '1234'
+			command = "%s %s" % (command, new_passwd)
+
 
 		if command == Commands['reset'] :
 			self.debug_logger.warn( "Reseting handler" )
@@ -121,6 +137,9 @@ class ControlSubShell ( SimpleSubShell ) :
 		self.debug_logger.warn( "Sending '%s' control command!" % command )
 		self.handler.preferred_send( command, self.stream )
 
+		if self.chpasswd :
+			self.handler.getOrchestrator().initCrypto(self.chpasswd)
+			self.chpasswd = None
 
 		if command == Commands['check_sync'] :
 			self.check_sync = True

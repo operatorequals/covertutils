@@ -9,6 +9,7 @@ def init( storage ) :
 		'nuke' : 'NK',
 		'check_sync' : 'CS',
 		'sync' : 'Y',
+		'chpasswd' : 'PWD',
 	}
 	storage['commands'] = Commands
 	def wait_exit() :
@@ -26,7 +27,15 @@ def init( storage ) :
 	def dummy_send(raw) : return
 	storage['dummy_send_func'] = dummy_send
 	storage['real_send_func'] = storage['COMMON']['handler'].send_function
+
+	def chpasswd (passwd) :
+		from time import sleep
+		sleep(0.1)
+		storage['COMMON']['handler'].getOrchestrator().initCrypto(passwd)
+	storage['chpasswd_func'] = chpasswd
+
 	return True
+
 
 def work( storage, message ) :
 	# print( "Control message: %s" % message )
@@ -42,9 +51,17 @@ def work( storage, message ) :
 
 	elif message == storage['commands']['sync'] :
 		stream = args[1]
-		print type(args), args
+		# print type(args), args
 		storage['COMMON']['handler'].getOrchestrator().reset( streams = [stream] )
-		print "Reseted"
+		# print "Reseted"
+		return 'OK'
+
+	elif message == storage['commands']['chpasswd'] :
+		new_passwd = args[1]
+		import threading
+		print storage.keys()
+		chpasswd_thread = threading.Thread( target = storage['chpasswd_func'], args = ( new_passwd, ) )
+		chpasswd_thread.start()
 		return 'OK'
 
 
