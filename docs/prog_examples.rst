@@ -351,5 +351,27 @@ Server - Agent
 
 
 Client - Handler
-***************
+****************
 .. literalinclude:: ../examples/dns_reverse_handler.py
+
+
+
+Traffic Sample
+**************
+
+An ``ls -l`` command generate the below traffic sample:
+
+.. code::
+
+	08:57:48.390834 IP localhost.48985 > localhost.domain: 63646+ A? uoXXVuMB_7BQURPqgFA6M-TdHIIL58ixI_X27wweITB1Amc.sub.securosophy.net. (85)
+	08:57:48.390877 IP localhost.48985 > localhost.domain: 15202+ AAAA? uoXXVuMB_7BQURPqgFA6M-TdHIIL58ixI_X27wweITB1Amc.sub.securosophy.net. (85)
+	08:57:48.395709 IP localhost.domain > localhost.48985: 63646* 1/0/0 A 127.0.0.1 (101)
+	08:57:48.396936 IP localhost.domain > localhost.48985: 15202* 1/0/0 AAAA 7946:ff1c:1ca5:4a95:4e20:7f3e:c48d:9eba (113)
+	08:57:49.959515 IP localhost.51862 > localhost.domain: 5431+ A? uoWEZup4f34eAcabJVtrZolbO2HnBMnwhc4oU2hHGGfIAmc.sub.securosophy.net. (85)
+	08:57:49.959564 IP localhost.51862 > localhost.domain: 23840+ AAAA? uoWEZup4f34eAcabJVtrZolbO2HnBMnwhc4oU2hHGGfIAmc.sub.securosophy.net. (85)
+	08:57:49.960646 IP localhost.domain > localhost.51862: 5431* 1/0/0 A 127.0.0.1 (101)
+	08:57:49.961966 IP localhost.domain > localhost.51862: 23840* 1/0/0 AAAA 8e97:3c37:a3aa:8619:b726:3eee:25c8:5ad1 (113)
+	08:57:50.915846 IP localhost.40830 > localhost.domain: 23622+ A? uoXnUJzWiKt1fu90o9tAi7XjQIjrE-X2v88IN5cJzcgvAmc.sub.securosophy.net. (85)
+	08:57:50.915860 IP localhost.40830 > localhost.domain: 38529+ AAAA? uoXnUJzWiKt1fu90o9tAi7XjQIjrE-X2v88IN5cJzcgvAmc.sub.securosophy.net. (85)
+	08:57:50.917037 IP localhost.domain > localhost.40830: 23622* 1/0/0 A 127.0.0.1 (101)
+	08:57:50.920558 IP localhost.domain > localhost.40830: 38529* 1/0/0 AAAA 8e97:a6b9:495:c197:e499:8147:c012:5ad1 (113)
