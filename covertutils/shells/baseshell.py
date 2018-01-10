@@ -56,7 +56,8 @@ class BaseShell( cmd.Cmd ) :
 The base class of the package. It implements basics, like hooking the :class:`covertutils.handlers.basehandler.BaseHandler` and giving a handle for further incoming message proccessing.
 	"""
 
-	stream_preamp_char = "!"
+	# stream_preamp_char = "!"
+	stream_preamp_char = ":"
 	control_preamp_char = ":"
 	ruler = "><"
 	Defaults = {
@@ -267,3 +268,21 @@ Exit with 'exit', 'quit', 'q'
 	def emptyline( self, *args ) : return
 
 	def do_EOF( self, *args ) : return
+
+	def completenames( self, text, line, begidx, endidx ) :
+		# print "Run"
+		if not line.startswith( self.stream_preamp_char ) :
+			return []
+		line = line[1:]
+		toks = line.split()
+		complete_list = []
+		probable_stream = toks[0]
+		if probable_stream in self.availableStreams() :
+			return []
+		for stream in self.availableStreams() :
+			if stream.startswith(probable_stream) :
+				complete_list.append( stream )
+		return complete_list
+		# toks[0]
+
+	# if

@@ -147,3 +147,25 @@ class ControlSubShell ( SimpleSubShell ) :
 
 	def resetHandler( self ) :
 		self.handler.reset()
+
+
+	def completenames( self, text, line, begidx, endidx ) :
+		# print "RUN"
+		comm, args, line = self.parseline(line)
+		# print "pasrsed"
+		complete_list = []
+		probable_comm = comm
+		# print probable_comm
+		if probable_comm in Commands.keys() :
+			return []
+
+		for known_command in Commands.keys() :
+			if known_command.startswith(probable_comm) :
+
+				complete_list.append( known_command )
+
+		return complete_list
+
+	def do_help( self, line ) :
+		commands = Commands.keys()
+		print commands
