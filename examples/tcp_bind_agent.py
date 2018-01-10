@@ -6,8 +6,6 @@ import sys
 import socket
 from time import sleep
 
-from hashlib import sha512
-
 passphrase = "Pa55phra531"
 addr = "0.0.0.0", int(sys.argv[1])
 

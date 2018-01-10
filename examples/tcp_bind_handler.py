@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
-
 from covertutils.shells.impl import StandardShell
 
 import sys
 import socket
 from time import sleep
-
-from hashlib import sha512
 
 try :
 	program, ip, port, passphrase = sys.argv
