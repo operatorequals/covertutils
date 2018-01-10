@@ -155,11 +155,14 @@ This method returns the stream that is used if no stream is specified in `readyM
 		return self.default_stream
 
 
-	def reset( self ) :
+	def reset( self, streams = None ) :
 		"""
 This method resets all components of the `Orchestrator` instance, effectively restarting One-Time-Pad keys, etc.
 		"""
-		for stream in self.getStreams() :
+		to_reset = streams
+		if streams == None :
+			to_reset = self.getStreams()
+		for stream in to_reset :
 			for key in self.streams_buckets[stream]['keys'].values() :
 				key.reset()
 		self.streamIdent.reset()

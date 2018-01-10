@@ -1,6 +1,6 @@
 def init( storage ) :
 	Commands = {
-		'reset' : 'RST',
+		'reset' : 'R',
 		'identity' : 'ID',
 		'sysinfo' : 'SI',
 		'kill' : 'KI',
@@ -8,6 +8,7 @@ def init( storage ) :
 		'unmute' : 'UM',
 		'nuke' : 'NK',
 		'check_sync' : 'CS',
+		'sync' : 'Y',
 	}
 	storage['commands'] = Commands
 	def wait_exit() :
@@ -29,12 +30,23 @@ def init( storage ) :
 
 def work( storage, message ) :
 	# print( "Control message: %s" % message )
+	import re
+	args = re.split("\s", message)
+	message = args[0]
 
 	if message == storage['commands']['reset'] :
 		storage['COMMON']['handler'].reset()
 		return 'OK'
 	elif message == storage['commands']['identity'] :
 		return storage['COMMON']['handler'].orchestrator.getIdentity()[:8]
+
+	elif message == storage['commands']['sync'] :
+		stream = args[1]
+		print type(args), args
+		storage['COMMON']['handler'].getOrchestrator().reset( streams = [stream] )
+		print "Reseted"
+		return 'OK'
+
 
 	elif message == storage['commands']['kill'] :
 		storage['COMMON']['handler'].stop()
