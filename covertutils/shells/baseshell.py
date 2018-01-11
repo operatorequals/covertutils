@@ -269,7 +269,7 @@ Exit with 'exit', 'quit', 'q'
 
 	def do_EOF( self, *args ) : return
 
-	def completenames( self, text, line, begidx, endidx ) :
+	def completedefault( self, text, line, begidx, endidx ) :
 		# print "Run"
 		if not line.startswith( self.stream_preamp_char ) :
 			return []
