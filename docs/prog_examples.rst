@@ -94,13 +94,13 @@ The Code
 ***********
 
 Agent - Client
-***************
+++++++++++++++
 
 .. literalinclude:: ../examples/udp_reverse_agent.py
 
 
 Handler - Server
-****************
+++++++++++++++++
 
 .. literalinclude:: ../examples/udp_reverse_handler.py
 
