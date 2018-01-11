@@ -94,13 +94,13 @@ The Code
 ***********
 
 Agent - Client
-***************
+++++++++++++++
 
 .. literalinclude:: ../examples/udp_reverse_agent.py
 
 
 Handler - Server
-****************
+++++++++++++++++
 
 .. literalinclude:: ../examples/udp_reverse_handler.py
 
@@ -445,15 +445,18 @@ Using an OS API call has the advantage that the process does not send a UDP pack
 The data exfiltration is happening (traditionally) by subdomain names (e.g ``cmFuZG9tIGRhdGEK.sub.example.com``). The queries for those subdomains are always routed to the `Authoritative Nameserver` (as they contain random parts and *cannot be cached*), so the data always reaches the *Handler*.
 The *Handler* packs data in IPv6 addresses (16 byte chunks), and responds with a legitimate DNS reply.
 
+The Code
+********
 
 Agent - Client
-***************
+++++++++++++++
 
 .. literalinclude:: ../examples/dns_reverse_agent.py
 
 
 Handler - Server
-****************
+++++++++++++++++
+
 .. literalinclude:: ../examples/dns_reverse_handler.py
 
 
