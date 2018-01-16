@@ -87,13 +87,14 @@ def generatePayloads( ) :
 	# GenericStages['pythonapi'] = import_stage_from_module_str('generic.pythonapi')
 	# GenericStages['control'] = import_stage_from_module_str('generic.control')
 
-	from covertutils.payloads.generic import control, shell, shellprocess, pythonapi, echo, file as file_
+	from covertutils.payloads.generic import control, shell, shellprocess, pythonapi, echo, meterpreter, file as file_
 	GenericStages['control'] = import_stage_from_module(control)
 	GenericStages['shell'] = import_stage_from_module(shell)
 	GenericStages['shellprocess'] = import_stage_from_module(shellprocess)
 	GenericStages['pythonapi'] = import_stage_from_module(pythonapi)
 	GenericStages['echo'] = import_stage_from_module(echo)
 	GenericStages['file'] = import_stage_from_module(file_)
+	GenericStages['meterpreter'] = import_stage_from_module(meterpreter)
 
 	return GenericStages, WindowsStages, LinuxStages
 

@@ -1,12 +1,10 @@
 #!/usr/bin/env python
-from covertutils.handlers.impl import StandardShellHandler, ExtendableShellHandler
+from covertutils.handlers.impl import ExtendableShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 
 import sys
 import socket
 from time import sleep
-
-from hashlib import sha512
 
 passphrase = "Pa55phra531"
 addr = sys.argv[1], int(sys.argv[2])

@@ -15,5 +15,5 @@ class SimpleShell (BaseShell) :
 	def __init__( self, handler,
 		**kw
 		) :
-		args = defaultArgMerging(StandardShell.Defaults, kw)
+		args = defaultArgMerging(SimpleShell.Defaults, kw)
 		BaseShell.__init__( self, handler, **args )

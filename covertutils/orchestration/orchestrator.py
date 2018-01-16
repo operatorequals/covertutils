@@ -29,32 +29,50 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 	def __init__( self, passphrase, tag_length, cycling_algorithm = None, streams = [], history = 1, reverse = False ) :
 		self.compressor = Compressor()
 
+		self.reverse = reverse
 		self.cycling_algorithm = cycling_algorithm
 		if self.cycling_algorithm == None:
 			self.cycling_algorithm = StandardCyclingAlgorithm
+		self.streams_buckets = dict([(stream, None) for stream in streams])
 
-		passGenerator = StandardCyclingKey( passphrase, cycling_algorithm = self.cycling_algorithm )
-		self.id_value = passGenerator.encrypt( self.__pass_encryptor )
-		strIdentifierSeed = passGenerator.encrypt( self.__pass_encryptor )
+		self.initCrypto( passphrase )
 
-		self.reverse = reverse
-		self.streamIdent = StreamIdentifier( strIdentifierSeed, reverse = reverse, stream_list = streams, cycling_algorithm = self.cycling_algorithm )
-
-		self.default_stream = self.streamIdent.getHardStreamName()
-		if self.default_stream not in streams :
-			streams.insert( 0, self.default_stream )
-
-		self.streams_buckets = {}
-		self.__key_generator = passGenerator.encrypt( self.__pass_encryptor )
-
-		for stream in streams :
-			self.addStream( stream )
+		# passGenerator = StandardCyclingKey( passphrase, cycling_algorithm = self.cycling_algorithm )
+		# self.id_value = passGenerator.encrypt( self.__pass_encryptor )
+		# strIdentifierSeed = passGenerator.encrypt( self.__pass_encryptor )
+		#
+		# self.streamIdent = StreamIdentifier( strIdentifierSeed, reverse = self.reverse, stream_list = streams, cycling_algorithm = self.cycling_algorithm )
+		#
+		#
+		# for stream in streams :
+		# 	self.addStream( stream )
 			# self.__key_generator = passGenerator.encrypt( self.__key_generator )
 
 		self.tag_length = tag_length
 		self.history_queue = []
 		self.history_length = history
 		self.identity = self.generateIdentity( )
+
+
+	def initCrypto( self, passphrase, streams = None ) :
+
+		if streams == None :
+			streams = self.getStreams()
+		passGenerator = StandardCyclingKey( passphrase, cycling_algorithm = self.cycling_algorithm )
+		self.id_value = passGenerator.encrypt( self.__pass_encryptor )
+		strIdentifierSeed = passGenerator.encrypt( self.__pass_encryptor )
+		self.__key_generator = passGenerator.encrypt( self.__pass_encryptor )
+		
+		self.streamIdent = StreamIdentifier( strIdentifierSeed, reverse = self.reverse, stream_list = streams, cycling_algorithm = self.cycling_algorithm )
+		self.default_stream = self.streamIdent.getHardStreamName()
+		if self.default_stream not in streams :
+			streams.insert( 0, self.default_stream )
+
+		for stream in streams :
+			# try :
+			if stream != self.streamIdent.getHardStreamName() :
+				self.deleteStream(stream)
+			self.addStream( stream )
 
 
 	def generateIdentity( self, *args ) :
@@ -90,6 +108,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 
 	def deleteStream( self, stream ) :
+		# if stream not in self.getStreams()
 		self.streamIdent.deleteStream( stream )
 		del self.streams_buckets[ stream ]
 
@@ -141,6 +160,10 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 	def getStreams( self ) :
 		return self.streams_buckets.keys()
 
+	def getKeyCycles( self, stream ) :
+		e_cycles = self.streams_buckets[stream]['keys']['encryption'].getCycles()
+		d_cycles = self.streams_buckets[stream]['keys']['decryption'].getCycles()
+		return e_cycles, d_cycles
 
 	def getDefaultStream( self ) :
 		"""
@@ -151,11 +174,14 @@ This method returns the stream that is used if no stream is specified in `readyM
 		return self.default_stream
 
 
-	def reset( self ) :
+	def reset( self, streams = None ) :
 		"""
 This method resets all components of the `Orchestrator` instance, effectively restarting One-Time-Pad keys, etc.
 		"""
-		for stream in self.getStreams() :
+		to_reset = streams
+		if streams == None :
+			to_reset = self.getStreams()
+		for stream in to_reset :
 			for key in self.streams_buckets[stream]['keys'].values() :
 				key.reset()
 		self.streamIdent.reset()

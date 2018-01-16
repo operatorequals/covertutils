@@ -38,6 +38,7 @@ def str_similar(a, b):
 
 def defaultArgMerging( defaults, kwargs ) :
 	ret = {}
+	# print defaults.keys()
 	for k in list( defaults.keys() ) :
 		try :
 			ret[k] = kwargs[k]

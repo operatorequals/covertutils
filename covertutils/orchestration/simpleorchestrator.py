@@ -53,7 +53,7 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 															reverse = self.reverse )
 
 
-	def reset( self ) :
+	def reset( self, streams = None ) :
 		"""
 This method resets all components of the `SimpleOrchestrator` instance, effectively flushing the Chunkers, restarting One-Time-Pad keys, etc.
 		"""
@@ -62,4 +62,4 @@ This method resets all components of the `SimpleOrchestrator` instance, effectiv
 			chunker = self.getChunkerForStream( stream )
 			chunker.reset()
 
-		super(SimpleOrchestrator, self).reset()
+		super(SimpleOrchestrator, self).reset(streams)

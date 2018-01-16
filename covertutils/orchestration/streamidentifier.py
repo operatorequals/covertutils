@@ -64,6 +64,12 @@ class StreamIdentifier :
 		return self.__hard_stream
 
 
+	def setHardStreamName( self, hard_stream ) :
+		if hard_stream not in self.__streams :
+			raise HardStreamException( "The Stream doesn't exist. Can't harden it." )
+		self.__hard_stream = hard_stream
+
+
 	def getIdentifierForStream( self, stream_name = None, byte_len = 2 ) :
 		if stream_name == None :
 			stream_name = self.__hard_stream

