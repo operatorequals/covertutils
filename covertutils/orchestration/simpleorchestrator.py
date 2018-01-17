@@ -47,10 +47,11 @@ The `SimpleOrchestrator` class combines compression, chunking, encryption and st
 
 	@copydoc(Orchestrator.addStream)
 	def addStream( self, stream ) :
-		super(SimpleOrchestrator, self).addStream( stream )
+		ret = super(SimpleOrchestrator, self).addStream( stream )
 		self.streams_buckets[ stream ]['chunker'] = Chunker( self.out_length,
 															self.in_length,
-															reverse = self.reverse )
+															reverse = self.reverse,
+															)
 
 
 	def reset( self, streams = None ) :

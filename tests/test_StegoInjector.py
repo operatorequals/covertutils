@@ -59,6 +59,34 @@ data2 = "4444XXXXXXXX4545"
 			self.assertTrue( extr_dict == inj_dict )
 
 
+	def test_injection_from_dict_with_template( self, n = 100 ) :
+
+		for i in range( 2, n, 2  ) :
+			config = '''
+	X:_data_:
+	Y:_sxor_(_data_, '\xaa'):
+
+	data1="""44444444%s41414141%s"""
+			''' % ("X"*i, "Y"*i)
+
+			inj_dict = { 'X':'a'* (i//2),
+						'Y':'b'* (i//2)
+					}
+
+			psi = StegoInjector( config )
+
+			templ_pkt = psi.inject('\x00' * i, 'data1')
+			print templ_pkt, "<----"
+
+			stego_pkt = psi.injectByTag(inj_dict, template = 'data1', pkt = templ_pkt)
+			testable = 'DDDD%sAAAA%s' % ('a' * (i//2), 'b' * (i//2))
+
+			# print( stego_pkt, testable )
+			extr_dict = psi.extractByTag( stego_pkt, 'data1' )
+			# print( extr_dict, inj_dict )
+			self.assertTrue( extr_dict == inj_dict )
+
+
 	def test_extraction_from_dict( self, n = 4 ) :
 		config = '''
 X:_data_:

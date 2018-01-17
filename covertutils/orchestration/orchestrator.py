@@ -34,7 +34,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		if self.cycling_algorithm == None:
 			self.cycling_algorithm = StandardCyclingAlgorithm
 		self.streams_buckets = dict([(stream, None) for stream in streams])
-
+		print self.streams_buckets
 		self.initCrypto( passphrase )
 
 		# passGenerator = StandardCyclingKey( passphrase, cycling_algorithm = self.cycling_algorithm )
@@ -62,7 +62,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 		self.id_value = passGenerator.encrypt( self.__pass_encryptor )
 		strIdentifierSeed = passGenerator.encrypt( self.__pass_encryptor )
 		self.__key_generator = passGenerator.encrypt( self.__pass_encryptor )
-		
+
 		self.streamIdent = StreamIdentifier( strIdentifierSeed, reverse = self.reverse, stream_list = streams, cycling_algorithm = self.cycling_algorithm )
 		self.default_stream = self.streamIdent.getHardStreamName()
 		if self.default_stream not in streams :
@@ -114,8 +114,7 @@ Orchestrator objects utilize the `raw data` to **(stream, message)** tuple trans
 
 
 	def addStream( self, stream ) :
-
-		if stream in self.getStreams() : return False
+		# if stream in self.getStreams() : return False
 		if stream not in self.streamIdent.getStreams() :
 			self.streamIdent.addStream( stream )
 
