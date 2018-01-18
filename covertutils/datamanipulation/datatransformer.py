@@ -92,6 +92,13 @@ Runs all Tranformations in the `transformation_list` that relate to the specifie
 			injectable_dict[in_tag] = injectable_data
 			# print( injectable_data.encode('hex') )
 		# print( self.injector.getCapacityDict( template ) )
+		# pkt = self.injector.blankPacket( pkt, template )
+		# pkt = pkt.encode('hex')
+		# pkt = self.injector.blankifyPacketFields( pkt, template, zero = True )
+		# print pkt
+		# pkt = pkt.decode('hex')
+		# print pkt.encode('hex')
 		pkt = self.injector.injectByTag( injectable_dict, template, pkt  )
 			# pkt = self.injector.inject( injectable_data, template, pkt  )
+
 		return pkt

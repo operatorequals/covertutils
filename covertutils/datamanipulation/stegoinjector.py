@@ -238,13 +238,30 @@ Example ::
 		return str(pkt)
 
 
-	def __blankifyPacketFields( self, pkt, sample ) :
+	# def blankPacket( self, packet, template ) :
+	# 	# cap = self.getCapacity( template )
+	# 	ret = ''
+	# 	templ_pkt = self.getTemplate( template )
+	# 	for c in templ_pkt :
+	#
+	# 	pkt =
+	# 	pkt = self.inject( '\x00'*cap, template, packet )
+	# 	# print pkt.encode('hex')
+	# 	return pkt
+
+
+	def blankifyPacketFields( self, pkt, template, zero = False ) :
+		# print pkt
+		sample = self.getTemplate( template )
 		pkt = bytearray(pkt)
 		for i in range( len(sample) ) :
 			char = sample[i]
+			# print sample[i]
 			if char in self.__tags.keys() :
-				pkt[i] = ord(sample[i])
-		# print pkt, "<<"
+				if zero :
+					char = '\x00'
+				pkt[i] = ord(char)
+				# print i, char, pkt, "<<"
 		return str(pkt)
 
 
@@ -306,7 +323,7 @@ Example ::
 		if self.hex_inject :
 			data = data.encode('hex')
 
-		injection_dict = self.__createInjectionDict( hex_pkt, data, sample_capacity )
+		injection_dict = self.__createInjectionDict( data, template )
 		inj_hex_pkt = self.__injectFromDict( hex_pkt, injection_dict, sample_capacity, template = template )
 
 		# print injection_dict
@@ -330,11 +347,15 @@ Example ::
 		if pkt == None :
 			pkt = deepcopy( sample_packet )			# COPY DEEPLY
 			if data_len != sample_capacity :
-					raise StegoDataInjectionException( "Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity) )
-			# pkt = self.__blankifyPacketFields( pkt, sample, )
+					raise StegoDataInjectionException(
+				"Trying to inject %d bytes in template '%s' with capacity '%d' bytes" % (data_len, template, sample_capacity)
+					)
+			# pkt = self.__blankifyPacketFields( pkt, template, )
+			# pkt = self.injector.blankPacket( pkt, template )
 		else :
 			pkt = codecs.encode(pkt, 'hex')
-			# pkt = self.__blankifyPacketFields(pkt, sample_packet)
+		# pkt = self.blankifyPacketFields(pkt, template)
+
 		sample = bytearray( sample_packet )
 		pkt = bytearray( pkt )
 		# print(sample)
@@ -349,9 +370,11 @@ Example ::
 		return pkt
 
 
-	def __createInjectionDict( self, hex_pkt, data, sample_capacity ) :
+	def __createInjectionDict( self, data, template ) :
 		# data = bytearray(data)
 		# print hex_pkt
+		hex_pkt = self.getTemplate(template)
+		sample_capacity = self.getCapacity(template)
 		data_hex = codecs.encode(data, 'hex')
 		injection_dict = {}
 		for tag in self.__tags :
@@ -371,7 +394,8 @@ Example ::
 				injection_dict[ tag ] += half_byte_hex
 
 		for tag in injection_dict.keys() :
-			injection_dict[tag] = bytearray(codecs.decode(injection_dict[tag], 'hex'))
+			value = codecs.decode(injection_dict[tag], 'hex')
+			injection_dict[tag] = bytearray( value )
 
 		# print len( data_hex ), data_hex
 		# print injection_dict
@@ -503,7 +527,10 @@ This method tries to guess the used template of a data packet by computing simil
 
 			if len( pkt_test ) != len( pkt ) :
 				continue
-
+			pkt_hex = pkt.encode('hex')
+			# pkt_test2 = self.__blankifyPacketFields(pkt_hex, template)
+			pkt_test2 = pkt_hex
+			# print pkt_hex
 			pkt_test2 = self.inject( payload, template, pkt )
 			sim_ratio = str_similar( pkt_test2, pkt_test )
 			ret.append( ( template, sim_ratio ) )
