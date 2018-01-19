@@ -10,19 +10,27 @@ Some References First
 The Blog Posts that started all
 *******************************
 
-* The Basic Idea and PoC
+* `The Basic Idea and PoC`__
+
+.. _part1 : https://securosophy.com/2016/09/14/teaching-an-old-dog-not-that-new-tricks-stego-in-tcpip-made-easy-part-1/
+
+__ part1_
 
 
-https://securosophy.com/2016/09/14/teaching-an-old-dog-not-that-new-tricks-stego-in-tcpip-made-easy-part-1/
+
+* `The Implementation requirements and Demo`__
 
 
-* The Implementation requirements and Demo
+.. _part2 : https://securosophy.com/2016/09/19/pozzo-lucky-stego-in-tcpip-part-2/
 
-https://securosophy.com/2016/09/19/pozzo-lucky-stego-in-tcpip-part-2/
+__ part2_
 
-* The Mitigation Research
 
-https://securosophy.com/2016/09/28/pozzo-lucky-busted-the-tales-of-a-mathematician-soc-analyst/
+* `The Mitigation Research`__
+
+.. _part3 : https://securosophy.com/2016/09/28/pozzo-lucky-busted-the-tales-of-a-mathematician-soc-analyst/
+
+__ part3_
 
 Parts of these articles have been republished in exploit-db_ and shellstorm_.
 They 've also been translated_.
