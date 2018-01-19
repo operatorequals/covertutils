@@ -105,7 +105,7 @@ And all that with the abstraction of **Object Oriented Programming**, as this pa
 	assembling_backdoor
 	prog_examples
 	stage_api
-
+	real_covert_channel_pozzo_n_lucky
 
 
 All modules *[citation needed]* are documented automatically from comments with *Sphinx* ``apidoc``. The output is below...
