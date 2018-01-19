@@ -52,6 +52,14 @@ covertutils.payloads.generic.meterpreter module
     :undoc-members:
     :show-inheritance:
 
+covertutils.payloads.generic.portfwd module
+-------------------------------------------
+
+.. automodule:: covertutils.payloads.generic.portfwd
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.payloads.generic.pythonapi module
 ---------------------------------------------
 
@@ -72,6 +80,14 @@ covertutils.payloads.generic.shellprocess module
 ------------------------------------------------
 
 .. automodule:: covertutils.payloads.generic.shellprocess
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+covertutils.payloads.generic.stdapi module
+------------------------------------------
+
+.. automodule:: covertutils.payloads.generic.stdapi
     :members:
     :undoc-members:
     :show-inheritance:

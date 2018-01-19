@@ -44,6 +44,14 @@ covertutils.datamanipulation.stegoinjector module
     :undoc-members:
     :show-inheritance:
 
+covertutils.datamanipulation.stegoinjector2 module
+--------------------------------------------------
+
+.. automodule:: covertutils.datamanipulation.stegoinjector2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

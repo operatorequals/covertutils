@@ -36,6 +36,14 @@ covertutils.shells.subshells.meterpretersubshell module
     :undoc-members:
     :show-inheritance:
 
+covertutils.shells.subshells.portfwdsubshell module
+---------------------------------------------------
+
+.. automodule:: covertutils.shells.subshells.portfwdsubshell
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 covertutils.shells.subshells.pythonapisubshell module
 -----------------------------------------------------
 
