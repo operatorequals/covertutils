@@ -8,7 +8,7 @@ Some References First
 ---------------------
 
 The Blog Posts that started all
-******************************
+*******************************
 
 * The Basic Idea and PoC
 
