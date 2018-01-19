@@ -76,7 +76,7 @@ and :ref:`ids_evasion` were ideas from *Pozzo & Lucky*.
 So, now the ``covertutils`` project became mature enough to manage a **whole re-write**
 of the *Pozzo & Lucky* backdoor with **only covertutils dependency** and *pure Python2*.
 
-Some readers were displeased that I didn't published (while I said that I'd do).
+Some readers were displeased that I didn't publish even later (while I said that I'd do).
 This was a common case where code refactoring took a year... It happens.
 
 **Until now...**
