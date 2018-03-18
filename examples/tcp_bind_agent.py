@@ -2,6 +2,7 @@
 from covertutils.handlers.impl import StandardShellHandler
 from covertutils.orchestration import SimpleOrchestrator
 
+from hashlib import sha512
 import sys
 import socket
 from time import sleep
