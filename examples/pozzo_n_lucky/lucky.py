@@ -1,6 +1,8 @@
 from covertutils.datamanipulation import DataTransformer
 from covertutils.datamanipulation import StegoInjector
 
+from covertutils.exceptions import StegoDataExtractionException
+
 from covertutils.orchestration import SimpleOrchestrator
 
 from covertutils.handlers import ResponseOnlyHandler
