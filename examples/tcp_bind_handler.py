@@ -3,6 +3,7 @@ from covertutils.handlers import BaseHandler
 from covertutils.orchestration import SimpleOrchestrator
 from covertutils.shells.impl import StandardShell
 
+from hashlib import sha512
 import sys
 import socket
 from time import sleep
